@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Every Tool You Need to Start a Pay-Per-Lead Business</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f0d0a;
+      --surface: #161310;
+      --card-bg: #1c1915;
+      --card-border: #2e2820;
+      --primary: #C7963F;
+      --primary-glow: rgba(199, 150, 63, 0.15);
+      --secondary: #7c3aed;
+      --text: #ffffff;
+      --text-muted: #9a9080;
+      --text-accent: #C7963F;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --font-heading: Inter, system-ui, sans-serif;
+      --font-body: Inter, system-ui, sans-serif;
+      --font-mono: JetBrains Mono, monospace;
+      --title-size: 3.5rem;
+      --heading-size: 2.5rem;
+      --subheading-size: 1.5rem;
+      --body-size: 1.125rem;
+      --bullet-size: 1.25rem;
+      --caption-size: 0.875rem;
+      --content-padding: 80px;
+      --card-radius: 16px;
+      --sidebar-width: 260px;
+      --transition-duration: 300ms;
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: var(--body-size); line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .presentation { display: flex; width: 100vw; height: 100vh; }
+    .sidebar { width: var(--sidebar-width); min-width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--card-border); display: flex; flex-direction: column; padding: 32px 0; overflow-y: auto; z-index: 10; transition: transform var(--transition-duration) ease; }
+    .sidebar--hidden { transform: translateX(calc(-1 * var(--sidebar-width))); position: absolute; left: 0; top: 0; bottom: 0; }
+    .sidebar__logo { padding: 0 24px 32px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
+    .sidebar__logo img { max-width: 120px; height: auto; }
+    .sidebar__nav { list-style: none; padding: 0 12px; flex: 1; }
+    .sidebar__item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 8px; cursor: pointer; transition: all 150ms ease; margin-bottom: 4px; font-size: var(--caption-size); color: var(--text-muted); font-weight: 500; }
+    .sidebar__item:hover { background: rgba(255, 255, 255, 0.05); color: var(--text); }
+    .sidebar__item--active { background: var(--primary-glow); color: var(--primary); font-weight: 600; }
+    .sidebar__item-number { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; min-width: 28px; text-align: center; }
+    .sidebar__item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar__progress { padding: 16px 24px; border-top: 1px solid var(--card-border); margin-top: auto; }
+    .sidebar__progress-bar { width: 100%; height: 3px; background: var(--card-border); border-radius: 2px; overflow: hidden; }
+    .sidebar__progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width var(--transition-duration) ease; }
+    .sidebar__progress-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: center; }
+    .stage { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #ffffff; }
+    .slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity var(--transition-duration) ease; padding: var(--content-padding); }
+    .slide--active { opacity: 1; pointer-events: auto; }
+    .slide__content { width: 100%; max-width: 1400px; display: flex; flex-direction: column; gap: 32px; align-items: center; text-align: center; }
+    .slide__content--centered { align-items: center; text-align: center; }
+    .slide__content--split { flex-direction: row; align-items: center; gap: 64px; }
+    .slide__stats-grid, .slide__cards { width: 100%; }
+    .slide__bullets, .slide__takeaways { text-align: left; }
+    .slide__title { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; line-height: 1.1; color: #1a1a1a; letter-spacing: -0.02em; }
+    .slide__heading { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 700; line-height: 1.2; color: #1a1a1a; letter-spacing: -0.01em; }
+    .slide__subheading { font-size: var(--subheading-size); font-weight: 500; color: #666666; line-height: 1.4; }
+    .slide__subtitle { font-size: var(--subheading-size); font-weight: 400; color: #666666; margin-top: -16px; }
+    .slide__description { font-size: var(--body-size); color: #666666; line-height: 1.6; }
+    .slide__logo { max-width: 160px; height: auto; margin-bottom: 24px; }
+    .badge { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
+    .badge--step { border: 1.5px solid var(--primary); background: transparent; color: var(--primary); }
+    .badge--recommended { border: 1.5px solid var(--primary); background: var(--primary); color: var(--bg); }
+    .slide__bullets { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .slide__bullet { font-size: var(--bullet-size); font-weight: 400; color: #1a1a1a; padding-left: 28px; position: relative; line-height: 1.5; }
+    .slide__bullet::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+    .slide__text-side { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+    .slide__image-side { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .slide__image { max-width: 100%; max-height: 70vh; border-radius: var(--card-radius); object-fit: cover; }
+    .slide__hero-image { width: 100%; max-height: 45vh; border-radius: var(--card-radius); object-fit: contain; display: block; margin: 0 auto; }
+    .slide--image-left .slide__content--split { flex-direction: row; }
+    .slide--image-right .slide__content--split { flex-direction: row-reverse; }
+    .slide__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: var(--card-radius); overflow: hidden; transition: transform 150ms ease, box-shadow 150ms ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .card__image-wrapper { width: 100%; aspect-ratio: 1; overflow: hidden; background: #f0f0f0; }
+    .card__image { width: 100%; height: 100%; object-fit: cover; }
+    .card__body { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .card__title { font-family: var(--font-heading); font-size: var(--subheading-size); font-weight: 600; color: #1a1a1a; }
+    .card__description { font-size: var(--body-size); color: #666666; line-height: 1.5; }
+    .slide--full-image { padding: 0; }
+    .slide__bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
+    .slide__overlay { position: absolute; inset: 0; z-index: 1; display: flex; padding: var(--content-padding); }
+    .slide__overlay--bottom { align-items: flex-end; background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 80%); }
+    .slide__overlay--center { align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.6); }
+    .slide__heading--overlay { text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8); }
+    .slide__subheading--overlay { text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); color: #ffffff; }
+    .slide__diagram-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 400px; }
+    .slide__diagram-wrapper .mermaid { width: 100%; }
+    .slide__svg-diagram { width: 100%; display: flex; justify-content: center; }
+    .slide__svg-diagram svg { max-width: 100%; max-height: 500px; }
+    .slide__quote-wrapper { max-width: 900px; position: relative; }
+    .slide__quote-mark { font-family: Georgia, serif; font-size: 8rem; color: var(--primary); opacity: 0.3; line-height: 1; position: absolute; top: -40px; left: -20px; }
+    .slide__quote { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 500; font-style: italic; line-height: 1.4; color: #1a1a1a; position: relative; z-index: 1; }
+    .slide__attribution { display: block; margin-top: 24px; font-size: var(--body-size); font-style: normal; color: #666666; }
+    .slide__stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+    .stat-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: var(--card-radius); padding: 40px 32px; text-align: center; }
+    .stat-card__value { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 8px; }
+    .stat-card__label { font-size: var(--subheading-size); font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+    .stat-card__description { font-size: var(--caption-size); color: #666666; }
+    .slide__takeaways { list-style: none; counter-reset: takeaway; display: flex; flex-direction: column; gap: 16px; }
+    .slide__takeaway { counter-increment: takeaway; font-size: var(--bullet-size); color: #1a1a1a; padding-left: 48px; position: relative; line-height: 1.5; }
+    .slide__takeaway::before { content: counter(takeaway); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--primary-glow); color: var(--primary); font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .slide__cta { margin-top: 16px; }
+    .slide__cta-link { display: inline-flex; align-items: center; padding: 14px 32px; background: var(--primary); color: var(--bg); border-radius: 100px; font-weight: 600; font-size: var(--body-size); text-decoration: none; transition: transform 150ms ease, box-shadow 150ms ease; }
+    .slide__cta-link:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .slide__cta-text { font-size: var(--subheading-size); color: var(--primary); font-weight: 600; }
+    .image-placeholder { background: #f8f9fa; border: 2px dashed #e0e0e0; border-radius: var(--card-radius); display: flex; align-items: center; justify-content: center; padding: 40px; color: #666666; font-style: italic; font-size: var(--caption-size); aspect-ratio: 16/9; width: 100%; }
+    /* Edit Mode */
+    .edit-mode .slide__title, .edit-mode .slide__heading, .edit-mode .slide__subheading, .edit-mode .slide__subtitle, .edit-mode .slide__description, .edit-mode .slide__bullet, .edit-mode .slide__quote, .edit-mode .slide__attribution, .edit-mode .card__title, .edit-mode .card__description, .edit-mode .stat-card__value, .edit-mode .stat-card__label, .edit-mode .stat-card__description, .edit-mode .slide__takeaway, .edit-mode .slide__cta-text, .edit-mode .badge { outline: 1px dashed rgba(0, 0, 0, 0.15); outline-offset: 4px; cursor: text; }
+    .edit-mode [contenteditable="true"]:focus { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 4px; }
+    .edit-mode .slide__image, .edit-mode .card__image-wrapper { position: relative; cursor: pointer; }
+    .edit-mode .image-replace-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 150ms ease; border-radius: var(--card-radius); pointer-events: none; }
+    .edit-mode .slide__image:hover + .image-replace-overlay, .edit-mode .image-replace-overlay:hover { opacity: 1; pointer-events: auto; }
+    .image-replace-btn { padding: 8px 20px; background: var(--primary); color: var(--bg); border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+    .edit-toolbar { position: fixed; top: 0; left: var(--sidebar-width); right: 0; height: 48px; background: var(--surface); border-bottom: 1px solid var(--card-border); display: none; align-items: center; padding: 0 24px; gap: 8px; z-index: 100; }
+    .edit-mode .edit-toolbar { display: flex; }
+    .edit-toolbar__btn { padding: 6px 12px; background: transparent; border: 1px solid var(--card-border); border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer; transition: all 150ms ease; }
+    .edit-toolbar__btn:hover { background: var(--card-bg); border-color: var(--primary); }
+    .edit-toolbar__btn--active { background: var(--primary-glow); border-color: var(--primary); color: var(--primary); }
+    .edit-toolbar__separator { width: 1px; height: 24px; background: var(--card-border); margin: 0 4px; }
+    .edit-toolbar__spacer { flex: 1; }
+    .edit-toolbar__btn--save { background: var(--primary); color: var(--bg); border-color: var(--primary); font-weight: 600; }
+    .edit-toolbar__btn--save:hover { opacity: 0.9; }
+    .edit-toolbar__btn--danger { color: var(--error); border-color: var(--error); }
+    .edit-toolbar__btn--danger:hover { background: rgba(239, 68, 68, 0.15); border-color: var(--error); }
+    .edit-mode .slide__content > * { position: relative; }
+    .drag-handle { position: absolute; left: -40px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: grab; opacity: 0; transition: opacity 150ms ease; user-select: none; z-index: 10; }
+    .drag-handle::before { content: ''; display: block; width: 8px; height: 14px; background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px); background-size: 4px 4.5px; }
+    .edit-mode .slide__content > *:hover > .drag-handle { opacity: 0.5; }
+    .drag-handle:hover { opacity: 1 !important; color: var(--primary); }
+    .edit-mode .slide__content > .dragging { opacity: 0.3; }
+    .edit-indicator { position: fixed; bottom: 16px; right: 16px; padding: 8px 16px; background: var(--primary); color: var(--bg); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; z-index: 100; display: none; }
+    .edit-mode .edit-indicator { display: block; }
+    .presentation--fullscreen .sidebar { display: none; }
+    .mermaid { font-family: var(--font-body) !important; }
+    @media (max-width: 1200px) { .slide__content--split { flex-direction: column; gap: 32px; } .slide__image-side { max-height: 40vh; } }
+  </style>
+</head>
+<body>
+  <div class="presentation">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul class="sidebar__nav">
+        <li class="sidebar__item sidebar__item--active">
+          <span class="sidebar__item-number">01</span>
+          <span class="sidebar__item-label">Hook</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">02</span>
+          <span class="sidebar__item-label">The Problem</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">03</span>
+          <span class="sidebar__item-label">The Promise</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">04</span>
+          <span class="sidebar__item-label">Facebook Ads</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">05</span>
+          <span class="sidebar__item-label">Why Facebook?</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">06</span>
+          <span class="sidebar__item-label">Key Insight</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">07</span>
+          <span class="sidebar__item-label">Funnel Builder</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">08</span>
+          <span class="sidebar__item-label">TrustedForm</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">09</span>
+          <span class="sidebar__item-label">Flozy</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">10</span>
+          <span class="sidebar__item-label">Speed Matters</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">11</span>
+          <span class="sidebar__item-label">Core Machine</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">12</span>
+          <span class="sidebar__item-label">CRM</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">13</span>
+          <span class="sidebar__item-label">CRM Options</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">14</span>
+          <span class="sidebar__item-label">Apollo</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">15</span>
+          <span class="sidebar__item-label">Finding Buyers</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">16</span>
+          <span class="sidebar__item-label">Make.com</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">17</span>
+          <span class="sidebar__item-label">Full Stack</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">18</span>
+          <span class="sidebar__item-label">Recap</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">19</span>
+          <span class="sidebar__item-label">Next Steps</span>
+        </li>
+      </ul>
+      <div class="sidebar__progress">
+        <div class="sidebar__progress-bar">
+          <div class="sidebar__progress-fill" style="width: 5.26%"></div>
+        </div>
+        <div class="sidebar__progress-text">1 / 19</div>
+      </div>
+    </aside>
+
+    <!-- Edit Toolbar -->
+    <div class="edit-toolbar">
+      <button class="edit-toolbar__btn" data-action="bold"><strong>B</strong></button>
+      <button class="edit-toolbar__btn" data-action="italic"><em>I</em></button>
+      <button class="edit-toolbar__btn" data-action="font-up">Font+</button>
+      <button class="edit-toolbar__btn" data-action="font-down">Font-</button>
+      <button class="edit-toolbar__btn" data-action="add-bullet">+ Bullet</button>
+      <button class="edit-toolbar__btn" data-action="remove-bullet">- Bullet</button>
+      <div class="edit-toolbar__separator"></div>
+      <button class="edit-toolbar__btn" data-action="add-slide">+ Slide</button>
+      <button class="edit-toolbar__btn edit-toolbar__btn--danger" data-action="delete-slide">Delete Slide</button>
+      <div class="edit-toolbar__spacer"></div>
+      <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save">Save</button>
+    </div>
+
+    <!-- Edit Indicator -->
+    <div class="edit-indicator">Edit Mode</div>
+
+    <!-- Stage -->
+    <main class="stage">
+
+      <!-- Slide 1: Title Slide (Hook) -->
+      <section class="slide slide--title slide--active" data-slide="1" data-chapter="Hook">
+        <div class="slide__content slide__content--centered">
+          <h1 class="slide__title">Every Tool You Need to Start a Pay-Per-Lead Business</h1>
+          <p class="slide__subtitle">The 6-Tool Stack That Actually Works</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: Stats/Numbers (Problem) -->
+      <section class="slide slide--stats" data-slide="2" data-chapter="The Problem">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">THE PROBLEM</div>
+          <h2 class="slide__heading">90% of PPL Businesses Fail</h2>
+          <div class="slide__stats-grid">
+            <div class="stat-card">
+              <div class="stat-card__value">90%</div>
+              <div class="stat-card__label">Fail Rate</div>
+              <div class="stat-card__description">Most PPL businesses never make it</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">15+</div>
+              <div class="stat-card__label">Cobbled Tools</div>
+              <div class="stat-card__description">Platforms that don't talk to each other</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">0</div>
+              <div class="stat-card__label">Leads Delivered</div>
+              <div class="stat-card__description">Because they fall through the cracks</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Heading + Image (Promise) -->
+      <section class="slide slide--heading-image" data-slide="3" data-chapter="The Promise">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">THE PROMISE</div>
+          <h2 class="slide__heading">6 Tools. Fully Connected.</h2>
+          <img class="slide__hero-image" src="images/slide-03-six-tools-connected.png" alt="Six tools connected" onerror="this.outerHTML='<div class=\'image-placeholder\'>Image: Six tools connected</div>'">
+          <p class="slide__subheading">Leads flow from ad to buyer without you touching a thing</p>
+        </div>
+      </section>
+
+      <!-- Slide 4: Heading + Image (Tool 1: Facebook Ads) -->
+      <section class="slide slide--heading-image" data-slide="4" data-chapter="Facebook Ads">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">TOOL 1</div>
+          <h2 class="slide__heading">Facebook Ads: Your Lead Engine</h2>
+          <img class="slide__hero-image" src="images/slide-04-facebook-ads.png" alt="Facebook Ads" onerror="this.outerHTML='<div class=\'image-placeholder\'>Image: Facebook Ads</div>'">
+          <p class="slide__subheading">Without traffic, nothing else matters</p>
+        </div>
+      </section>
+
+      <!-- Slide 5: Heading + Bullets (Why Facebook) -->
+      <section class="slide slide--heading-bullets" data-slide="5" data-chapter="Why Facebook?">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">WHY FACEBOOK?</div>
+          <h2 class="slide__heading">The Best Platform for PPL</h2>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Insane targeting capabilities</li>
+            <li class="slide__bullet">Lowest cost per lead of any platform</li>
+            <li class="slide__bullet">Scales from $50/day to $500/day</li>
+            <li class="slide__bullet">Shorter learning curve than Google</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 6: Quote/Callout -->
+      <section class="slide slide--quote" data-slide="6" data-chapter="Key Insight">
+        <div class="slide__content slide__content--centered">
+          <div class="slide__quote-wrapper">
+            <span class="slide__quote-mark">"</span>
+            <blockquote class="slide__quote">Running ads is not the hard part. The hard part is what happens after someone clicks.</blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Heading + Image (Tool 2: Funnel Builder) -->
+      <section class="slide slide--heading-image" data-slide="7" data-chapter="Funnel Builder">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">TOOL 2</div>
+          <h2 class="slide__heading">Funnel Builder: Capture & Qualify</h2>
+          <img class="slide__hero-image" src="images/slide-07-funnel-builder.png" alt="Funnel Builder" onerror="this.outerHTML='<div class=\'image-placeholder\'>Image: Funnel Builder</div>'">
+          <p class="slide__subheading">Your landing page does two jobs at once</p>
+        </div>
+      </section>
+
+      <!-- Slide 8: Heading + Bullets (TrustedForm) -->
+      <section class="slide slide--heading-bullets" data-slide="8" data-chapter="TrustedForm">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">PRO TIP</div>
+          <h2 class="slide__heading">Add TrustedForm to Every Lead</h2>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Certifies proper consent on every lead</li>
+            <li class="slide__bullet">Timestamps and records the source page</li>
+            <li class="slide__bullet">Buyers require it for regulated industries</li>
+            <li class="slide__bullet">Certified leads sell for more money</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 9: Heading + Image (Tool 3: Flozy) -->
+      <section class="slide slide--heading-image" data-slide="9" data-chapter="Flozy">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">TOOL 3</div>
+          <h2 class="slide__heading">Lead Distribution: The Backbone</h2>
+          <img class="slide__hero-image" src="images/slide-09-lead-distribution.png" alt="Lead Distribution" onerror="this.outerHTML='<div class=\'image-placeholder\'>Image: Lead Distribution</div>'">
+          <p class="slide__subheading">Route leads to the right buyer in real time</p>
+        </div>
+      </section>
+
+      <!-- Slide 10: Stats/Numbers (Speed Matters) -->
+      <section class="slide slide--stats" data-slide="10" data-chapter="Speed Matters">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">SPEED KILLS</div>
+          <h2 class="slide__heading">Speed Matters More Than You Think</h2>
+          <div class="slide__stats-grid">
+            <div class="stat-card">
+              <div class="stat-card__value">5 min</div>
+              <div class="stat-card__label">Response Window</div>
+              <div class="stat-card__description">Before the lead forgets they opted in</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">15%</div>
+              <div class="stat-card__label">With Flozy</div>
+              <div class="stat-card__description">Conversion rate with instant delivery</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">5%</div>
+              <div class="stat-card__label">Without It</div>
+              <div class="stat-card__description">Conversion rate with manual forwarding</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Diagram (Core Machine - Mermaid) -->
+      <section class="slide slide--diagram" data-slide="11" data-chapter="Core Machine">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">THE CORE MACHINE</div>
+          <h2 class="slide__heading">How the First 3 Tools Connect</h2>
+          <div class="slide__diagram-wrapper">
+            <div class="mermaid">
+graph LR
+    A["Facebook Ads<br/>Traffic Engine"] -->|"Clicks"| B["Landing Page<br/>+ TrustedForm"]
+    B -->|"Qualified Leads"| C["Flozy<br/>Distribution"]
+    C -->|"Texas Leads"| D["Buyer TX"]
+    C -->|"Florida Leads"| E["Buyer FL"]
+    C -->|"California Leads"| F["Buyer CA"]
+    style A fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style B fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style C fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style D fill:#f0f0f0,stroke:#666,stroke-width:1px,color:#1a1a1a
+    style E fill:#f0f0f0,stroke:#666,stroke-width:1px,color:#1a1a1a
+    style F fill:#f0f0f0,stroke:#666,stroke-width:1px,color:#1a1a1a
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12: Heading + Image (Tool 4: CRM) -->
+      <section class="slide slide--heading-image" data-slide="12" data-chapter="CRM">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">TOOL 4</div>
+          <h2 class="slide__heading">CRM: Your Command Center</h2>
+          <img class="slide__hero-image" src="images/slide-12-crm.png" alt="CRM" onerror="this.outerHTML='<div class=\'image-placeholder\'>Image: CRM</div>'">
+          <p class="slide__subheading">Track buyers, manage deals, stay organized</p>
+        </div>
+      </section>
+
+      <!-- Slide 13: Card Grid (CRM Options) -->
+      <section class="slide slide--cards" data-slide="13" data-chapter="CRM Options">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">PICK YOUR CRM</div>
+          <h2 class="slide__heading">Two Great Options</h2>
+          <div class="slide__cards">
+            <div class="card">
+              <div class="card__body">
+                <div class="badge badge--recommended">RECOMMENDED</div>
+                <div class="card__title">Hayflow</div>
+                <div class="card__description">Clean, simple, does exactly what you need. No bloat.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__body">
+                <div class="card__title">GoHighLevel</div>
+                <div class="card__description">All-in-one: CRM + funnel builder + email + automations.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 14: Heading + Image (Tool 5: Apollo) -->
+      <section class="slide slide--heading-image" data-slide="14" data-chapter="Apollo">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">TOOL 5</div>
+          <h2 class="slide__heading">Apollo: Free Prospecting</h2>
+          <img class="slide__hero-image" src="images/slide-14-apollo.png" alt="Apollo" onerror="this.outerHTML='<div class=\'image-placeholder\'>Image: Apollo</div>'">
+          <p class="slide__subheading">Find buyers without spending a dollar</p>
+        </div>
+      </section>
+
+      <!-- Slide 15: Heading + Bullets (Finding Buyers) -->
+      <section class="slide slide--heading-bullets" data-slide="15" data-chapter="Finding Buyers">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">HOW TO USE IT</div>
+          <h2 class="slide__heading">Fill Your Pipeline for Free</h2>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Search by industry, location, company size</li>
+            <li class="slide__bullet">Pull emails and LinkedIn profiles instantly</li>
+            <li class="slide__bullet">Build targeted buyer lists in minutes</li>
+            <li class="slide__bullet">Combine with LinkedIn for warm outreach</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 16: Heading + Image (Tool 6: Make.com) -->
+      <section class="slide slide--heading-image" data-slide="16" data-chapter="Make.com">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">TOOL 6</div>
+          <h2 class="slide__heading">Make.com: Automate Everything</h2>
+          <img class="slide__hero-image" src="images/slide-16-automation.png" alt="Make.com Automation" onerror="this.outerHTML='<div class=\'image-placeholder\'>Image: Make.com Automation</div>'">
+          <p class="slide__subheading">Replaced 3 manual processes. Cut setup time in half.</p>
+        </div>
+      </section>
+
+      <!-- Slide 17: Diagram (Full Stack - Mermaid) -->
+      <section class="slide slide--diagram" data-slide="17" data-chapter="Full Stack">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">THE COMPLETE STACK</div>
+          <h2 class="slide__heading">All 6 Tools Connected</h2>
+          <div class="slide__diagram-wrapper">
+            <div class="mermaid">
+graph LR
+    A["Facebook Ads"] -->|"Traffic"| B["Funnel Builder<br/>+ TrustedForm"]
+    B -->|"Qualified Leads"| C["Flozy"]
+    C -->|"Routed Leads"| D["Buyers"]
+    E["Apollo"] -->|"New Prospects"| F["CRM"]
+    F -->|"Buyer Management"| C
+    G["Make.com"] -.->|"Automates"| A
+    G -.->|"Automates"| B
+    G -.->|"Automates"| C
+    G -.->|"Automates"| F
+    style A fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style B fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style C fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style D fill:#f0f0f0,stroke:#666,stroke-width:1px,color:#1a1a1a
+    style E fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style F fill:#faf5eb,stroke:#C7963F,stroke-width:2px,color:#1a1a1a
+    style G fill:#f0e6ff,stroke:#7c3aed,stroke-width:2px,color:#1a1a1a
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 18: Recap/Summary -->
+      <section class="slide slide--recap" data-slide="18" data-chapter="Recap">
+        <div class="slide__content slide__content--centered">
+          <h2 class="slide__heading">The Complete PPL Tech Stack</h2>
+          <ol class="slide__takeaways">
+            <li class="slide__takeaway">Facebook Ads for traffic and lead generation</li>
+            <li class="slide__takeaway">Funnel Builder + TrustedForm for capture and certification</li>
+            <li class="slide__takeaway">Flozy for real-time lead distribution to buyers</li>
+            <li class="slide__takeaway">CRM (Hayflow or GoHighLevel) for organization</li>
+            <li class="slide__takeaway">Apollo for free buyer prospecting</li>
+            <li class="slide__takeaway">Make.com or Zapier to automate the whole thing</li>
+          </ol>
+          <div class="slide__cta">
+            <p class="slide__cta-text">6 tools. That's it. Set up right, talking to each other.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 19: Title Slide (CTA) -->
+      <section class="slide slide--title" data-slide="19" data-chapter="Next Steps">
+        <div class="slide__content slide__content--centered">
+          <h1 class="slide__title">Ready to Build Your Stack?</h1>
+          <p class="slide__subtitle">Try Flozy free for 7 days | Book a call with Great Marketing AI | Subscribe for more</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+      let currentSlide = 0;
+      let editMode = false;
+      let isFullscreen = false;
+      let slides = Array.from(document.querySelectorAll('.slide'));
+      let sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+      const progressFill = document.querySelector('.sidebar__progress-fill');
+      const progressText = document.querySelector('.sidebar__progress-text');
+      const presentation = document.querySelector('.presentation');
+      const editToolbar = document.querySelector('.edit-toolbar');
+      const editIndicator = document.querySelector('.edit-indicator');
+      const stage = document.querySelector('.stage');
+      const sidebarNav = document.querySelector('.sidebar__nav');
+
+      function getTotalSlides() { return slides.length; }
+
+      function goToSlide(index) {
+        var total = getTotalSlides();
+        if (index < 0 || index >= total) return;
+        slides[currentSlide].classList.remove('slide--active');
+        sidebarItems[currentSlide]?.classList.remove('sidebar__item--active');
+        currentSlide = index;
+        slides[currentSlide].classList.add('slide--active');
+        sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+        updateProgress();
+        sidebarItems[currentSlide]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+
+      function nextSlide() { goToSlide(currentSlide + 1); }
+      function prevSlide() { goToSlide(currentSlide - 1); }
+
+      function updateProgress() {
+        var total = getTotalSlides();
+        var pct = ((currentSlide + 1) / total) * 100;
+        if (progressFill) progressFill.style.width = pct + '%';
+        if (progressText) progressText.textContent = (currentSlide + 1) + ' / ' + total;
+      }
+
+      function bindSidebarClicks() {
+        sidebarItems.forEach(function (item, i) {
+          item.onclick = function () { goToSlide(i); };
+        });
+      }
+      bindSidebarClicks();
+
+      function renumberSidebar() {
+        sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+        sidebarItems.forEach(function (item, i) {
+          var numEl = item.querySelector('.sidebar__item-number');
+          if (numEl) numEl.textContent = String(i + 1).padStart(2, '0');
+        });
+        bindSidebarClicks();
+      }
+
+      const editableSelectors = ['.slide__title', '.slide__heading', '.slide__subheading', '.slide__subtitle', '.slide__description', '.slide__bullet', '.slide__quote', '.slide__attribution', '.card__title', '.card__description', '.stat-card__value', '.stat-card__label', '.stat-card__description', '.slide__takeaway', '.slide__cta-text', '.badge'];
+
+      function enableEditMode() {
+        editMode = true;
+        presentation.classList.add('edit-mode');
+        document.querySelectorAll(editableSelectors.join(', ')).forEach(function (el) { el.setAttribute('contenteditable', 'true'); });
+        addImageOverlays();
+        addDragHandles();
+      }
+
+      function disableEditMode() {
+        editMode = false;
+        presentation.classList.remove('edit-mode');
+        document.querySelectorAll('[contenteditable="true"]').forEach(function (el) { el.removeAttribute('contenteditable'); });
+        removeImageOverlays();
+        removeDragHandles();
+      }
+
+      function toggleEditMode() { if (editMode) disableEditMode(); else enableEditMode(); }
+
+      function addImageOverlays() {
+        document.querySelectorAll('.slide__image').forEach(function (img) {
+          if (img.parentElement.querySelector('.image-replace-overlay')) return;
+          var wrapper = document.createElement('div');
+          wrapper.style.position = 'relative';
+          wrapper.style.display = 'inline-block';
+          img.parentNode.insertBefore(wrapper, img);
+          wrapper.appendChild(img);
+          var overlay = document.createElement('div');
+          overlay.className = 'image-replace-overlay';
+          var btn = document.createElement('button');
+          btn.className = 'image-replace-btn';
+          btn.textContent = 'Replace Image';
+          btn.addEventListener('click', function () {
+            var url = prompt('Paste new image URL (or base64 data URI):');
+            if (url) img.src = url;
+          });
+          overlay.appendChild(btn);
+          wrapper.appendChild(overlay);
+        });
+      }
+
+      function removeImageOverlays() {
+        document.querySelectorAll('.image-replace-overlay').forEach(function (overlay) {
+          var wrapper = overlay.parentElement;
+          var img = wrapper.querySelector('.slide__image');
+          if (img && wrapper.parentElement) {
+            wrapper.parentElement.insertBefore(img, wrapper);
+            wrapper.remove();
+          }
+        });
+      }
+
+      var dragState = null;
+      function addDragHandles() {
+        document.querySelectorAll('.slide__content > *').forEach(function (el) {
+          if (el.querySelector('.drag-handle')) return;
+          var handle = document.createElement('div');
+          handle.className = 'drag-handle';
+          handle.addEventListener('mousedown', function (e) { startDrag(e, el); });
+          el.appendChild(handle);
+        });
+      }
+
+      function removeDragHandles() {
+        if (dragState) handleDragEnd();
+        document.querySelectorAll('.drag-handle').forEach(function (handle) { handle.remove(); });
+      }
+
+      function startDrag(e, el) {
+        e.preventDefault();
+        dragState = { el: el, container: el.parentElement };
+        el.classList.add('dragging');
+        document.addEventListener('mousemove', handleDragMove);
+        document.addEventListener('mouseup', handleDragEnd);
+      }
+
+      function handleDragMove(e) {
+        if (!dragState) return;
+        e.preventDefault();
+        var container = dragState.container;
+        var dragEl = dragState.el;
+        var children = Array.from(container.children);
+        for (var i = 0; i < children.length; i++) {
+          var child = children[i];
+          if (child === dragEl) continue;
+          var rect = child.getBoundingClientRect();
+          var midY = rect.top + rect.height / 2;
+          if (e.clientY < midY) { container.insertBefore(dragEl, child); return; }
+        }
+        container.appendChild(dragEl);
+      }
+
+      function handleDragEnd() {
+        if (!dragState) return;
+        dragState.el.classList.remove('dragging');
+        dragState = null;
+        document.removeEventListener('mousemove', handleDragMove);
+        document.removeEventListener('mouseup', handleDragEnd);
+      }
+
+      function addSlide() {
+        if (!editMode) return;
+        var newNum = currentSlide + 2;
+        var section = document.createElement('section');
+        section.className = 'slide slide--heading-bullets';
+        section.setAttribute('data-slide', String(newNum));
+        section.setAttribute('data-chapter', 'New Slide');
+        section.innerHTML = '<div class="slide__content"><div class="badge badge--step" contenteditable="true">New Section</div><h2 class="slide__heading" contenteditable="true">Slide Title</h2><p class="slide__subheading" contenteditable="true">Subtitle goes here</p><ul class="slide__bullets"><li class="slide__bullet" contenteditable="true">First point</li><li class="slide__bullet" contenteditable="true">Second point</li><li class="slide__bullet" contenteditable="true">Third point</li></ul></div>';
+        var currentSlideEl = slides[currentSlide];
+        if (currentSlideEl.nextElementSibling) stage.insertBefore(section, currentSlideEl.nextElementSibling);
+        else stage.appendChild(section);
+        var li = document.createElement('li');
+        li.className = 'sidebar__item';
+        li.innerHTML = '<span class="sidebar__item-number">' + String(newNum).padStart(2, '0') + '</span><span class="sidebar__item-label">New Slide</span>';
+        var currentSidebarItem = sidebarItems[currentSlide];
+        if (currentSidebarItem && currentSidebarItem.nextElementSibling) sidebarNav.insertBefore(li, currentSidebarItem.nextElementSibling);
+        else sidebarNav.appendChild(li);
+        slides = Array.from(document.querySelectorAll('.slide'));
+        renumberSidebar();
+        updateProgress();
+        goToSlide(currentSlide + 1);
+      }
+
+      function deleteSlide() {
+        if (!editMode) return;
+        var total = getTotalSlides();
+        if (total <= 1) return;
+        if (!confirm('Delete this slide?')) return;
+        var slideToRemove = slides[currentSlide];
+        var sidebarToRemove = sidebarItems[currentSlide];
+        var targetIndex = currentSlide;
+        if (currentSlide >= total - 1) targetIndex = currentSlide - 1;
+        slideToRemove.classList.remove('slide--active');
+        if (sidebarToRemove) sidebarToRemove.classList.remove('sidebar__item--active');
+        slideToRemove.remove();
+        if (sidebarToRemove) sidebarToRemove.remove();
+        slides = Array.from(document.querySelectorAll('.slide'));
+        renumberSidebar();
+        currentSlide = Math.max(0, Math.min(targetIndex, getTotalSlides() - 1));
+        slides[currentSlide].classList.add('slide--active');
+        sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+        updateProgress();
+      }
+
+      function execCommand(cmd) { document.execCommand(cmd, false, null); }
+      function changeFontSize(delta) {
+        var sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        var el = sel.anchorNode?.parentElement;
+        if (!el) return;
+        var current = parseFloat(window.getComputedStyle(el).fontSize);
+        el.style.fontSize = (current + delta) + 'px';
+      }
+      function addBullet() {
+        var activeSlide = slides[currentSlide];
+        var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways');
+        if (!list) return;
+        var item = document.createElement('li');
+        item.className = list.querySelector('li')?.className || '';
+        item.textContent = 'New item';
+        item.setAttribute('contenteditable', 'true');
+        list.appendChild(item);
+        item.focus();
+      }
+      function removeBullet() {
+        var activeSlide = slides[currentSlide];
+        var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways');
+        if (!list) return;
+        var items = list.querySelectorAll('li');
+        if (items.length > 1) items[items.length - 1].remove();
+      }
+      function savePresentation() {
+        var wasEditing = editMode;
+        if (wasEditing) disableEditMode();
+        var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        if (wasEditing) enableEditMode();
+        var blob = new Blob([html], { type: 'text/html' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+
+      document.querySelectorAll('.edit-toolbar__btn').forEach(function (btn) {
+        var action = btn.dataset.action;
+        if (!action) return;
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          switch (action) {
+            case 'bold': execCommand('bold'); break;
+            case 'italic': execCommand('italic'); break;
+            case 'font-up': changeFontSize(2); break;
+            case 'font-down': changeFontSize(-2); break;
+            case 'add-bullet': addBullet(); break;
+            case 'remove-bullet': removeBullet(); break;
+            case 'add-slide': addSlide(); break;
+            case 'delete-slide': deleteSlide(); break;
+            case 'save': savePresentation(); break;
+          }
+        });
+      });
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().then(function () {
+            isFullscreen = true;
+            presentation.classList.add('presentation--fullscreen');
+          }).catch(function () {});
+        } else {
+          document.exitFullscreen();
+          isFullscreen = false;
+          presentation.classList.remove('presentation--fullscreen');
+        }
+      }
+
+      document.addEventListener('fullscreenchange', function () {
+        if (!document.fullscreenElement) {
+          isFullscreen = false;
+          presentation.classList.remove('presentation--fullscreen');
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        var isEditing = e.target.isContentEditable;
+        if ((e.ctrlKey || e.metaKey) && e.key === 'e') { e.preventDefault(); toggleEditMode(); return; }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') { if (editMode) { e.preventDefault(); deleteSlide(); return; } }
+        if (e.key === 'Escape') { if (editMode) disableEditMode(); return; }
+        if (isEditing) return;
+        switch (e.key) {
+          case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nextSlide(); break;
+          case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prevSlide(); break;
+          case 'f': case 'F11': e.preventDefault(); toggleFullscreen(); break;
+          case 'Home': e.preventDefault(); goToSlide(0); break;
+          case 'End': e.preventDefault(); goToSlide(getTotalSlides() - 1); break;
+        }
+      });
+
+      var touchStartX = 0;
+      document.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+      document.addEventListener('touchend', function (e) {
+        var diff = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(diff) > 50) { if (diff > 0) prevSlide(); else nextSlide(); }
+      }, { passive: true });
+
+      if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'base',
+          themeVariables: {
+            primaryColor: '#faf5eb',
+            primaryTextColor: '#1a1a1a',
+            primaryBorderColor: '#C7963F',
+            lineColor: '#666666',
+            secondaryColor: '#f0f0f0',
+            tertiaryColor: '#f8f9fa',
+            fontSize: '16px',
+            fontFamily: 'Inter, system-ui, sans-serif'
+          }
+        });
+      }
+
+      goToSlide(0);
+    })();
+  </script>
+</body>
+</html>

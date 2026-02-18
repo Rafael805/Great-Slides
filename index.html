@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide Decks &mdash; Great Marketing AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f0d0a;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      padding: 64px 48px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .header {
+      margin-bottom: 48px;
+    }
+    .header__title {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #C7963F;
+      margin-bottom: 8px;
+    }
+    .header__subtitle {
+      font-size: 1rem;
+      color: #9a9080;
+      font-weight: 400;
+    }
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+    }
+    .deck-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 28px 24px;
+      background: #1c1915;
+      border: 1px solid #2e2820;
+      border-radius: 16px;
+      text-decoration: none;
+      color: #ffffff;
+      transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+    }
+    .deck-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(199, 150, 63, 0.15);
+      border-color: #C7963F;
+    }
+    .deck-card__icon {
+      font-size: 1.5rem;
+      color: #C7963F;
+      width: 48px;
+      height: 48px;
+      background: rgba(199, 150, 63, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .deck-card__info {
+      flex: 1;
+      min-width: 0;
+    }
+    .deck-card__title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .deck-card__slug {
+      font-size: 0.75rem;
+      color: #9a9080;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .deck-card__arrow {
+      font-size: 1.25rem;
+      color: #9a9080;
+      transition: color 150ms ease, transform 150ms ease;
+      flex-shrink: 0;
+    }
+    .deck-card:hover .deck-card__arrow {
+      color: #C7963F;
+      transform: translateX(4px);
+    }
+    .footer {
+      margin-top: 64px;
+      font-size: 0.75rem;
+      color: #6a6050;
+    }
+    @media (max-width: 480px) {
+      body { padding: 32px 20px; }
+      .deck-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="header__title">Slide Decks</h1>
+    <p class="header__subtitle">YouTube presentation decks &mdash; Great Marketing AI</p>
+  </div>
+  <div class="deck-grid">
+        <a class="deck-card" href="3-pillars-profitable-ppl-agency/3-pillars-profitable-ppl-agency.html">
+          <div class="deck-card__icon">&#9654;</div>
+          <div class="deck-card__info">
+            <h2 class="deck-card__title">3 Pillars Profitable Ppl Agency</h2>
+            <span class="deck-card__slug">3-pillars-profitable-ppl-agency</span>
+          </div>
+          <div class="deck-card__arrow">&rarr;</div>
+        </a>
+        <a class="deck-card" href="ppl-tech-stack/ppl-tech-stack.html">
+          <div class="deck-card__icon">&#9654;</div>
+          <div class="deck-card__info">
+            <h2 class="deck-card__title">Ppl Tech Stack</h2>
+            <span class="deck-card__slug">ppl-tech-stack</span>
+          </div>
+          <div class="deck-card__arrow">&rarr;</div>
+        </a>
+  </div>
+  <p class="footer">Great Marketing AI &bull; Last deployed 2026-02-18</p>
+</body>
+</html>
