@@ -463,22 +463,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 550px;
+      min-height: 420px;
       width: 100%;
     }
 
     .slide__diagram-wrapper .mermaid {
       width: 100%;
-      min-height: 500px;
+      min-height: 380px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .slide__diagram-wrapper .mermaid svg {
-      min-height: 450px;
+      min-height: 350px;
       width: 100% !important;
       max-width: 100%;
+      height: auto !important;
+      transform: scale(1.3);
+      transform-origin: center center;
     }
 
     .slide__svg-diagram {
@@ -999,7 +1002,7 @@
     <!-- ========== SIDEBAR ========== -->
     <aside class="sidebar">
       <div class="sidebar__logo">
-        <span style="font-family: var(--font-heading); font-weight: 700; font-size: 1rem; color: var(--primary);">FLOZEE</span>
+        <span style="font-family: var(--font-heading); font-weight: 700; font-size: 1rem; color: var(--primary);">GREAT MARKETING AI</span>
       </div>
       <ul class="sidebar__nav">
         <li class="sidebar__item sidebar__item--active">
@@ -1095,14 +1098,17 @@
         </div>
       </section>
 
-      <!-- SLIDE 02: The Duct Tape Reality (Full Image) -->
-      <section class="slide slide--full-image" data-slide="2" data-chapter="Duct Tape Reality" data-notes="Paint the picture of the chaos|Make them feel seen - they're living this|This is the setup for everything that follows">
-        <div class="slide__bg-image" style="background-image: url('images/slide-02-duct-tape-reality.png');" role="img" aria-label="PPL agency tools duct-taped together in a chaotic Frankenstein setup"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">The Duct Tape Reality</h2>
-            <p class="slide__subheading slide__subheading--overlay">Most PPL agencies run on prayers and API connections</p>
-          </div>
+      <!-- SLIDE 02: The Duct Tape Reality (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="2" data-chapter="Duct Tape Reality" data-notes="Paint the picture of the chaos|Make them feel seen - they're living this|This is the setup for everything that follows">
+        <div class="slide__content">
+          <div class="badge badge--step">The Reality</div>
+          <img class="slide__hero-image" src="images/slide-02-duct-tape-reality.png" alt="PPL agency tools duct-taped together in a chaotic Frankenstein setup" />
+          <p class="slide__subheading">Most PPL agencies run on prayers and API connections</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Zapier, Make, GHL stitched together</li>
+            <li class="slide__bullet">$500-$3K/mo in stacked software fees</li>
+            <li class="slide__bullet">No AI. No intelligence. Just duct tape.</li>
+          </ul>
         </div>
       </section>
 
@@ -1132,14 +1138,17 @@
         </div>
       </section>
 
-      <!-- SLIDE 05: Problem 1 - The Duct Tape Stack (Full Image) -->
-      <section class="slide slide--full-image" data-slide="5" data-chapter="Duct Tape Stack" data-notes="This is problem #1 - emphasize the number|Tell the Zapier ICU story here|Stress the 2 AM breakage pain point">
-        <div class="slide__bg-image" style="background-image: url('images/slide-05-duct-tape-stack.png');" role="img" aria-label="Six tools stacked precariously like Jenga with duct tape, breaking at 2 AM"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">Problem 1: The Duct Tape Stack</h2>
-            <p class="slide__subheading slide__subheading--overlay">6 tools held together by prayers and API connections</p>
-          </div>
+      <!-- SLIDE 05: Problem 1 - The Duct Tape Stack (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="5" data-chapter="Duct Tape Stack" data-notes="This is problem #1 - emphasize the number|Tell the Zapier ICU story here|Stress the 2 AM breakage pain point">
+        <div class="slide__content">
+          <div class="badge badge--step">Problem 1</div>
+          <img class="slide__hero-image" src="images/slide-05-duct-tape-stack.png" alt="Six tools stacked precariously like Jenga with duct tape, breaking at 2 AM" />
+          <p class="slide__subheading">6 tools held together by prayers and API connections</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">GHL + Zapier + Make + Sheets + Email</li>
+            <li class="slide__bullet">Zaps break at 2 AM, no one notices</li>
+            <li class="slide__bullet">Checking Zapier logs like an ICU doctor</li>
+          </ul>
         </div>
       </section>
 
@@ -1187,17 +1196,25 @@ graph LR
     style E fill:#1c1915,stroke:#C7963F,color:#fff
             </div>
           </div>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">One platform replaces 6 duct-taped tools</li>
+            <li class="slide__bullet">Set up campaigns, buyers, and routing logic once</li>
+            <li class="slide__bullet">No Zapier. No Make. It just works.</li>
+          </ul>
         </div>
       </section>
 
-      <!-- SLIDE 08: Problem 2 - Profitability Black Box (Full Image) -->
-      <section class="slide slide--full-image" data-slide="8" data-chapter="Profitability Black Box" data-notes="This is problem #2|Tell the '4 tabs' story|Stress you could lose money for 3 days without knowing">
-        <div class="slide__bg-image" style="background-image: url('images/slide-08-profitability-black-box.png');" role="img" aria-label="Person with 4 browser tabs open, unable to see their profit"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">Problem 2: The Profitability Black Box</h2>
-            <p class="slide__subheading slide__subheading--overlay">Your profit lives in your head, not your dashboard</p>
-          </div>
+      <!-- SLIDE 08: Problem 2 - Profitability Black Box (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="8" data-chapter="Profitability Black Box" data-notes="This is problem #2|Tell the '4 tabs' story|Stress you could lose money for 3 days without knowing">
+        <div class="slide__content">
+          <div class="badge badge--step">Problem 2</div>
+          <img class="slide__hero-image" src="images/slide-08-profitability-black-box.png" alt="Person with 4 browser tabs open, unable to see their profit" />
+          <p class="slide__subheading">Your profit lives in your head, not your dashboard</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Ad spend in Facebook Ads Manager</li>
+            <li class="slide__bullet">Revenue in your distribution tool</li>
+            <li class="slide__bullet">Profit in a spreadsheet you update weekly</li>
+          </ul>
         </div>
       </section>
 
@@ -1226,36 +1243,45 @@ graph LR
         </div>
       </section>
 
-      <!-- SLIDE 10: Flozee Real-Time Profitability (Full Image) -->
-      <section class="slide slide--full-image" data-slide="10" data-chapter="Real-Time Profit" data-notes="This is the solution to problem 2|Stress 'no spreadsheet, no mental math'|Read the dashboard stats out loud">
-        <div class="slide__bg-image" style="background-image: url('images/slide-10-realtime-profitability.png');" role="img" aria-label="Clean Flozee dashboard showing spend, revenue, and 37% margin"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">Spent $500. Sold $800. Margin: 37%.</h2>
-            <p class="slide__subheading slide__subheading--overlay">Real-time profitability. One dashboard. No spreadsheets.</p>
-          </div>
+      <!-- SLIDE 10: Flozee Real-Time Profitability (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="10" data-chapter="Real-Time Profit" data-notes="This is the solution to problem 2|Stress 'no spreadsheet, no mental math'|Read the dashboard stats out loud">
+        <div class="slide__content">
+          <div class="badge badge--recommended">Solution</div>
+          <img class="slide__hero-image" src="images/slide-10-realtime-profitability.png" alt="Clean Flozee dashboard showing spend, revenue, and 37% margin" />
+          <p class="slide__subheading">Real-time profitability. One dashboard. No spreadsheets.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Ad spend pulled directly from Facebook/Google</li>
+            <li class="slide__bullet">Revenue matched to leads sold per campaign</li>
+            <li class="slide__bullet">Margin visible at a glance — by buyer, by day</li>
+          </ul>
         </div>
       </section>
 
-      <!-- SLIDE 11: Problem 3 - Lead Quality (Full Image) -->
-      <section class="slide slide--full-image" data-slide="11" data-chapter="Lead Quality Problem" data-notes="This is problem #3|Tell the '100 leads, half garbage' story|Stress you find out AFTER the buyer complains">
-        <div class="slide__bg-image" style="background-image: url('images/slide-11-lead-quality-problem.png');" role="img" aria-label="Conveyor belt of identical leads going to an angry buyer demanding refunds"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">Problem 3: The Lead Quality Problem</h2>
-            <p class="slide__subheading slide__subheading--overlay">The silent killer of PPL agencies</p>
-          </div>
+      <!-- SLIDE 11: Problem 3 - Lead Quality (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="11" data-chapter="Lead Quality Problem" data-notes="This is problem #3|Tell the '100 leads, half garbage' story|Stress you find out AFTER the buyer complains">
+        <div class="slide__content">
+          <div class="badge badge--step">Problem 3</div>
+          <img class="slide__hero-image" src="images/slide-11-lead-quality-problem.png" alt="Conveyor belt of identical leads going to an angry buyer demanding refunds" />
+          <p class="slide__subheading">The silent killer of PPL agencies</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Every lead treated the same — no scoring</li>
+            <li class="slide__bullet">Bad leads found AFTER the buyer complains</li>
+            <li class="slide__bullet">No data to prove quality or defend refunds</li>
+          </ul>
         </div>
       </section>
 
-      <!-- SLIDE 12: AI Lead Scoring (Full Image) -->
-      <section class="slide slide--full-image" data-slide="12" data-chapter="AI Lead Scoring" data-notes="This is the solution to problem 3|Use the credit score analogy|Green, yellow, red - simple and visual">
-        <div class="slide__bg-image" style="background-image: url('images/slide-12-ai-lead-scoring.png');" role="img" aria-label="Lead scoring gauge showing green/yellow/red zones like a credit score"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">AI Lead Scoring</h2>
-            <p class="slide__subheading slide__subheading--overlay">A credit score for every lead. Green, yellow, red.</p>
-          </div>
+      <!-- SLIDE 12: AI Lead Scoring (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="12" data-chapter="AI Lead Scoring" data-notes="This is the solution to problem 3|Use the credit score analogy|Green, yellow, red - simple and visual">
+        <div class="slide__content">
+          <div class="badge badge--recommended">Solution</div>
+          <img class="slide__hero-image" src="images/slide-12-ai-lead-scoring.png" alt="Lead scoring gauge showing green/yellow/red zones like a credit score" />
+          <p class="slide__subheading">A credit score for every lead. Green, yellow, red.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Scored on completeness, source, and patterns</li>
+            <li class="slide__bullet">System learns from historical performance</li>
+            <li class="slide__bullet">Show buyers the data — receipts, not opinions</li>
+          </ul>
         </div>
       </section>
 
@@ -1278,28 +1304,39 @@ graph TD
     style E fill:#1c1915,stroke:#ef4444,color:#fff
             </div>
           </div>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Best leads go to highest-paying buyers</li>
+            <li class="slide__bullet">Lower-quality leads match lower price points</li>
+            <li class="slide__bullet">Everyone gets what they paid for — max revenue</li>
+          </ul>
         </div>
       </section>
 
-      <!-- SLIDE 14: Problem 4 - Client Reporting (Full Image) -->
-      <section class="slide slide--full-image" data-slide="14" data-chapter="Client Reporting" data-notes="This is problem #4|Ask the question: how do buyers see leads now?|Stress churn happens from lack of visibility, not bad leads">
-        <div class="slide__bg-image" style="background-image: url('images/slide-14-client-reporting-problem.png');" role="img" aria-label="Confused buyer looking at messy emails and spreadsheets, walking toward the exit"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">Problem 4: Client Reporting</h2>
-            <p class="slide__subheading slide__subheading--overlay">When buyers can't see the value, they leave</p>
-          </div>
+      <!-- SLIDE 14: Problem 4 - Client Reporting (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="14" data-chapter="Client Reporting" data-notes="This is problem #4|Ask the question: how do buyers see leads now?|Stress churn happens from lack of visibility, not bad leads">
+        <div class="slide__content">
+          <div class="badge badge--step">Problem 4</div>
+          <img class="slide__hero-image" src="images/slide-14-client-reporting-problem.png" alt="Confused buyer looking at messy emails and spreadsheets, walking toward the exit" />
+          <p class="slide__subheading">When buyers can't see the value, they leave</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Leads arrive via email or webhook</li>
+            <li class="slide__bullet">No dashboard, no visibility, no trust</li>
+            <li class="slide__bullet">Clients churn from confusion, not bad leads</li>
+          </ul>
         </div>
       </section>
 
-      <!-- SLIDE 15: Flozee Client Portal (Full Image) -->
-      <section class="slide slide--full-image" data-slide="15" data-chapter="Client Portal" data-notes="This is the solution to problem 4|Compare to Shopify dashboard|Read the stats: 85 leads, quality 79, case value $42K">
-        <div class="slide__bg-image" style="background-image: url('images/slide-15-client-portal.png');" role="img" aria-label="Clean Flozee client portal showing 85 leads, quality score 79, and $42K case value"></div>
-        <div class="slide__overlay slide__overlay--bottom">
-          <div class="slide__content">
-            <h2 class="slide__heading slide__heading--overlay">Flozee Client Portal</h2>
-            <p class="slide__subheading slide__subheading--overlay">85 leads. Quality: 79. Est. case value: $42,000.</p>
-          </div>
+      <!-- SLIDE 15: Flozee Client Portal (Hero Image) -->
+      <section class="slide slide--heading-bullets" data-slide="15" data-chapter="Client Portal" data-notes="This is the solution to problem 4|Compare to Shopify dashboard|Read the stats: 85 leads, quality 79, case value $42K">
+        <div class="slide__content">
+          <div class="badge badge--recommended">Solution</div>
+          <img class="slide__hero-image" src="images/slide-15-client-portal.png" alt="Clean Flozee client portal showing 85 leads, quality score 79, and $42K case value" />
+          <p class="slide__subheading">85 leads. Quality: 79. Est. case value: $42,000.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Clean dashboard buyers actually enjoy using</li>
+            <li class="slide__bullet">Visible ROI means more leads purchased</li>
+            <li class="slide__bullet">You look like a platform, not a vendor</li>
+          </ul>
         </div>
       </section>
 
