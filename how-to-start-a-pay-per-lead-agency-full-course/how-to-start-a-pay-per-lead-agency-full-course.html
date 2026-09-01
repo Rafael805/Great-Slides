@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1920, height=1080, initial-scale=1" />
-  <title>The Empty Box Burning Your Ad Budget</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <title>How To Start A Pay Per Lead Agency (Full Course)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
+    /* === CSS Custom Properties from brand.json === */
 
     :root {
       --bg: #0f0d0a;
@@ -39,6 +39,7 @@
       --transition-duration: 300ms;
     }
 
+    /* === Inlined slide-theme.css (verbatim) === */
 /* ==========================================================================
    HTML Slide Designer - Base Theme
    All values reference CSS custom properties injected from brand.json
@@ -92,8 +93,6 @@ html, body {
   top: 0;
   bottom: 0;
 }
-
-
 
 .sidebar__nav {
   list-style: none;
@@ -178,6 +177,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Slide canvas is intentionally WHITE — do NOT change to var(--bg). The dark brand palette (--bg/--text) is for the sidebar chrome only. */
   background: #ffffff;
 }
 
@@ -942,6 +942,30 @@ html, body {
   color: var(--error, #ef4444);
 }
 
+/* ---------- Empty subtext / bullets stay clickable in Edit Mode ---------- */
+/* Without a min-height an emptied element collapses to ~0px and can't be
+   clicked into — so the caret can't be placed to Backspace-delete it.
+   Harmless for non-empty rows (natural height already exceeds this). */
+.edit-mode .slide__subheading,
+.edit-mode .slide__subtitle,
+.edit-mode .slide__description,
+.edit-mode .slide__bullet,
+.edit-mode .slide__takeaway {
+  min-height: 1.2em;
+}
+
+/* Faint cue that an empty editable row is present (best-effort — :empty only
+   matches when the browser left no stray <br> after clearing the text). */
+.edit-mode .slide__subheading:empty,
+.edit-mode .slide__subtitle:empty,
+.edit-mode .slide__description:empty,
+.edit-mode .slide__bullet:empty,
+.edit-mode .slide__takeaway:empty {
+  outline: 1px dashed var(--card-border);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 .add-row-btn {
   display: none;
   margin-top: 0.5rem;
@@ -967,6 +991,43 @@ html, body {
   opacity: 1;
 }
 
+/* ---------- Sidebar Reorder Grip (edit mode only) ---------- */
+/* Added/removed by JS (enableEditMode/disableEditMode), so it never saves. */
+.sidebar__drag-handle {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 18px;
+  margin-right: 2px;
+  cursor: grab;
+  color: var(--text-muted);
+  opacity: 0.35;
+  transition: opacity 150ms ease, color 150ms ease;
+  background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
+  background-size: 4px 4.5px;
+  background-position: center;
+  background-repeat: round;
+  user-select: none;
+}
+
+.edit-mode .sidebar__item:hover > .sidebar__drag-handle {
+  opacity: 0.7;
+}
+
+.sidebar__drag-handle:hover {
+  opacity: 1 !important;
+  color: var(--primary);
+}
+
+.sidebar__drag-handle:active {
+  cursor: grabbing;
+}
+
+.sidebar__item--dragging {
+  opacity: 0.6;
+  background: var(--card-bg);
+  outline: 1px dashed var(--primary);
+}
+
 /* ---------- Edit Mode Indicator ---------- */
 .edit-indicator {
   position: fixed;
@@ -986,6 +1047,54 @@ html, body {
 
 .edit-mode .edit-indicator {
   display: block;
+}
+
+/* ---------- Collapsible sidebar (press S) ---------- */
+.presentation--sidebar-collapsed .sidebar {
+  display: none;
+}
+
+.presentation--sidebar-collapsed .edit-toolbar {
+  left: 0;
+}
+
+/* Small reveal handle so a collapsed sidebar is never a dead end.
+   Only rendered/visible while collapsed; sits over the white canvas gutter. */
+.sidebar-reveal {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 56px;
+  padding: 0;
+  border: 1px solid var(--card-border);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 150ms ease, color 150ms ease;
+  z-index: 60;
+}
+
+.presentation--sidebar-collapsed .sidebar-reveal {
+  display: flex;
+}
+
+.sidebar-reveal:hover {
+  opacity: 1;
+  color: var(--primary);
+}
+
+.presentation--fullscreen .sidebar-reveal {
+  display: none;
 }
 
 /* ---------- Fullscreen adjustments ---------- */
@@ -1133,293 +1242,560 @@ html, body {
   }
 }
 
-  
-    /* ---------- Collapsible sidebar (press S) ---------- */
-    .presentation--sidebar-collapsed .sidebar { display: none; }
-    .presentation--sidebar-collapsed .edit-toolbar { left: 0; }
-    .sidebar-reveal {
-      position: fixed; top: 50%; left: 0; transform: translateY(-50%);
-      display: none; align-items: center; justify-content: center;
-      width: 22px; height: 56px; padding: 0;
-      border: 1px solid var(--card-border); border-left: none;
-      border-radius: 0 8px 8px 0; background: var(--surface);
-      color: var(--text-muted); font-size: 13px; line-height: 1; cursor: pointer;
-      opacity: 0.45; transition: opacity 150ms ease, color 150ms ease; z-index: 60;
+
+    /* Criteria table */
+    .criteria-table {
+      width: 100%;
+      max-width: 1000px;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 1rem;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
     }
-    .presentation--sidebar-collapsed .sidebar-reveal { display: flex; }
-    .sidebar-reveal:hover { opacity: 1; color: var(--primary); }
-    .presentation--fullscreen .sidebar-reveal { display: none; }
+    .criteria-table th {
+      background: #f0f0f0;
+      color: #1a1a1a;
+      font-weight: 700;
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 1rem;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .criteria-table td {
+      padding: 14px 20px;
+      color: #444;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .criteria-table td:first-child {
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .criteria-table tr:last-child td { border-bottom: none; }
+    .criteria-table tr:hover td { background: rgba(199, 150, 63, 0.04); }
+
   </style>
 </head>
 <body>
-  <div class="presentation">
-    <aside class="sidebar">
-      <ul class="sidebar__nav">
-        <li class="sidebar__item sidebar__item--active"><span class="sidebar__item-number">01</span><span class="sidebar__item-label">Intro</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">02</span><span class="sidebar__item-label">The Empty Box</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">03</span><span class="sidebar__item-label">The Problem</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">04</span><span class="sidebar__item-label">What You'll Learn</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">05</span><span class="sidebar__item-label">Custom Audiences</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">06</span><span class="sidebar__item-label">Stop Wasted Spend</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">07</span><span class="sidebar__item-label">Kill Ad Fatigue</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">08</span><span class="sidebar__item-label">Lookalike Ghost</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">09</span><span class="sidebar__item-label">Trust Your Numbers</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">10</span><span class="sidebar__item-label">Recap: 4 Wins</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">11</span><span class="sidebar__item-label">The Catch</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">12</span><span class="sidebar__item-label">Agency Wall</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">13</span><span class="sidebar__item-label">The Fix</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">14</span><span class="sidebar__item-label">Key Takeaways</span></li>
-        <li class="sidebar__item"><span class="sidebar__item-number">15</span><span class="sidebar__item-label">Your Move</span></li>
-      </ul>
-      <div class="sidebar__progress">
-        <div class="sidebar__progress-bar"><div class="sidebar__progress-fill"></div></div>
-        <div class="sidebar__progress-text">1 / 15</div>
+<div class="presentation">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <ul class="sidebar__nav">
+      <li class="sidebar__item sidebar__item--active"><span class="sidebar__item-number">01</span><span class="sidebar__item-label">Intro</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">02</span><span class="sidebar__item-label">Where Spend Dies</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">03</span><span class="sidebar__item-label">What You'll Learn</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">04</span><span class="sidebar__item-label">Leads Vs Calls</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">05</span><span class="sidebar__item-label">The Simple Math</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">06</span><span class="sidebar__item-label">Why Brand Matters</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">07</span><span class="sidebar__item-label">Brand Essentials</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">08</span><span class="sidebar__item-label">The Niche Test</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">09</span><span class="sidebar__item-label">Niches Worth Starting In</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">10</span><span class="sidebar__item-label">The 4 Ways To Sell</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">11</span><span class="sidebar__item-label">Exclusive Vs Shared</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">12</span><span class="sidebar__item-label">Quiz Funnel</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">13</span><span class="sidebar__item-label">Consent + Thank You</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">14</span><span class="sidebar__item-label">Call Funnel</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">15</span><span class="sidebar__item-label">Quiz Vs Call</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">16</span><span class="sidebar__item-label">Where To Run Ads</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">17</span><span class="sidebar__item-label">The 4 Platforms</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">18</span><span class="sidebar__item-label">Account Structure</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">19</span><span class="sidebar__item-label">Budget + Scale Rules</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">20</span><span class="sidebar__item-label">Tracking: The Moat</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">21</span><span class="sidebar__item-label">Getting Buyers</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">22</span><span class="sidebar__item-label">Compliance + Payment</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">23</span><span class="sidebar__item-label">When Buyers Complain</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">24</span><span class="sidebar__item-label">Scaling Decisions</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">25</span><span class="sidebar__item-label">Your First 90 Days</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">26</span><span class="sidebar__item-label">The 6 Tool Stack</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">27</span><span class="sidebar__item-label">The Whole Roadmap</span></li>
+      <li class="sidebar__item"><span class="sidebar__item-number">28</span><span class="sidebar__item-label">Next Steps</span></li>
+    </ul>
+    <div class="sidebar__progress">
+      <div class="sidebar__progress-bar"><div class="sidebar__progress-fill" style="width: 3.57%"></div></div>
+      <div class="sidebar__progress-text">1 / 28</div>
+    </div>
+  </aside>
+
+  <!-- ===== Edit Toolbar (inside .presentation) ===== -->
+  <div class="edit-toolbar">
+    <button class="edit-toolbar__btn" data-action="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+    <button class="edit-toolbar__btn" data-action="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="font-up" title="Increase font size">A+</button>
+    <button class="edit-toolbar__btn" data-action="font-down" title="Decrease font size">A-</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-bullet" title="Add bullet">+ Bullet</button>
+    <button class="edit-toolbar__btn" data-action="remove-bullet" title="Remove bullet">- Bullet</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-slide" title="Add slide after current">+ Slide</button>
+    <button class="edit-toolbar__btn edit-toolbar__btn--danger" data-action="delete-slide" title="Delete current slide (Ctrl+D)">Delete Slide</button>
+    <div class="edit-toolbar__spacer"></div>
+    <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save" title="Save (Ctrl+S)">Save</button>
+  </div>
+
+  <!-- ===== Slide Stage ===== -->
+  <div class="stage">
+
+    <section class="slide slide--active slide--title" data-slide="1" data-chapter="Intro" data-notes="This is the whole course, start to finish.|Set the tone: operator, not guru.|Tease the tools at the very end.">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Full Course</div>
+        <h1 class="slide__title">How To Start A Pay Per Lead Agency (Full Course)</h1>
+        <p class="slide__subtitle">The whole roadmap, step by step: model, brand, niche, funnels, platforms, and tools</p>
       </div>
-    </aside>
+    </section>
 
-    <main class="stage">
-
-      <!-- 1 -->
-      <section class="slide slide--title slide--active" data-slide="1" data-chapter="Intro" data-notes="Hook with the empty box mystery|Do not reveal the fix yet|Lean into curiosity">
-        <div class="slide__content slide__content--centered">
-          <div class="badge badge--step">Meta Ads &middot; Lead Gen</div>
-          <h1 class="slide__title">The Empty Box Burning Your Ad Budget</h1>
-          <p class="slide__subtitle">How Meta custom audiences and exclusions quietly decide who wins</p>
-        </div>
-      </section>
-
-      <!-- 2 -->
-      <section class="slide slide--heading-bullets" data-slide="2" data-chapter="The Empty Box" data-notes="Point at the blank exclude field|Stress almost nobody fills it in|Tease the hidden cost">
-        <div class="slide__content">
-          <div class="badge badge--step">The Hook</div>
-          <img class="slide__hero-image" src="images/slide-02-empty-box.png" alt="A Meta ad set with a filled include box and an empty exclude box leaking budget" />
-          <p class="slide__subheading">One field quietly decides where your money goes</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">Every ad set has an exclude field</li>
-            <li class="slide__bullet">Most advertisers leave it blank</li>
-            <li class="slide__bullet">Blank means paying for the wrong people</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 3 -->
-      <section class="slide slide--quote" data-slide="3" data-chapter="The Problem" data-notes="Let this land|Stress you already paid for these people|Short pause after">
-        <div class="slide__content slide__content--centered">
-          <div class="slide__quote-wrapper">
-            <div class="slide__quote-mark">&ldquo;</div>
-            <blockquote class="slide__quote">Leave that box empty, and you pay Meta to chase people who already said yes.</blockquote>
-            <cite class="slide__attribution">Rafael Hernandez</cite>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4 -->
-      <section class="slide slide--heading-bullets" data-slide="4" data-chapter="What You'll Learn" data-notes="Promise the four benefits|Tease the catch and the fix|Tell them to stay to the end">
-        <div class="slide__content">
-          <div class="badge badge--step">The Promise</div>
-          <h2 class="slide__heading">What You'll Walk Away With</h2>
-          <p class="slide__subheading">Four wins, one catch, and the fix that ties it together</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">Cut wasted spend and ad fatigue</li>
-            <li class="slide__bullet">Build lookalikes that find real prospects</li>
-            <li class="slide__bullet">Get a cost per lead you can trust</li>
-            <li class="slide__bullet">The catch that breaks it, and the fix</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 5 -->
-      <section class="slide slide--heading-bullets" data-slide="5" data-chapter="Custom Audiences" data-notes="Define it simply your own list|Show where the exclude field lives|Keep it jargon-free">
-        <div class="slide__content">
-          <div class="badge badge--step">The Basics</div>
-          <img class="slide__hero-image" src="images/slide-05-custom-audience.png" alt="Your data becomes a custom audience that drops into the include or exclude slot of an ad set" />
-          <p class="slide__subheading">A custom audience is just a list of your own people</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">Built from customers, leads, visitors</li>
-            <li class="slide__bullet">Drops into include or exclude</li>
-            <li class="slide__bullet">The exclude slot is the empty box</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 6 -->
-      <section class="slide slide--heading-bullets" data-slide="6" data-chapter="Stop Wasted Spend" data-notes="Benefit one stop re-paying for converters|Use the law firm example|Money saved on day one">
-        <div class="slide__content">
-          <div class="badge badge--step">Benefit 1</div>
-          <img class="slide__hero-image" src="images/slide-06-stop-wasted-spend.png" alt="Without exclusions budget hits people who already converted; with exclusions every dollar reaches a new prospect" />
-          <p class="slide__subheading">Stop paying to reach people who already converted</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">Past leads keep seeing your ad</li>
-            <li class="slide__bullet">Exclude them, save the spend</li>
-            <li class="slide__bullet">Every dollar hits a new prospect</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 7 -->
-      <section class="slide slide--heading-bullets" data-slide="7" data-chapter="Kill Ad Fatigue" data-notes="Define ad fatigue plainly|High frequency means Meta charges more|Excluding keeps the ad fresh">
-        <div class="slide__content">
-          <div class="badge badge--step">Benefit 2</div>
-          <img class="slide__hero-image" src="images/slide-07-ad-fatigue.png" alt="Repeating the ad to past converters raises frequency and cost; excluding them keeps frequency healthy" />
-          <p class="slide__subheading">Keep your ad fresh and your costs down</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">Repeats burn out your audience</li>
-            <li class="slide__bullet">High frequency tells Meta you're boring</li>
-            <li class="slide__bullet">Exclusions keep delivery cheap</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 8 -->
-      <section class="slide slide--heading-bullets" data-slide="8" data-chapter="Lookalike Ghost" data-notes="Reveal the ghost customers in your seed|Lookalike copies whatever you feed it|Clean seed plus exclude customers">
-        <div class="slide__content">
-          <div class="badge badge--step">Benefit 3</div>
-          <img class="slide__hero-image" src="images/slide-08-lookalike-ghost.png" alt="A lookalike copy machine clones whatever seed you feed it, including hidden existing customers" />
-          <p class="slide__subheading">The ghost wrecking your lookalikes is your own customers</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">Lookalikes copy your seed list</li>
-            <li class="slide__bullet">Dirty seed clones the wrong crowd</li>
-            <li class="slide__bullet">Clean seed, exclude current customers</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 9 -->
-      <section class="slide slide--heading-bullets" data-slide="9" data-chapter="Trust Your Numbers" data-notes="Old converters make CPL look fake-cheap|Exclusions reveal true new-lead cost|Now you can scale or kill">
-        <div class="slide__content">
-          <div class="badge badge--step">Benefit 4</div>
-          <img class="slide__hero-image" src="images/slide-09-clean-numbers.png" alt="Before, returning customers make cost per lead look fake-cheap; after, the true cost per new lead is clear" />
-          <p class="slide__subheading">Get a cost per lead you can finally trust</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">Returning buyers fake-cheapen your CPL</li>
-            <li class="slide__bullet">Exclusions reveal true new-lead cost</li>
-            <li class="slide__bullet">Trustworthy data, confident decisions</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 10 -->
-      <section class="slide slide--recap" data-slide="10" data-chapter="Recap: 4 Wins" data-notes="Quickly restate the four benefits|Then pivot to the catch">
-        <div class="slide__content">
-          <h2 class="slide__heading">Four Wins So Far</h2>
-          <ol class="slide__takeaways">
-            <li class="slide__takeaway">Less wasted spend on past converters</li>
-            <li class="slide__takeaway">Less ad fatigue, lower delivery cost</li>
-            <li class="slide__takeaway">Smarter lookalikes that find real prospects</li>
-            <li class="slide__takeaway">A cost per lead you can trust</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- 11 -->
-      <section class="slide slide--quote" data-slide="11" data-chapter="The Catch" data-notes="Lists go stale fast|Full but stale equals empty|Pause for emphasis">
-        <div class="slide__content slide__content--centered">
-          <div class="slide__quote-wrapper">
-            <div class="slide__quote-mark">&ldquo;</div>
-            <blockquote class="slide__quote">A box you fill today but never refresh is back to an empty box. Full but stale equals empty.</blockquote>
-            <cite class="slide__attribution">The catch almost everyone misses</cite>
-          </div>
-        </div>
-      </section>
-
-      <!-- 12 -->
-      <section class="slide slide--stats" data-slide="12" data-chapter="Agency Wall" data-notes="One account is fine by hand|Ten to forty is impossible|So it never happens money leaks">
-        <div class="slide__content">
-          <div class="badge badge--step">Why It Breaks</div>
-          <h2 class="slide__heading">The Agency Wall</h2>
-          <div class="slide__stats-grid">
-            <div class="stat-card">
-              <div class="stat-card__value">1</div>
-              <div class="stat-card__label">Account by hand</div>
-              <div class="stat-card__description">Totally doable on your own</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-card__value">10-40</div>
-              <div class="stat-card__label">Client accounts</div>
-              <div class="stat-card__description">Refresh each one every few days</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-card__value">Never</div>
-              <div class="stat-card__label">Stays fresh by hand</div>
-              <div class="stat-card__description">No time, so the leak reopens</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 13 -->
-      <section class="slide slide--diagram" data-slide="13" data-chapter="The Fix" data-notes="Introduce Lead Distro AI integration|Walk the flow left to right|Always full always fresh hands-off">
-        <div class="slide__content">
-          <div class="badge badge--recommended">The Fix</div>
-          <h2 class="slide__heading">Lead Distro AI Keeps The Box Fresh</h2>
-          <div class="slide__diagram-wrapper">
-            <div class="mermaid">
-flowchart LR
-  A["New lead or<br/>converted customer"] --> B["Lead Distro AI"]
-  B --> C["Meta exclusion lists<br/>always fresh"]
-  B --> D["Clean lookalike<br/>seeds"]
-  C --> E["Every client account<br/>on autopilot"]
-  D --> E
-            </div>
-          </div>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">New leads sync in automatically</li>
-            <li class="slide__bullet">Converters pushed into exclusions</li>
-            <li class="slide__bullet">Seeds stay clean across every account</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- 14 -->
-      <section class="slide slide--recap" data-slide="14" data-chapter="Key Takeaways" data-notes="Recap the whole video|Reinforce the empty box lesson">
-        <div class="slide__content">
-          <h2 class="slide__heading">Key Takeaways</h2>
-          <ol class="slide__takeaways">
-            <li class="slide__takeaway">Fill the exclude box in every ad set</li>
-            <li class="slide__takeaway">Exclude converters, feed lookalikes a clean seed</li>
-            <li class="slide__takeaway">Stale lists quietly leak money again</li>
-            <li class="slide__takeaway">Automate the refresh across all accounts</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- 15 -->
-      <section class="slide slide--heading-bullets" data-slide="15" data-chapter="Your Move" data-notes="Insert your own CTA|Ask the comment question|Remind like and subscribe">
-        <div class="slide__content">
-          <div class="badge badge--recommended">Your Move</div>
-          <h2 class="slide__heading">Plug The Leak On Every Account</h2>
-          <p class="slide__subheading">Automate your Meta custom audiences with Lead Distro AI</p>
-          <ul class="slide__bullets">
-            <li class="slide__bullet">[ Add your call to action here ]</li>
-            <li class="slide__bullet">Comment: how many accounts by hand?</li>
-            <li class="slide__bullet">Like if the empty box surprised you</li>
-            <li class="slide__bullet">Subscribe for the next teardown</li>
-          </ul>
-        </div>
-      </section>
-
-    </main>
-
-      <div class="edit-toolbar">
-        <button class="edit-toolbar__btn" data-action="bold"><b>B</b></button>
-        <button class="edit-toolbar__btn" data-action="italic"><i>I</i></button>
-        <div class="edit-toolbar__separator"></div>
-        <button class="edit-toolbar__btn" data-action="font-up">A+</button>
-        <button class="edit-toolbar__btn" data-action="font-down">A&minus;</button>
-        <div class="edit-toolbar__separator"></div>
-        <button class="edit-toolbar__btn" data-action="add-bullet">+ Bullet</button>
-        <button class="edit-toolbar__btn" data-action="remove-bullet">&minus; Bullet</button>
-        <div class="edit-toolbar__separator"></div>
-        <button class="edit-toolbar__btn" data-action="add-slide">+ Slide</button>
-        <button class="edit-toolbar__btn edit-toolbar__btn--danger" data-action="delete-slide">Delete Slide</button>
-        <div class="edit-toolbar__spacer"></div>
-        <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save">Save</button>
+    <section class="slide slide--heading-bullets" data-slide="2" data-chapter="Where Spend Dies" data-notes="Say this slowly, it is the whole thesis.|Most people blame the ad, not the business model.|Set up the promise slide next.">
+      <div class="slide__content">
+        <div class="badge badge--step">Where Spend Dies</div>
+        <h2 class="slide__heading">Most People Quit In The First 30 Days</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Not because the ads didn't work</li>
+          <li class="slide__bullet">Not because the niche was wrong</li>
+          <li class="slide__bullet">They never learned how the business actually works</li>
+        </ul>
       </div>
-      <div class="edit-indicator">&#9679; Edit Mode &mdash; Ctrl/Cmd+S to save</div>
+    </section>
 
-  </div><!-- /presentation -->
+    <section class="slide slide--heading-bullets" data-slide="3" data-chapter="What You'll Learn" data-notes="Preview the whole video in one breath.|Model, brand, niche, pricing, funnels, platforms, tools.|This is the engine room of the business.">
+      <div class="slide__content">
+        <div class="badge badge--step">What You'll Learn</div>
+        <h2 class="slide__heading">What You'll Walk Away With</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">How the pay per lead and pay per call model works</li>
+          <li class="slide__bullet">How to build a brand, pick a niche, and price what you sell</li>
+          <li class="slide__bullet">The funnels, platforms, and tools that run the whole thing</li>
+        </ul>
+      </div>
+    </section>
 
-  <script>
+    <section class="slide slide--heading-bullets" data-slide="4" data-chapter="Leads Vs Calls" data-notes="Two flavors, explain both clearly.|A lead is a form fill, a call must hit 90 seconds.|Calls pay more because the bar is higher.">
+      <div class="slide__content">
+        <div class="badge badge--step">The Model</div>
+        <h2 class="slide__heading">Two Ways To Sell What You Generate</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">A lead is a form fill: name, phone, email, what they need</li>
+          <li class="slide__bullet">A call must hit 90+ seconds to count as billable</li>
+          <li class="slide__bullet">Calls pay more because the bar is higher</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--stats" data-slide="5" data-chapter="The Simple Math" data-notes="Walk the numbers slowly, this is the whole engine.|Ad spend in, leads or calls out, buyer pays.|The difference is profit.">
+      <div class="slide__content">
+        <div class="badge badge--step">The Model</div>
+        <h2 class="slide__heading">A Simple Way To Think About It</h2>
+        <div class="slide__stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__value">$1,000</div>
+            <div class="stat-card__label">Ad spend</div>
+            <div class="stat-card__description">At a $25 cost per lead, that's 40 leads</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">$2,400</div>
+            <div class="stat-card__label">Revenue</div>
+            <div class="stat-card__description">40 leads sold at $60 each, the difference is profit</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="6" data-chapter="Why Brand Matters" data-notes="Buyers pay people they trust, say that plainly.|Skip this and every pitch starts from doubt.|Set up brand essentials next.">
+      <div class="slide__content">
+        <div class="badge badge--step">Building Your Brand</div>
+        <h2 class="slide__heading">Buyers Pay People They Trust</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Not just running ads from a random Facebook page</li>
+          <li class="slide__bullet">A real brand turns a cold pitch into a signed buyer</li>
+          <li class="slide__bullet">Skip it and every buyer conversation starts from doubt</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="7" data-chapter="Brand Essentials" data-notes="Keep this simple, do not overcomplicate it.|Name, domain, logo, FB structure.|This is the checklist, nothing fancy.">
+      <div class="slide__content">
+        <div class="badge badge--step">Building Your Brand</div>
+        <h2 class="slide__heading">What A Real Brand Actually Needs</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">A name and domain that fit the niche</li>
+          <li class="slide__bullet">A simple logo, nothing fancy</li>
+          <li class="slide__bullet">A Facebook Business structure that won't get flagged</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="8" data-chapter="The Niche Test" data-notes="Three rules, say all three clearly.|Buyer pool, margin, ad approvability.|Fail any one, walk away.">
+      <div class="slide__content">
+        <div class="badge badge--step">Picking Your Niche</div>
+        <h2 class="slide__heading">Test Any Niche Before You Touch It</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Are there enough buyers who actually want these leads</li>
+          <li class="slide__bullet">Can you sell each lead 2.5 to 3x your cost to generate it</li>
+          <li class="slide__bullet">Can you get ads approved without getting banned</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="9" data-chapter="Niches Worth Starting In" data-notes="Let the table do the talking.|Final expense and home services are the safe start.|Addiction treatment gets banned fast, name that directly.">
+      <div class="slide__content">
+        <div class="badge badge--step">Picking Your Niche</div>
+        <h2 class="slide__heading">Beginner Friendly Vs High Risk</h2>
+        <table class="criteria-table">
+          <thead>
+            <tr><th>Niche</th><th>Buyer Pool</th><th>Ad Risk</th><th>Verdict</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Final Expense Insurance</td><td>Steady</td><td>Low</td><td>Start here</td></tr>
+            <tr><td>Home Services</td><td>Steady</td><td>Low</td><td>Start here</td></tr>
+            <tr><td>Addiction Treatment</td><td>High-value leads</td><td>Gets banned fast</td><td>Skip as a beginner</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide slide--card-grid" data-slide="10" data-chapter="The 4 Ways To Sell" data-notes="Four models, keep it simple for beginners.|Leads or calls is the easy starting point.|Rev share comes later once you have trust.">
+      <div class="slide__content">
+        <div class="badge badge--step">Offer + Pricing</div>
+        <h2 class="slide__heading">Per Lead, Per Call, Per Appointment, Rev Share</h2>
+        <div class="slide__cards">
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Per Lead</h3>
+              <p class="card__description">Simplest place to start.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Per Call</h3>
+              <p class="card__description">Pays more, more risk if the calls are bad.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Per Booked Appointment</h3>
+              <p class="card__description">Highest pay, highest risk if the buyer's prospect doesn't show.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Rev Share</h3>
+              <p class="card__description">Paid on the close, once you have real buyer trust.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="11" data-chapter="Exclusive Vs Shared" data-notes="Exclusive is the easier pitch for beginners.|One sentence sells it: exclusive, pay per result.|Price at 2.5 to 3x cost, no thinner.">
+      <div class="slide__content">
+        <div class="badge badge--step">Offer + Pricing</div>
+        <h2 class="slide__heading">Exclusive Is The Easier Sell</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Exclusive: one buyer gets that lead, nobody else</li>
+          <li class="slide__bullet">Shared: sold to multiple buyers, harder to close</li>
+          <li class="slide__bullet">Price at 2.5 to 3x your cost to generate the lead</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="12" data-chapter="Quiz Funnel" data-notes="A quiz does two jobs at once.|It qualifies and it builds intent.|Someone who answers questions is more serious.">
+      <div class="slide__content">
+        <div class="badge badge--step">Quiz Funnel</div>
+        <img class="slide__hero-image" src="images/slide-05-quiz-funnel.png" alt="A multi-step lead-generation quiz funnel building intent before a lead is captured" />
+        <p class="slide__subheading">A few short questions before the lead is captured</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Qualifies the lead as it goes</li>
+          <li class="slide__bullet">Builds real intent, not a guess</li>
+          <li class="slide__bullet">Ends with contact info, not just a click</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="13" data-chapter="Consent + Thank You" data-notes="Consent is not optional, say that plainly.|The thank you page sets expectations.|This is where compliance actually lives.">
+      <div class="slide__content">
+        <div class="badge badge--step">Quiz Funnel</div>
+        <h2 class="slide__heading">Consent, Then A Thank You Page</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Captures contact info plus consent to be contacted</li>
+          <li class="slide__bullet">Consent is what keeps you compliant</li>
+          <li class="slide__bullet">Thank you page sets expectations for what's next</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="14" data-chapter="Call Funnel" data-notes="Calls are simpler and convert higher.|One number, one tap, that is the whole page.|Higher intent than a form fill.">
+      <div class="slide__content">
+        <div class="badge badge--step">Call Funnel</div>
+        <img class="slide__hero-image" src="images/slide-08-call-funnel.png" alt="A call funnel landing page with one giant tap-to-call button" />
+        <p class="slide__subheading">One giant number, one tap, one call</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Ad has a call button, not a form</li>
+          <li class="slide__bullet">Landing page is one giant number to tap</li>
+          <li class="slide__bullet">Routes through quick qualifying before the buyer</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="15" data-chapter="Quiz Vs Call" data-notes="Let the table do the talking here.|Both are valid, the niche decides which.|Pause before moving to platforms.">
+      <div class="slide__content">
+        <div class="badge badge--step">Side By Side</div>
+        <h2 class="slide__heading">Quiz Funnel vs Call Funnel</h2>
+        <table class="criteria-table">
+          <thead>
+            <tr><th>Dimension</th><th>Quiz Funnel</th><th>Call Funnel</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Format</td><td>Multi-step form</td><td>Tap-to-call button</td></tr>
+            <tr><td>Intent level</td><td>Moderate to high</td><td>Very high</td></tr>
+            <tr><td>Qualification step</td><td>Quiz questions</td><td>Quick call routing</td></tr>
+            <tr><td>Best for</td><td>Niches with more buyers, lower price per unit</td><td>Niches where calls pay a premium</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide slide--title" data-slide="16" data-chapter="Where To Run Ads" data-notes="Section break, reset the energy.|Funnels are built, now where do they run.|Four platforms coming up.">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Platforms</div>
+        <h1 class="slide__title">Where To Run These Ads</h1>
+        <p class="slide__subtitle">Four platforms, four very different starting points</p>
+      </div>
+    </section>
+
+    <section class="slide slide--card-grid" data-slide="17" data-chapter="The 4 Platforms" data-notes="Meta is the easy starting point, say that clearly.|Google needs a local angle to compete.|TikTok and SEO are the two others worth knowing.">
+      <div class="slide__content">
+        <div class="badge badge--step">Platforms</div>
+        <h2 class="slide__heading">The 4 Platforms</h2>
+        <div class="slide__cards">
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Meta</h3>
+              <p class="card__description">Easiest place to start. Target broad and let the algorithm do the work.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Google</h3>
+              <p class="card__description">Powerful but brutally competitive. You'll need a local angle to compete.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">TikTok</h3>
+              <p class="card__description">Works well for younger audiences in the right niche.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">SEO / Rank and Rent</h3>
+              <p class="card__description">Build a site that ranks and drives free organic traffic.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="18" data-chapter="Account Structure" data-notes="Keep it boring on purpose, say that phrase.|One campaign, broad targeting, a handful of creatives.|Simple beats clever here.">
+      <div class="slide__content">
+        <div class="badge badge--step">Account Structure</div>
+        <img class="slide__hero-image" src="images/slide-13-ad-account-structure.png" alt="A simple ad account structure, one campaign, broad targeting, a handful of creatives" />
+        <p class="slide__subheading">One campaign. Broad targeting. A handful of creatives.</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">One campaign, not five</li>
+          <li class="slide__bullet">Broad targeting, let the algorithm work</li>
+          <li class="slide__bullet">Three to five creatives running at once</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--stats" data-slide="19" data-chapter="Budget + Scale Rules" data-notes="Stress the 72 hour window, this is the mistake everyone makes.|Never double budget overnight.|The kill rule protects your margin.">
+      <div class="slide__content">
+        <div class="badge badge--step">Account Structure</div>
+        <h2 class="slide__heading">Start Small, Scale Slow, Kill Fast</h2>
+        <div class="slide__stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__value">$50-100</div>
+            <div class="stat-card__label">Starting daily budget</div>
+            <div class="stat-card__description">Judge results over 72 hours, not two days</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">20-30%</div>
+            <div class="stat-card__label">Scale winners per day</div>
+            <div class="stat-card__description">Never double your budget overnight</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">1.5-2x</div>
+            <div class="stat-card__label">Kill threshold</div>
+            <div class="stat-card__description">Kill a creative once it's running 1.5 to 2x your target cost with nothing to show for it</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="20" data-chapter="Tracking: The Moat" data-notes="This is the real moat, nobody talks about it.|Track sales, not just form fills.|This is how you outscale everyone else.">
+      <div class="slide__content">
+        <div class="badge badge--step">Tracking</div>
+        <h2 class="slide__heading">Track What Actually Sells, Not Just What Fills Out A Form</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Pixel and conversions tracking must reflect real sales</li>
+          <li class="slide__bullet">Buyers who share which leads closed unlock quality optimization</li>
+          <li class="slide__bullet">This is how you outscale everyone else in the niche</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="21" data-chapter="Getting Buyers" data-notes="Ads are the best way to get buyers, say that directly.|Same mechanic as lead gen itself.|New buyers always prepay a pilot.">
+      <div class="slide__content">
+        <div class="badge badge--step">Buyers + Compliance</div>
+        <h2 class="slide__heading">Ads Are The Best Way To Get Buyers</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Same mechanic as lead gen itself, run ads to business owners</li>
+          <li class="slide__bullet">Cold outreach, referrals, and broker networks fill in the rest</li>
+          <li class="slide__bullet">New buyers prepay a pilot before moving to invoicing</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="22" data-chapter="Compliance + Payment" data-notes="Compliance is not optional, say that plainly.|Documented consent, call recording disclosure.|Late payment pauses delivery, no exceptions.">
+      <div class="slide__content">
+        <div class="badge badge--step">Buyers + Compliance</div>
+        <h2 class="slide__heading">Compliance Isn't Optional</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Documented consent from every lead</li>
+          <li class="slide__bullet">Disclose if calls are recorded</li>
+          <li class="slide__bullet">Late payment pauses delivery, no exceptions</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="23" data-chapter="When Buyers Complain" data-notes="Do not panic and blame your ads first.|Check follow up speed and lead intent first.|Most of the time the leads were fine.">
+      <div class="slide__content">
+        <div class="badge badge--step">Buyers + Compliance</div>
+        <h2 class="slide__heading">Check Their Follow Up Before You Touch Your Ads</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Check their speed to follow up first</li>
+          <li class="slide__bullet">Check how qualified the leads actually were</li>
+          <li class="slide__bullet">Most of the time the leads were fine</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--heading-bullets" data-slide="24" data-chapter="Scaling Decisions" data-notes="Two moves, keep this simple.|More volume at the same price, or raise price.|If they won't take more, go wider into a new niche.">
+      <div class="slide__content">
+        <div class="badge badge--step">Scaling</div>
+        <h2 class="slide__heading">Two Moves When A Buyer Wants More</h2>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Send more volume at the same price</li>
+          <li class="slide__bullet">Raise your price 10 to 20 percent</li>
+          <li class="slide__bullet">If they won't take more, go find that playbook in a new niche</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide slide--stats" data-slide="25" data-chapter="Your First 90 Days" data-notes="Give a realistic pace, not hype.|Day 30, day 60, day 90 milestones.|This is the actual timeline, not a fantasy.">
+      <div class="slide__content">
+        <div class="badge badge--step">Scaling</div>
+        <h2 class="slide__heading">A Realistic Pace</h2>
+        <div class="slide__stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__value">Day 30</div>
+            <div class="stat-card__label">First niche live</div>
+            <div class="stat-card__description">One niche live, one paying buyer</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">Day 60</div>
+            <div class="stat-card__label">Growing</div>
+            <div class="stat-card__description">2 to 3 buyers, price raised once</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">Day 90</div>
+            <div class="stat-card__label">Expanding</div>
+            <div class="stat-card__description">Second niche, or calls added alongside leads</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--card-grid" data-slide="26" data-chapter="The 6 Tool Stack" data-notes="Six categories, that is it.|You do not need twenty apps.|These six move leads from your ad to your buyer's phone.">
+      <div class="slide__content">
+        <div class="badge badge--step">The Tools</div>
+        <h2 class="slide__heading">The 6 Tools You Actually Need</h2>
+        <div class="slide__cards">
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Funnel Builder</h3>
+              <p class="card__description">Builds the quiz or call landing page.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Ad Platform</h3>
+              <p class="card__description">Runs the traffic that fills the funnel.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Lead Tracking + Delivery</h3>
+              <p class="card__description">Routes each lead to the right buyer.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Call Tracking</h3>
+              <p class="card__description">Logs and scores every billable call.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Buyer + CRM Management</h3>
+              <p class="card__description">Keeps buyer relationships and invoicing straight.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Compliance + Consent</h3>
+              <p class="card__description">Documents consent and keeps you covered.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--recap" data-slide="27" data-chapter="The Whole Roadmap" data-notes="Recap fast, this section covered a lot.|Hit every major beat in order.|Keep the energy up into the CTA.">
+      <div class="slide__content">
+        <h2 class="slide__heading">The Whole Roadmap, Locked In</h2>
+        <ol class="slide__takeaways">
+          <li class="slide__takeaway">The model: sell a result, leads or calls, not a retainer</li>
+          <li class="slide__takeaway">Build a real brand before you ever pitch a buyer</li>
+          <li class="slide__takeaway">Pick a niche that passes the 3-rule test</li>
+          <li class="slide__takeaway">Price 2.5 to 3x your cost, start exclusive</li>
+          <li class="slide__takeaway">Quiz funnels qualify and build intent, call funnels convert higher</li>
+          <li class="slide__takeaway">Meta, Google, TikTok, and SEO are your four starting platforms</li>
+          <li class="slide__takeaway">Track what sells, stay compliant, scale 20 to 30% a day</li>
+          <li class="slide__takeaway">The 6 tools move leads from your ad to your buyer's phone</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="slide slide--title" data-slide="28" data-chapter="Next Steps" data-notes="Ask the comment question.|Subscribe for the next build.|Point to Lead Distro AI and the Skool community.">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Your Move</div>
+        <h1 class="slide__title">Go Build This This Week</h1>
+        <p class="slide__subtitle">Subscribe for the next build. Check out Lead Distro AI for the software side. Join our Skool community if you want to be around people actually doing this. Comment the niche you're thinking about starting in.</p>
+      </div>
+    </section>
+
+  </div><!-- /stage -->
+
+  <!-- Edit mode indicator -->
+  <div class="edit-indicator">Edit Mode</div>
+
+</div><!-- /presentation -->
+
+<script>
 /**
  * Slide Engine - Navigation, Edit Mode, Slide Management, and Fullscreen
  * Embedded in every generated HTML slide deck.
@@ -1434,6 +1810,7 @@ flowchart LR
   let editMode = false;
   let isFullscreen = false;
   let notesVisible = false;
+  let sidebarCollapsed = false;
   let fileHandle = null;
   let slides = Array.from(document.querySelectorAll('.slide'));
   let sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
@@ -1532,6 +1909,7 @@ flowchart LR
     addDragHandles();
     addDeleteButtons();
     addListRowControls();
+    addSidebarDragHandles();
   }
 
   // Capture-phase guards on the sidebar so that, in edit mode, clicking a label
@@ -1573,6 +1951,7 @@ flowchart LR
     removeDragHandles();
     removeDeleteButtons();
     removeListRowControls();
+    removeSidebarDragHandles();
   }
 
   function toggleEditMode() {
@@ -1768,6 +2147,107 @@ flowchart LR
   }
 
   /* ------------------------------------------------------------------ */
+  /*  Sidebar Reorder (Edit Mode) - drag a page up/down to reorder       */
+  /* ------------------------------------------------------------------ */
+  // Edit-only grip handles. Added in enableEditMode / stripped in
+  // disableEditMode, so they never leak into the saved HTML. Dragging a
+  // sidebar item reorders both the sidebar entry and its matching slide.
+  var sidebarDrag = null;
+
+  function addSidebarDragHandles() {
+    document.querySelectorAll('.sidebar__item').forEach(function (item) {
+      if (item.querySelector(':scope > .sidebar__drag-handle')) return; // idempotent
+      var h = document.createElement('span');
+      h.className = 'sidebar__drag-handle';
+      h.setAttribute('contenteditable', 'false');
+      h.setAttribute('draggable', 'false');
+      h.title = 'Drag to reorder';
+      h.addEventListener('mousedown', function (e) { startSidebarDrag(e, item); });
+      item.insertBefore(h, item.firstChild); // grip sits left of the number
+    });
+  }
+
+  function removeSidebarDragHandles() {
+    document.querySelectorAll('.sidebar__drag-handle').forEach(function (el) {
+      el.remove();
+    });
+  }
+
+  function startSidebarDrag(e, li) {
+    if (!editMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // Map each sidebar item to its slide using the current index alignment,
+    // so we can re-sync the slide order after the sidebar is reordered.
+    var liveItems = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    var map = new Map();
+    liveItems.forEach(function (it, i) { map.set(it, slides[i]); });
+    sidebarDrag = {
+      li: li,
+      itemToSlide: map,
+      activeSlideEl: slides[currentSlide],
+      startY: e.clientY,
+      moved: false
+    };
+    li.classList.add('sidebar__item--dragging');
+    document.addEventListener('mousemove', handleSidebarDragMove);
+    document.addEventListener('mouseup', handleSidebarDragEnd);
+  }
+
+  function handleSidebarDragMove(e) {
+    if (!sidebarDrag) return;
+    e.preventDefault();
+    if (!sidebarDrag.moved && Math.abs(e.clientY - sidebarDrag.startY) < 4) return; // threshold
+    sidebarDrag.moved = true;
+    var dragEl = sidebarDrag.li;
+    var siblings = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    for (var i = 0; i < siblings.length; i++) {
+      var sib = siblings[i];
+      if (sib === dragEl) continue;
+      var rect = sib.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) {
+        sidebarNav.insertBefore(dragEl, sib);
+        return;
+      }
+    }
+    sidebarNav.appendChild(dragEl); // dropped below everything
+  }
+
+  function handleSidebarDragEnd() {
+    if (!sidebarDrag) return;
+    var d = sidebarDrag;
+    d.li.classList.remove('sidebar__item--dragging');
+    document.removeEventListener('mousemove', handleSidebarDragMove);
+    document.removeEventListener('mouseup', handleSidebarDragEnd);
+    sidebarDrag = null;
+    if (!d.moved) return; // a plain click on the grip - nothing to reorder
+
+    // Mirror the new sidebar order onto the slide elements (appendChild moves nodes).
+    Array.from(sidebarNav.querySelectorAll('.sidebar__item')).forEach(function (li) {
+      var slideEl = d.itemToSlide.get(li);
+      if (slideEl) stage.appendChild(slideEl);
+    });
+
+    slides = Array.from(document.querySelectorAll('.slide'));
+    renumberSidebar();                                  // re-number + rebind navigation
+    currentSlide = Math.max(0, slides.indexOf(d.activeSlideEl)); // keep the open slide active
+    updateProgress();
+    suppressNextSidebarClick();                          // stop the post-drag click from navigating
+  }
+
+  function suppressNextSidebarClick() {
+    var sidebarEl = document.querySelector('.sidebar');
+    if (!sidebarEl) return;
+    var handler = function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      sidebarEl.removeEventListener('click', handler, true);
+    };
+    sidebarEl.addEventListener('click', handler, true); // capture: fires before item.onclick
+    setTimeout(function () { sidebarEl.removeEventListener('click', handler, true); }, 0);
+  }
+
+  /* ------------------------------------------------------------------ */
   /*  Slide Management (Add / Delete)                                    */
   /* ------------------------------------------------------------------ */
   function addSlide() {
@@ -1818,6 +2298,7 @@ flowchart LR
     // Refresh arrays
     slides = Array.from(document.querySelectorAll('.slide'));
     renumberSidebar();
+    addSidebarDragHandles(); // make the new sidebar item draggable while editing
     updateProgress();
 
     // Navigate to the new slide
@@ -1898,6 +2379,87 @@ flowchart LR
     if (items.length > 1) {
       items[items.length - 1].remove();
     }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Empty subtext / bullet removal (Backspace on an empty element)     */
+  /* ------------------------------------------------------------------ */
+  // Only these get removed when emptied + Backspace'd — subtext lines and list
+  // rows. Headings, titles and table cells are intentionally NOT in this set.
+  var REMOVABLE_EMPTY_SELECTOR =
+    '.slide__subheading, .slide__subtitle, .slide__description, .slide__bullet, .slide__takeaway';
+
+  function isEditableEl(node) {
+    return !!(node && node.nodeType === 1 && node.matches &&
+      node.matches(editableSelectors.join(', ')));
+  }
+
+  function placeCaretAtEnd(node) {
+    if (!node) return;
+    try {
+      node.focus();
+      var range = document.createRange();
+      range.selectNodeContents(node);
+      range.collapse(false);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (err) { /* focus is best-effort */ }
+  }
+
+  // Where the caret should land after `el` is removed.
+  function focusTargetAfterRemoval(el) {
+    if (el.tagName === 'LI') {
+      var prevRow = el.previousElementSibling;
+      while (prevRow && prevRow.tagName !== 'LI') prevRow = prevRow.previousElementSibling;
+      if (prevRow) return prevRow;
+      // No previous row: hop to the editable element before the whole list.
+      var listSib = el.parentNode ? el.parentNode.previousElementSibling : null;
+      while (listSib && !isEditableEl(listSib)) {
+        var innerLi = listSib.querySelector ? listSib.querySelector('li') : null;
+        if (innerLi) return innerLi;
+        listSib = listSib.previousElementSibling;
+      }
+      return listSib;
+    }
+    // Subtext: hop to the previous editable content element (usually the heading).
+    var sib = el.previousElementSibling;
+    while (sib && !isEditableEl(sib)) sib = sib.previousElementSibling;
+    return sib;
+  }
+
+  // Toolbar "+ Subtext": re-add a subtitle line if the slide has none.
+  function addSubtext() {
+    if (!editMode) return;
+    var activeSlide = slides[currentSlide];
+    var content = activeSlide && activeSlide.querySelector('.slide__content');
+    if (!content) return;
+    var existing = content.querySelector('.slide__subheading');
+    if (existing) { placeCaretAtEnd(existing); return; }
+    var p = document.createElement('p');
+    p.className = 'slide__subheading';
+    p.setAttribute('contenteditable', 'true');
+    p.textContent = 'Subtitle goes here';
+    var heading = content.querySelector('.slide__heading');
+    if (heading && heading.nextSibling) {
+      content.insertBefore(p, heading.nextSibling);
+    } else if (heading) {
+      content.appendChild(p);
+    } else {
+      var badge = content.querySelector('.badge');
+      if (badge && badge.nextSibling) content.insertBefore(p, badge.nextSibling);
+      else content.insertBefore(p, content.firstChild);
+    }
+    addDeleteButtons();
+    // Select the placeholder so the user can type straight over it.
+    try {
+      p.focus();
+      var range = document.createRange();
+      range.selectNodeContents(p);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (err) { p.focus(); }
   }
 
   /* ------------------------------------------------------------------ */
@@ -2080,6 +2642,9 @@ flowchart LR
       insertBeforeAnchor(makeBtn('add-image', '+ Image', 'Insert image (or paste from clipboard with Cmd/Ctrl+V)'));
       insertBeforeAnchor(makeSep());
     }
+    if (!editToolbar.querySelector('[data-action="add-subtext"]')) {
+      insertBeforeAnchor(makeBtn('add-subtext', '+ Subtext', 'Add a subtitle line to this slide (Backspace on an empty subtext/bullet removes it)'));
+    }
     if (!editToolbar.querySelector('[data-action="add-row"]')) {
       // Insert table buttons after bullets group
       var addSlideBtn = editToolbar.querySelector('[data-action="add-slide"]');
@@ -2108,10 +2673,18 @@ flowchart LR
     var notesPanel = document.querySelector('.notes-panel');
     if (notesPanel) notesPanel.style.display = 'none';
 
+    // A collapsed sidebar is a view preference, not deck content — a saved deck
+    // always reopens with its navigation visible (press S to collapse again).
+    var wasCollapsed = sidebarCollapsed;
+    if (wasCollapsed) toggleSidebar(false);
+
     var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
     // Restore notes panel if it was visible
     if (notesPanel && notesVisible) notesPanel.style.display = 'block';
+
+    // Restore the collapsed view for the person still presenting
+    if (wasCollapsed) toggleSidebar(true);
 
     // Re-enable if was editing
     if (wasEditing) enableEditMode();
@@ -2252,6 +2825,7 @@ flowchart LR
         case 'font-down': changeFontSize(-2); break;
         case 'add-bullet': addBullet(); break;
         case 'remove-bullet': removeBullet(); break;
+        case 'add-subtext': addSubtext(); break;
         case 'add-image': addImage(); break;
         case 'add-row': addTableRow(); break;
         case 'remove-row': removeTableRow(); break;
@@ -2279,6 +2853,32 @@ flowchart LR
       presentation.classList.remove('presentation--fullscreen');
     }
   }
+
+  /* ------------------------------------------------------------------ */
+  /*  Collapsible Sidebar                                                */
+  /* ------------------------------------------------------------------ */
+  function toggleSidebar(force) {
+    if (!presentation) return;
+    sidebarCollapsed = typeof force === 'boolean' ? force : !sidebarCollapsed;
+    presentation.classList.toggle('presentation--sidebar-collapsed', sidebarCollapsed);
+  }
+
+  // Reveal handle: the only affordance left once the nav is hidden.
+  // Re-binds to a handle carried over from a saved deck instead of duplicating it.
+  (function mountSidebarReveal() {
+    if (!presentation) return;
+    var handle = document.querySelector('.sidebar-reveal');
+    if (!handle) {
+      handle = document.createElement('button');
+      presentation.appendChild(handle);
+    }
+    handle.className = 'sidebar-reveal';
+    handle.type = 'button';
+    handle.setAttribute('aria-label', 'Show slide navigation (S)');
+    handle.title = 'Show slide navigation (S)';
+    handle.textContent = '\u203A';
+    handle.addEventListener('click', function () { toggleSidebar(false); });
+  })();
 
   document.addEventListener('fullscreenchange', function () {
     if (!document.fullscreenElement) {
@@ -2327,6 +2927,24 @@ flowchart LR
       return;
     }
 
+    // Backspace/Delete on an EMPTY subtext or bullet removes the element entirely
+    // (edit mode only). Must run before the isEditing early-return below, because
+    // editing an empty contenteditable still reports isEditing === true.
+    if (editMode && isEditing && (e.key === 'Backspace' || e.key === 'Delete')) {
+      var delTarget = e.target;
+      // strip zero-width space / BOM; trim() already covers normal + nbsp whitespace
+      var delText = delTarget && delTarget.textContent
+        ? delTarget.textContent.replace(/[​﻿]/g, '').trim()
+        : '';
+      if (delTarget && delTarget.matches && delTarget.matches(REMOVABLE_EMPTY_SELECTOR) && delText === '') {
+        e.preventDefault();
+        var nextFocus = focusTargetAfterRemoval(delTarget);
+        delTarget.remove();
+        if (nextFocus) placeCaretAtEnd(nextFocus);
+        return;
+      }
+    }
+
     // Don't handle navigation keys while editing text
     if (isEditing) return;
 
@@ -2349,6 +2967,11 @@ flowchart LR
       case 't':
         e.preventDefault();
         toggleNotes();
+        break;
+      case 's':
+      case 'S':
+        e.preventDefault();
+        toggleSidebar();
         break;
       case 'Home':
         e.preventDefault();
@@ -2400,67 +3023,14 @@ flowchart LR
   /* ------------------------------------------------------------------ */
   /*  Initialize                                                         */
   /* ------------------------------------------------------------------ */
+  // A deck saved while parked on slide N carries that slide's --active class in
+  // the markup. goToSlide(0) only clears index 0, so the stale one would stay
+  // painted on top of slide 1. Clear every active marker before activating.
+  slides.forEach(function (s) { s.classList.remove('slide--active'); });
+  sidebarItems.forEach(function (i) { i.classList.remove('sidebar__item--active'); });
   goToSlide(0);
 })();
 
-  </script>
-
-  <!-- collapsible-sidebar -->
-  <script>
-    (function () {
-      'use strict';
-      var presentation = document.querySelector('.presentation');
-      if (!presentation) return;
-      var collapsed = false;
-
-      // A deck saved while parked on slide N carries that slide's --active class
-      // in the markup; the engine's goToSlide(0) only clears index 0, so the stale
-      // one stays painted on top of slide 1. Clear all but the first.
-      var allSlides = document.querySelectorAll('.slide');
-      var allNav = document.querySelectorAll('.sidebar__item');
-      allSlides.forEach(function (el, i) { if (i !== 0) el.classList.remove('slide--active'); });
-      allNav.forEach(function (el, i) { if (i !== 0) el.classList.remove('sidebar__item--active'); });
-      if (allSlides[0]) allSlides[0].classList.add('slide--active');
-      if (allNav[0]) allNav[0].classList.add('sidebar__item--active');
-
-      function toggle(force) {
-        collapsed = typeof force === 'boolean' ? force : !collapsed;
-        presentation.classList.toggle('presentation--sidebar-collapsed', collapsed);
-      }
-
-      var handle = document.querySelector('.sidebar-reveal');
-      if (!handle) { handle = document.createElement('button'); presentation.appendChild(handle); }
-      handle.className = 'sidebar-reveal';
-      handle.type = 'button';
-      handle.title = 'Show slide navigation (S)';
-      handle.setAttribute('aria-label', 'Show slide navigation (S)');
-      handle.textContent = '\u203A';
-      handle.addEventListener('click', function () { toggle(false); });
-
-      function isTyping(e) {
-        var t = e.target;
-        if (!t) return false;
-        return t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName || '');
-      }
-
-      document.addEventListener('keydown', function (e) {
-        if (e.ctrlKey || e.metaKey || e.altKey) return;
-        if (isTyping(e)) return;
-        if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggle(); }
-      });
-
-      // A collapsed sidebar is a view preference, not deck content: expand before the
-      // deck's own Ctrl/Cmd+S handler serializes the DOM, then restore the view.
-      window.addEventListener('keydown', function (e) {
-        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S') && collapsed) {
-          presentation.classList.remove('presentation--sidebar-collapsed');
-          setTimeout(function () {
-            if (collapsed) presentation.classList.add('presentation--sidebar-collapsed');
-          }, 0);
-        }
-      }, true);
-    })();
-  </script>
-
+</script>
 </body>
 </html>

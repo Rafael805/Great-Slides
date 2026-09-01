@@ -44,8 +44,6 @@
     .presentation { display: flex; width: 100vw; height: 100vh; }
     .sidebar { width: var(--sidebar-width); min-width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--card-border); display: flex; flex-direction: column; padding: 32px 0; overflow-y: auto; z-index: 10; transition: transform var(--transition-duration) ease; }
     .sidebar--hidden { transform: translateX(calc(-1 * var(--sidebar-width))); position: absolute; left: 0; top: 0; bottom: 0; }
-    .sidebar__logo { padding: 0 24px 32px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
-    .sidebar__logo img { max-width: 120px; height: auto; }
     .sidebar__nav { list-style: none; padding: 0 12px; flex: 1; }
     .sidebar__item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 8px; cursor: pointer; transition: all 150ms ease; margin-bottom: 4px; font-size: var(--caption-size); color: var(--text-muted); font-weight: 500; }
     .sidebar__item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
@@ -374,6 +372,22 @@
     .cta-secondary-item span {
       font-size: 1.4rem;
     }
+  
+    /* ---------- Collapsible sidebar (press S) ---------- */
+    .presentation--sidebar-collapsed .sidebar { display: none; }
+    .presentation--sidebar-collapsed .edit-toolbar { left: 0; }
+    .sidebar-reveal {
+      position: fixed; top: 50%; left: 0; transform: translateY(-50%);
+      display: none; align-items: center; justify-content: center;
+      width: 22px; height: 56px; padding: 0;
+      border: 1px solid var(--card-border); border-left: none;
+      border-radius: 0 8px 8px 0; background: var(--surface);
+      color: var(--text-muted); font-size: 13px; line-height: 1; cursor: pointer;
+      opacity: 0.45; transition: opacity 150ms ease, color 150ms ease; z-index: 60;
+    }
+    .presentation--sidebar-collapsed .sidebar-reveal { display: flex; }
+    .sidebar-reveal:hover { opacity: 1; color: var(--primary); }
+    .presentation--fullscreen .sidebar-reveal { display: none; }
   </style>
 </head>
 <body>
@@ -381,12 +395,6 @@
 
   <!-- ===== Sidebar ===== -->
   <aside class="sidebar">
-    <div class="sidebar__logo">
-      <svg width="120" height="28" viewBox="0 0 120 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="20" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="#C7963F">GREAT</text>
-        <text x="60" y="20" font-family="Inter, sans-serif" font-weight="400" font-size="16" fill="#ffffff">MKTG</text>
-      </svg>
-    </div>
     <ul class="sidebar__nav">
       <li class="sidebar__item sidebar__item--active"><span class="sidebar__item-number">01</span><span class="sidebar__item-label">Niche Tier List</span></li>
       <li class="sidebar__item"><span class="sidebar__item-number">02</span><span class="sidebar__item-label">The Problem</span></li>
@@ -1155,5 +1163,63 @@
   goToSlide(0);
 })();
 </script>
+
+  <!-- collapsible-sidebar -->
+  <script>
+    (function () {
+      'use strict';
+      var presentation = document.querySelector('.presentation');
+      if (!presentation) return;
+      var collapsed = false;
+
+      // A deck saved while parked on slide N carries that slide's --active class
+      // in the markup; the engine's goToSlide(0) only clears index 0, so the stale
+      // one stays painted on top of slide 1. Clear all but the first.
+      var allSlides = document.querySelectorAll('.slide');
+      var allNav = document.querySelectorAll('.sidebar__item');
+      allSlides.forEach(function (el, i) { if (i !== 0) el.classList.remove('slide--active'); });
+      allNav.forEach(function (el, i) { if (i !== 0) el.classList.remove('sidebar__item--active'); });
+      if (allSlides[0]) allSlides[0].classList.add('slide--active');
+      if (allNav[0]) allNav[0].classList.add('sidebar__item--active');
+
+      function toggle(force) {
+        collapsed = typeof force === 'boolean' ? force : !collapsed;
+        presentation.classList.toggle('presentation--sidebar-collapsed', collapsed);
+      }
+
+      var handle = document.querySelector('.sidebar-reveal');
+      if (!handle) { handle = document.createElement('button'); presentation.appendChild(handle); }
+      handle.className = 'sidebar-reveal';
+      handle.type = 'button';
+      handle.title = 'Show slide navigation (S)';
+      handle.setAttribute('aria-label', 'Show slide navigation (S)');
+      handle.textContent = '\u203A';
+      handle.addEventListener('click', function () { toggle(false); });
+
+      function isTyping(e) {
+        var t = e.target;
+        if (!t) return false;
+        return t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName || '');
+      }
+
+      document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        if (isTyping(e)) return;
+        if (e.key === 's' || e.key === 'S') { e.preventDefault(); toggle(); }
+      });
+
+      // A collapsed sidebar is a view preference, not deck content: expand before the
+      // deck's own Ctrl/Cmd+S handler serializes the DOM, then restore the view.
+      window.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S') && collapsed) {
+          presentation.classList.remove('presentation--sidebar-collapsed');
+          setTimeout(function () {
+            if (collapsed) presentation.classList.add('presentation--sidebar-collapsed');
+          }, 0);
+        }
+      }, true);
+    })();
+  </script>
+
 </body>
 </html>
