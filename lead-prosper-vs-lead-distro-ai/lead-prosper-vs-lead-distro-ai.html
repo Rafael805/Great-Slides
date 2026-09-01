@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1.0">
+  <title>Lead Prosper vs Lead Distro AI: The Honest Comparison (2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    /* ── Brand CSS Custom Properties ─────────────────────────────────────── */
+    :root {
+      --bg: #0f0d0a;
+      --surface: #161310;
+      --card-bg: #1c1915;
+      --card-border: #2e2820;
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.15);
+      --secondary: #7c3aed;
+      --text: #ffffff;
+      --text-muted: #9a9080;
+      --text-accent: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --font-heading: Inter, system-ui, sans-serif;
+      --font-body: Inter, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --title-size: 3.5rem;
+      --heading-size: 2.5rem;
+      --subheading-size: 1.5rem;
+      --body-size: 1.125rem;
+      --bullet-size: 1.25rem;
+      --caption-size: 0.875rem;
+      --content-padding: 80px;
+      --card-radius: 16px;
+      --sidebar-width: 260px;
+      --transition-duration: 300ms;
+    }
+
+    /* ── slide-theme.css (inlined verbatim) ──────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: var(--body-size); line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .presentation { display: flex; width: 100vw; height: 100vh; }
+    .sidebar { width: var(--sidebar-width); min-width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--card-border); display: flex; flex-direction: column; padding: 32px 0; overflow-y: auto; z-index: 10; transition: transform var(--transition-duration) ease; }
+    .sidebar--hidden { transform: translateX(calc(-1 * var(--sidebar-width))); position: absolute; left: 0; top: 0; bottom: 0; }
+    .sidebar__logo { padding: 0 24px 32px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
+    .sidebar__logo img { max-width: 120px; height: auto; }
+    .sidebar__nav { list-style: none; padding: 0 12px; flex: 1; }
+    .sidebar__item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 8px; cursor: pointer; transition: all 150ms ease; margin-bottom: 4px; font-size: var(--caption-size); color: var(--text-muted); font-weight: 500; }
+    .sidebar__item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .sidebar__item--active { background: var(--primary-glow); color: var(--primary); font-weight: 600; }
+    .sidebar__item-number { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; min-width: 28px; text-align: center; }
+    .sidebar__item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar__progress { padding: 16px 24px; border-top: 1px solid var(--card-border); margin-top: auto; }
+    .sidebar__progress-bar { width: 100%; height: 3px; background: var(--card-border); border-radius: 2px; overflow: hidden; }
+    .sidebar__progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width var(--transition-duration) ease; }
+    .sidebar__progress-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: center; }
+    .stage { flex: 1; position: relative; overflow-x: hidden; overflow-y: auto; display: flex; align-items: center; justify-content: center; background: #ffffff; }
+    .slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity var(--transition-duration) ease; padding: var(--content-padding); }
+    .slide--active { opacity: 1; pointer-events: auto; }
+    .slide__content { width: 100%; max-width: 1400px; display: flex; flex-direction: column; gap: 32px; align-items: center; text-align: center; }
+    .slide__content--centered { align-items: center; text-align: center; }
+    .slide__content--split { flex-direction: row; align-items: center; gap: 64px; }
+    .slide__stats-grid, .slide__cards { width: 100%; }
+    .slide__bullets, .slide__takeaways { text-align: left; }
+    .slide__title { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; line-height: 1.1; color: #1a1a1a; letter-spacing: -0.02em; }
+    .slide__heading { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 700; line-height: 1.2; color: #1a1a1a; letter-spacing: -0.01em; }
+    .slide__heading--overlay { text-shadow: 0 2px 12px rgba(0,0,0,0.8); }
+    .slide__subheading { font-size: var(--subheading-size); font-weight: 500; color: #666666; line-height: 1.4; }
+    .slide__subheading--overlay { text-shadow: 0 2px 8px rgba(0,0,0,0.8); color: #ffffff; }
+    .slide__subtitle { font-size: var(--subheading-size); font-weight: 400; color: #666666; margin-top: -16px; }
+    .slide__description { font-size: var(--body-size); color: #666666; line-height: 1.6; }
+    .slide__logo { max-width: 160px; height: auto; margin-bottom: 24px; }
+    .badge { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
+    .badge--step { border: 1.5px solid var(--primary); background: transparent; color: var(--primary); }
+    .badge--recommended { border: 1.5px solid var(--primary); background: var(--primary); color: var(--bg); }
+    .badge--winner { border: 1.5px solid #059669; background: #059669; color: #ffffff; }
+    .slide__bullets { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .slide__bullet { font-size: var(--bullet-size); font-weight: 400; color: #1a1a1a; padding-left: 28px; position: relative; line-height: 1.5; }
+    .slide__bullet::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+    .slide__text-side { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+    .slide__image-side { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .slide__image { max-width: 100%; max-height: 75vh; border-radius: var(--card-radius); object-fit: cover; }
+    .slide__hero-image { width: 100%; max-height: 55vh; border-radius: var(--card-radius); object-fit: contain; display: block; margin: 0 auto; }
+    .slide--image-left .slide__content--split { flex-direction: row; }
+    .slide--image-right .slide__content--split { flex-direction: row-reverse; }
+    .slide__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: var(--card-radius); overflow: hidden; transition: transform 150ms ease, box-shadow 150ms ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .card__image-wrapper { width: 100%; aspect-ratio: 1; overflow: hidden; background: #f0f0f0; }
+    .card__image { width: 100%; height: 100%; object-fit: cover; }
+    .card__body { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .card__title { font-family: var(--font-heading); font-size: var(--subheading-size); font-weight: 600; color: #1a1a1a; }
+    .card__description { font-size: var(--body-size); color: #666666; line-height: 1.5; }
+    .slide--full-image { padding: 0; }
+    .slide__bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
+    .slide__overlay { position: absolute; inset: 0; z-index: 1; display: flex; padding: var(--content-padding); }
+    .slide__overlay--center { align-items: center; justify-content: center; background: rgba(0,0,0,0.6); }
+    .slide__diagram-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 420px; width: 100%; }
+    .slide__quote-wrapper { max-width: 900px; position: relative; }
+    .slide__quote-mark { font-family: Georgia, serif; font-size: 8rem; color: var(--primary); opacity: 0.3; line-height: 1; position: absolute; top: -40px; left: -20px; }
+    .slide__quote { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 500; font-style: italic; line-height: 1.4; color: #1a1a1a; position: relative; z-index: 1; }
+    .slide__attribution { display: block; margin-top: 24px; font-size: var(--body-size); font-style: normal; color: #666666; }
+    .slide__stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+    .stat-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: var(--card-radius); padding: 40px 32px; text-align: center; }
+    .stat-card__value { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 8px; }
+    .stat-card__label { font-size: var(--subheading-size); font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+    .stat-card__description { font-size: var(--caption-size); color: #666666; }
+    .slide__takeaways { list-style: none; counter-reset: takeaway; display: flex; flex-direction: column; gap: 16px; }
+    .slide__takeaway { counter-increment: takeaway; font-size: var(--bullet-size); color: #1a1a1a; padding-left: 48px; position: relative; line-height: 1.5; }
+    .slide__takeaway::before { content: counter(takeaway); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--primary-glow); color: var(--primary); font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .slide__cta { margin-top: 16px; }
+    .slide__cta-link { display: inline-flex; align-items: center; padding: 14px 32px; background: var(--primary); color: var(--bg); border-radius: 100px; font-weight: 600; font-size: var(--body-size); text-decoration: none; transition: transform 150ms ease, box-shadow 150ms ease; }
+    .slide__cta-link:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .slide__cta-text { font-size: var(--subheading-size); color: var(--primary); font-weight: 600; }
+    .image-placeholder { background: #f8f9fa; border: 2px dashed #e0e0e0; border-radius: var(--card-radius); display: flex; align-items: center; justify-content: center; padding: 40px; color: #666666; font-style: italic; font-size: var(--caption-size); }
+    .edit-mode .slide__title, .edit-mode .slide__heading, .edit-mode .slide__subheading, .edit-mode .slide__subtitle, .edit-mode .slide__description, .edit-mode .slide__bullet, .edit-mode .slide__quote, .edit-mode .slide__attribution, .edit-mode .card__title, .edit-mode .card__description, .edit-mode .stat-card__value, .edit-mode .stat-card__label, .edit-mode .stat-card__description, .edit-mode .slide__takeaway, .edit-mode .slide__cta-text, .edit-mode .badge { outline: 1px dashed rgba(0,0,0,0.15); outline-offset: 4px; cursor: text; }
+    .edit-mode .sidebar__item-label { outline: 1px dashed rgba(255,255,255,0.2); outline-offset: 2px; cursor: text; border-radius: 3px; }
+    .edit-mode .sidebar__item-label:focus { outline: 2px solid var(--primary); }
+    .edit-mode .slide__table th, .edit-mode .slide__table td { outline: 1px dashed rgba(0,0,0,0.15); outline-offset: -2px; cursor: text; }
+    .edit-mode [contenteditable="true"]:focus { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 4px; }
+    .edit-mode .slide__image, .edit-mode .card__image-wrapper { position: relative; cursor: pointer; }
+    .edit-mode .image-replace-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 150ms ease; border-radius: var(--card-radius); pointer-events: none; }
+    .edit-mode .slide__image:hover + .image-replace-overlay, .edit-mode .image-replace-overlay:hover { opacity: 1; pointer-events: auto; }
+    .image-replace-btn { padding: 8px 20px; background: var(--primary); color: var(--bg); border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+    .edit-toolbar { position: fixed; top: 0; left: var(--sidebar-width); right: 0; height: 48px; background: var(--surface); border-bottom: 1px solid var(--card-border); display: none; align-items: center; padding: 0 24px; gap: 8px; z-index: 100; }
+    .edit-mode .edit-toolbar { display: flex; }
+    .edit-toolbar__btn { padding: 6px 12px; background: transparent; border: 1px solid var(--card-border); border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer; transition: all 150ms ease; }
+    .edit-toolbar__btn:hover { background: var(--card-bg); border-color: var(--primary); }
+    .edit-toolbar__btn--active { background: var(--primary-glow); border-color: var(--primary); color: var(--primary); }
+    .edit-toolbar__separator { width: 1px; height: 24px; background: var(--card-border); margin: 0 4px; }
+    .edit-toolbar__spacer { flex: 1; }
+    .edit-toolbar__btn--save { background: var(--primary); color: var(--bg); border-color: var(--primary); font-weight: 600; }
+    .edit-toolbar__btn--save:hover { opacity: 0.9; }
+    .edit-toolbar__btn--danger { color: var(--error); border-color: var(--error); }
+    .edit-toolbar__btn--danger:hover { background: rgba(239,68,68,0.15); border-color: var(--error); }
+    .edit-mode .slide__content > * { position: relative; }
+    .drag-handle { position: absolute; left: -40px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: grab; opacity: 0; transition: opacity 150ms ease; user-select: none; z-index: 10; }
+    .drag-handle::before { content: ''; display: block; width: 8px; height: 14px; background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px); background-size: 4px 4.5px; }
+    .edit-mode .slide__content > *:hover > .drag-handle { opacity: 0.5; }
+    .drag-handle:hover { opacity: 1 !important; color: var(--primary); }
+    .edit-mode .slide__content > .dragging { opacity: 0.3; }
+    .delete-element-btn { position: absolute; right: -40px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; opacity: 0; transition: opacity 150ms ease, color 150ms ease; user-select: none; z-index: 10; background: none; border: none; padding: 0; font-size: 16px; line-height: 1; }
+    .delete-element-btn::before { content: '\00D7'; font-size: 20px; font-weight: 700; }
+    .edit-mode .slide__content > *:hover > .delete-element-btn { opacity: 0.5; }
+    .delete-element-btn:hover { opacity: 1 !important; color: var(--error, #ef4444); }
+    .edit-mode .slide__bullet, .edit-mode .slide__takeaway { position: relative; }
+    .row-delete-btn { position: absolute; right: -32px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; opacity: 0; transition: opacity 150ms ease, color 150ms ease; z-index: 10; background: none; border: none; padding: 0; line-height: 1; }
+    .row-delete-btn::before { content: '\00D7'; font-size: 18px; font-weight: 700; }
+    .edit-mode li:hover > .row-delete-btn { opacity: 0.5; }
+    .row-delete-btn:hover { opacity: 1 !important; color: var(--error, #ef4444); }
+    .edit-mode .slide__subheading, .edit-mode .slide__subtitle, .edit-mode .slide__description, .edit-mode .slide__bullet, .edit-mode .slide__takeaway { min-height: 1.2em; }
+    .edit-mode .slide__subheading:empty, .edit-mode .slide__subtitle:empty, .edit-mode .slide__description:empty, .edit-mode .slide__bullet:empty, .edit-mode .slide__takeaway:empty { outline: 1px dashed var(--card-border); outline-offset: 4px; border-radius: 4px; }
+    .add-row-btn { display: none; margin-top: 0.5rem; padding: 0.4rem 0.85rem; font-size: 0.8125rem; font-family: inherit; font-weight: 500; color: var(--text-muted); background: transparent; border: 1px dashed currentColor; border-radius: 6px; cursor: pointer; opacity: 0.6; transition: opacity 150ms ease, color 150ms ease; }
+    .edit-mode .add-row-btn { display: inline-flex; }
+    .add-row-btn:hover { color: var(--primary); opacity: 1; }
+    .sidebar__drag-handle { flex: 0 0 auto; width: 14px; height: 18px; margin-right: 2px; cursor: grab; color: var(--text-muted); opacity: 0.35; transition: opacity 150ms ease, color 150ms ease; background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px); background-size: 4px 4.5px; background-position: center; background-repeat: round; user-select: none; }
+    .edit-mode .sidebar__item:hover > .sidebar__drag-handle { opacity: 0.7; }
+    .sidebar__drag-handle:hover { opacity: 1 !important; color: var(--primary); }
+    .sidebar__drag-handle:active { cursor: grabbing; }
+    .sidebar__item--dragging { opacity: 0.6; background: var(--card-bg); outline: 1px dashed var(--primary); }
+    .edit-indicator { position: fixed; bottom: 16px; right: 16px; padding: 8px 16px; background: var(--primary); color: var(--bg); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; z-index: 100; display: none; }
+    .edit-mode .edit-indicator { display: block; }
+    .presentation--fullscreen .sidebar { display: none; }
+    .save-toast { position: fixed; top: 24px; right: 24px; padding: 12px 24px; background: var(--success, #22c55e); color: #ffffff; border-radius: 8px; font-size: 0.875rem; font-weight: 600; font-family: var(--font-body); z-index: 300; opacity: 0; transform: translateY(-12px); transition: opacity 300ms ease, transform 300ms ease; pointer-events: none; }
+    .save-toast--visible { opacity: 1; transform: translateY(0); }
+    .save-toast--error { background: var(--error, #ef4444); }
+    .notes-panel { position: fixed; bottom: 24px; right: 24px; width: 360px; max-height: 280px; background: rgba(22,19,16,0.95); border: 1px solid var(--card-border, #2e2820); border-radius: var(--card-radius, 16px); z-index: 200; overflow: hidden; display: flex; flex-direction: column; font-family: var(--font-body); box-shadow: 0 8px 32px rgba(0,0,0,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .notes-panel__header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--card-border, #2e2820); }
+    .notes-panel__title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary, #3b82f6); }
+    .notes-panel__hint { font-size: 0.625rem; font-family: var(--font-mono, monospace); background: rgba(255,255,255,0.1); color: var(--text-muted, #9a9080); padding: 2px 6px; border-radius: 4px; }
+    .notes-panel__close { margin-left: auto; background: none; border: none; color: var(--text-muted, #9a9080); font-size: 1.25rem; cursor: pointer; padding: 0 4px; line-height: 1; }
+    .notes-panel__close:hover { color: #ffffff; }
+    .notes-panel__list { list-style: none; padding: 12px 16px; margin: 0; overflow-y: auto; flex: 1; }
+    .notes-panel__item { font-size: 0.875rem; color: #ffffff; padding: 6px 0 6px 20px; position: relative; line-height: 1.4; }
+    .notes-panel__item::before { content: ''; position: absolute; left: 4px; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--primary, #3b82f6); }
+    .notes-panel__empty { font-size: 0.875rem; color: var(--text-muted, #9a9080); font-style: italic; padding: 6px 0; list-style: none; }
+    @media (max-width: 1200px) { .slide__content--split { flex-direction: column; gap: 32px; } .slide__image-side { max-height: 40vh; } }
+
+    /* ── Custom: comparison tables ────────────────────────────────────────── */
+    .slide__table-wrapper { width: 100%; overflow: hidden; border-radius: var(--card-radius); box-shadow: 0 2px 16px rgba(0,0,0,0.09); }
+    .slide__table { width: 100%; border-collapse: collapse; }
+    .slide__table th { padding: 16px 24px; text-align: left; font-family: var(--font-heading); font-weight: 700; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .slide__table th.col-feature { background: #1e293b; color: #ffffff; }
+    .slide__table th.col-leadprosper { background: #475569; color: #ffffff; }
+    .slide__table th.col-leaddistro { background: var(--primary); color: #0f0d0a; }
+    .slide__table td { padding: 13px 24px; border-bottom: 1px solid #e5e7eb; color: #1a1a1a; font-size: 1.05rem; text-align: left; }
+    .slide__table td:first-child { font-weight: 600; background: #f8fafc; color: #374151; }
+    .slide__table tr:last-child td { border-bottom: none; }
+    .slide__table .check { color: #059669; font-weight: 700; font-size: 1.2rem; }
+    .slide__table .winner { color: var(--primary); font-weight: 700; }
+    .slide__table .neutral { color: #9ca3af; }
+    .slide__table .highlight-row td { background: rgba(59,130,246,0.06) !important; font-weight: 600; }
+    .slide__table .na { color: #d1d5db; font-size: 0.9rem; }
+
+    /* ── Custom: title-slide centered layout ─────────────────────────────── */
+    .slide--title .slide__content { align-items: center; text-align: center; gap: 24px; }
+
+    /* ── Custom: quote slide ─────────────────────────────────────────────── */
+    .slide--quote-callout .slide__content { align-items: center; text-align: center; }
+
+    /* ── Custom: stats note ──────────────────────────────────────────────── */
+    .slide__stats-note { font-size: var(--body-size); color: #475569; font-style: italic; margin-top: 8px; text-align: center; border-top: 1px solid #e5e7eb; padding-top: 24px; width: 100%; }
+
+    /* ── Custom: section-break accent line ───────────────────────────────── */
+    .slide--section-break .slide__content { align-items: center; text-align: center; }
+    .slide__section-line { width: 80px; height: 4px; background: var(--primary); border-radius: 2px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+<div class="presentation">
+
+  <!-- ── Sidebar Navigation ──────────────────────────────────────────────── -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <span style="font-family: var(--font-heading); font-weight: 700; font-size: 1rem; color: var(--primary);">LEAD DISTRO AI</span>
+    </div>
+    <ul class="sidebar__nav">
+      <li class="sidebar__item sidebar__item--active">
+        <span class="sidebar__item-number">01</span>
+        <span class="sidebar__item-label">Honest Comparison</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">02</span>
+        <span class="sidebar__item-label">Who It Fits</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">03</span>
+        <span class="sidebar__item-label">Why It Matters</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">04</span>
+        <span class="sidebar__item-label">LeadProsper</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">05</span>
+        <span class="sidebar__item-label">Lead Distro AI</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">06</span>
+        <span class="sidebar__item-label">Head to Head</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">07</span>
+        <span class="sidebar__item-label">1. Pricing</span>
+      </li>
+      
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">08</span>
+        <span class="sidebar__item-label">3. Call Tracking</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">09</span>
+        <span class="sidebar__item-label">4. Real-Time P&amp;L</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">10</span>
+        <span class="sidebar__item-label">5. Claude MCP</span>
+      </li>
+      
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">11</span>
+        <span class="sidebar__item-label">Right Fit Guide</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">12</span>
+        <span class="sidebar__item-label">Key Takeaways</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">13</span>
+        <span class="sidebar__item-label">Free Trial</span>
+      </li>
+    </ul>
+    <div class="sidebar__progress">
+      <div class="sidebar__progress-bar">
+        <div class="sidebar__progress-fill" style="width: 7.69231%;"></div>
+      </div>
+      <p class="sidebar__progress-text">1 / 13</p>
+    </div>
+  </nav>
+
+  <!-- ── Slide Stage ──────────────────────────────────────────────────────── -->
+  <main class="stage">
+
+    <!-- ─ SLIDE 1: TITLE / HOOK ─────────────────────────────────────────── -->
+    <section class="slide slide--title slide--active" data-slide="1" data-chapter="Honest Comparison" data-notes="Lead with the admission, I built this platform|Credibility is built by honesty, not hype|The video they need before making this decision">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Honest Review 2026</div>
+        <h1 class="slide__title">Lead Prosper vs<br>Lead Distro AI</h1>
+        <p class="slide__subtitle">The honest comparison. Including where LeadProsper wins.</p>
+        <div class="slide__section-line"></div>
+        <p class="slide__description">I built Lead Distro AI. I have skin in the game.<br>This is still the most honest platform comparison you'll find.</p>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 2: WHO THIS IS FOR ──────────────────────────────────────── -->
+    <section class="slide slide--heading-bullets" data-slide="2" data-chapter="Who It Fits" data-notes="Speak directly to their exact situation|Name the pain before you pitch the solution|Make them feel understood before they hear about platforms">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Pay-Per-Lead Agencies</div>
+        <h2 class="slide__heading">This Video Is Built for You</h2>
+        <p class="slide__subheading">Lead distributors routing web form and call leads to buyers</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Law firms, insurance carriers, home services, mortgage lenders</li>
+          <li class="slide__bullet">Still routing manually in Google Sheets? Both are a major upgrade</li>
+          <li class="slide__bullet">Running pay-per-call alongside form leads? Keep watching</li>
+          <li class="slide__bullet">Already on LeadProsper and wondering about switching? Stay for the verdict</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 3: WHY IT MATTERS ───────────────────────────────────────── -->
+    <section class="slide slide--quote-callout" data-slide="3" data-chapter="Why It Matters" data-notes="Let this land, pause here|Software is the cheapest line item|The wrong call costs buyers and reputation">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Why This Matters</div>
+        <div class="slide__quote-wrapper">
+          <span class="slide__quote-mark">"</span>
+          <p class="slide__quote">Picking the wrong platform will cost you more than the software ever does.</p>
+        </div>
+        <p class="slide__subheading">Wrong routing loses buyers. Wrong compliance brings fines.<br>Wrong P&amp;L visibility hides your margin until it's too late.</p>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 4: WHAT IS LEADPROSPER ─────────────────────────────────── -->
+    <section class="slide slide--heading-bullets" data-slide="4" data-chapter="LeadProsper" data-notes="Give them their flowers honestly|The compliance integrations are genuinely strong|Don't dismiss LeadProsper, it earns its users">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Platform 1</div>
+        <img class="slide__hero-image" src="images/slide-04-leadprosper-overview.png" alt="LeadProsper lead distribution platform diagram">
+        <p class="slide__subheading">Established lead distribution for data-lead agencies</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Lead delivery, ping-post routing, and duplicate detection</li>
+          <li class="slide__bullet">Deep Jornaya LeadID, Anura, and Xverify compliance integrations</li>
+          <li class="slide__bullet">Established user base in insurance and legal verticals</li>
+          <li class="slide__bullet">Data leads only; starts at around $500 per month</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 5: WHAT IS LEAD DISTRO AI ──────────────────────────────── -->
+    <section class="slide slide--heading-bullets" data-slide="5" data-chapter="Lead Distro AI" data-notes="Built because spreadsheet routing was costing margin|The MCP is the differentiator to tease here|One platform, one bill, one dashboard">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Platform 2</div>
+        <img class="slide__hero-image" src="images/slide-05-lead-distro-ai-overview.png" alt="Lead Distro AI all-in-one platform diagram">
+        <p class="slide__subheading">All-in-one for agencies running leads and calls</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Lead distribution, call tracking, and AI scoring in one platform</li>
+          <li class="slide__bullet">Real-time P&amp;L dashboard by buyer and campaign</li>
+          <li class="slide__bullet">MCP lets you configure campaigns from Claude in seconds</li>
+          <li class="slide__bullet">Starts at $299 per month with no separate ping or pre-ping fees</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 6: HEAD TO HEAD (SECTION BREAK) ─────────────────────────── -->
+    <section class="slide slide--title slide--section-break" data-slide="6" data-chapter="Head to Head" data-notes="Tell them what is coming|Six areas, one verdict each|The honest scorecard">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--recommended">The Comparison</div>
+        <h1 class="slide__title">6 Key Areas</h1>
+        <div class="slide__section-line"></div>
+        <p class="slide__subtitle">Pricing &nbsp;•&nbsp; AI Scoring &nbsp;•&nbsp; Call Tracking &nbsp;•&nbsp; P&amp;L &nbsp;•&nbsp; Setup Speed &nbsp;•&nbsp; Compliance</p>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 7: PRICING ──────────────────────────────────────────────── -->
+    <section class="slide slide--heading-bullets" data-slide="7" data-chapter="1. Pricing" data-notes="Ping fees are the hidden cost nobody mentions|Volume tiers look similar on the surface|The entry price difference is real money every month">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">#1 of 6</div>
+        <h2 class="slide__heading">Pricing</h2>
+        <p class="slide__subheading">How the billing models actually compare</p>
+        <div class="slide__table-wrapper">
+          <table class="slide__table">
+            <thead>
+              <tr>
+                <th class="col-feature">Pricing Factor</th>
+                <th class="col-leadprosper">LeadProsper</th>
+                <th class="col-leaddistro">Lead Distro AI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly starting price</td>
+                <td>~$500/mo</td>
+                <td class="winner">$299/mo</td>
+              </tr>
+              <tr>
+                <td>Ping fees</td>
+                <td>Billed separately</td>
+                <td class="winner">Included in plan</td>
+              </tr>
+              <tr>
+                <td>Pre-ping fees</td>
+                <td>Billed separately</td>
+                <td class="winner">Included in plan</td>
+              </tr>
+              <tr>
+                <td>Volume tier pricing</td>
+                <td class="neutral">Comparable at scale</td>
+                <td class="neutral">Comparable at scale</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>Winner</td>
+                <td class="na">Higher at all volumes</td>
+                <td class="winner check">✓ Lower cost, no ping fees</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 8: AI LEAD SCORING ──────────────────────────────────────── -->
+    
+
+    <!-- ─ SLIDE 9: PAY-PER-CALL ─────────────────────────────────────────── -->
+    <section class="slide slide--heading-bullets" data-slide="9" data-chapter="3. Call Tracking" data-notes="This is the black and white differentiator|Two tools means double the integration complexity|If you run calls, this is the decision right here">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">#3 of 6</div>
+        <img class="slide__hero-image" src="images/slide-09-pay-per-call.png" alt="Pay-per-call unified with data leads versus two separate tools">
+        <p class="slide__subheading">The clearest platform difference of all six</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">LeadProsper: data leads only, pay-per-call requires a separate platform</li>
+          <li class="slide__bullet">Lead Distro AI: form leads and call tracking in one unified dashboard</li>
+          <li class="slide__bullet">Two tools means two dashboards, two bills, and two reconciliations</li>
+          <li class="slide__bullet">Only a wash if you run form leads only and have no plans to add calls</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 10: REAL-TIME P&L ────────────────────────────────────────── -->
+    <section class="slide slide--stats-numbers" data-slide="10" data-chapter="4. Real-Time P&amp;L" data-notes="Ask which buyer is making money right now|Most agencies find out at month end, too late|Margin visibility is a competitive weapon">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">#4 of 6</div>
+        <h2 class="slide__heading">Real-Time Margin Dashboard</h2>
+        <p class="slide__subheading">Revenue, cost, and profit live by buyer and campaign</p>
+        <div class="slide__stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__value">Revenue</div>
+            <div class="stat-card__label">By Source</div>
+            <div class="stat-card__description">Know exactly where every dollar comes from, as it comes in</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">Cost</div>
+            <div class="stat-card__label">By Campaign</div>
+            <div class="stat-card__description">Track spend as leads flow in, not at the end of the month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">Profit</div>
+            <div class="stat-card__label">By Buyer</div>
+            <div class="stat-card__description">See which buyer is making you money and which one is not</div>
+          </div>
+        </div>
+        <p class="slide__stats-note">LeadProsper has solid reporting. It does not have this level of live margin visibility by buyer and campaign.</p>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 11: CLAUDE MCP ──────────────────────────────────────────── -->
+    <section class="slide slide--heading-bullets" data-slide="11" data-chapter="5. Claude MCP" data-notes="This is the feature agencies say they would switch for alone|The MCP is a genuine unfair advantage|Pause here, let the visual do the talking">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">#5 of 6</div>
+        <img class="slide__hero-image" src="images/slide-11-mcp-claude.png" alt="MCP Model Context Protocol connecting Lead Distro AI to Claude for instant setup">
+        <p class="slide__subheading">Set up campaigns and buyers from Claude in seconds</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">No clicking through UI to configure a new buyer or campaign</li>
+          <li class="slide__bullet">Tell Claude the API spec and it is done in seconds</li>
+          <li class="slide__bullet">One prospect actually tried building their own MCP for a competitor just to avoid manual setup</li>
+          <li class="slide__bullet">LeadProsper does not have this</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 12: COMPLIANCE (WHERE LEADPROSPER WINS) ─────────────────── -->
+    
+
+    <!-- ─ SLIDE 13: WHO SHOULD CHOOSE WHICH ─────────────────────────────── -->
+    <section class="slide slide--heading-bullets" data-slide="13" data-chapter="Right Fit Guide" data-notes="This is the decision tree|Be direct, no hedging|Let them self-select the right answer">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">The Decision</div>
+        <h2 class="slide__heading">Choose the Right Fit</h2>
+        <p class="slide__subheading">Match your operation to the platform built for it</p>
+        <div class="slide__table-wrapper">
+          <table class="slide__table">
+            <thead>
+              <tr>
+                <th class="col-feature">If you...</th>
+                <th class="col-leadprosper">LeadProsper</th>
+                <th class="col-leaddistro">Lead Distro AI</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Want an established</td>
+                <td class="check">✓ Good choice</td>
+                <td class="na">Not yet</td>
+              </tr>
+              <tr>
+                <td>Run data leads only</td>
+                <td class="check">✓ Works great</td>
+                <td class="neutral">Also works</td>
+              </tr>
+              <tr>
+                <td>Already at high volume on platform</td>
+                <td class="check">✓ Stay put</td>
+                <td class="neutral">Worth comparing</td>
+              </tr>
+              <tr>
+                <td>Run pay-per-call too</td>
+                <td class="na">Need a 2nd tool</td>
+                <td class="check">✓ Best choice</td>
+              </tr>
+              <tr>
+                <td>Want scoring on every lead</td>
+                <td class="na">Not available</td>
+                <td class="check">✓ Built in</td>
+              </tr>
+              <tr>
+                <td>Need good real-time P&amp;L analytics by buyer</td>
+                <td class="neutral">Reporting only</td>
+                <td class="check">✓ Live dashboard</td>
+              </tr>
+              <tr>
+                <td>Want Claude MCP for fast setup</td>
+                <td class="na">Not available</td>
+                <td class="check">✓ Already here</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>Starting fresh, lower price</td>
+                <td class="na">~$500/mo</td>
+                <td class="winner check">✓ $299/mo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 14: RECAP ───────────────────────────────────────────────── -->
+    <section class="slide slide--recap-summary" data-slide="14" data-chapter="Key Takeaways" data-notes="Reinforce the six decision factors|Let them screenshot this slide|This is the shareable summary card">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Key Takeaways</div>
+        <h2 class="slide__heading">What to Remember</h2>
+        <ol class="slide__takeaways">
+          <li class="slide__takeaway">LeadProsper: established platform, strong compliance depth, data leads only, ~$500/mo</li>
+          <li class="slide__takeaway">Lead Distro AI: leads plus calls, AI scoring, real-time P&amp;L, $299/mo</li>
+          <li class="slide__takeaway">At high ping-post volume, no separate ping fees saves real money every month</li>
+          <li class="slide__takeaway">If you run pay-per-call, Lead Distro AI is the only option that unifies both</li>
+          
+          <li class="slide__takeaway">Setup speed and Claude MCP integration: Lead Distro AI wins by a wide margin</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ─ SLIDE 15: CTA ──────────────────────────────────────────────────── -->
+    <section class="slide slide--title" data-slide="15" data-chapter="Free Trial" data-notes="Clear and direct CTA|Link in description, say it twice|Invite comments, you read every one">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--recommended">Try It Free</div>
+        <h1 class="slide__title">Book A Demo Call</h1>
+        <div class="slide__section-line"></div>
+        <p class="slide__subtitle">Run real leads. Route real calls. See your actual margin before you commit.</p>
+        <p class="slide__description">Link in the description below.<br>Questions? Drop them in the comments. I read every one.</p>
+        <div class="slide__cta">
+          <p class="slide__cta-text">www.leaddistroai.com &nbsp;/&nbsp; Link in description</p>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /stage -->
+
+  <!-- Edit toolbar and indicator INSIDE .presentation -->
+  <div class="edit-toolbar">
+    <button class="edit-toolbar__btn" data-action="bold"><b>B</b></button>
+    <button class="edit-toolbar__btn" data-action="italic"><i>I</i></button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="font-up">A+</button>
+    <button class="edit-toolbar__btn" data-action="font-down">A-</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-image">+ Image</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-subtext">+ Subtext</button>
+    <button class="edit-toolbar__btn" data-action="add-bullet">+ Bullet</button>
+    <button class="edit-toolbar__btn" data-action="remove-bullet">- Bullet</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-row">+ Row</button>
+    <button class="edit-toolbar__btn" data-action="remove-row">- Row</button>
+    <button class="edit-toolbar__btn" data-action="add-col">+ Col</button>
+    <button class="edit-toolbar__btn" data-action="remove-col">- Col</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-slide">+ Slide</button>
+    <button class="edit-toolbar__btn edit-toolbar__btn--danger" data-action="delete-slide">Delete Slide</button>
+    <div class="edit-toolbar__spacer"></div>
+    <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save">Save</button>
+  </div>
+  <div class="edit-indicator">Edit Mode</div>
+
+</div><!-- /presentation -->
+
+<script>
+/**
+ * Slide Engine - Navigation, Edit Mode, Slide Management, and Fullscreen
+ * Embedded in every generated HTML slide deck.
+ */
+(function () {
+  'use strict';
+
+  let currentSlide = 0;
+  let editMode = false;
+  let isFullscreen = false;
+  let notesVisible = false;
+  let fileHandle = null;
+  let slides = Array.from(document.querySelectorAll('.slide'));
+  let sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+  const progressFill = document.querySelector('.sidebar__progress-fill');
+  const progressText = document.querySelector('.sidebar__progress-text');
+  const presentation = document.querySelector('.presentation');
+  const editToolbar = document.querySelector('.edit-toolbar');
+  const editIndicator = document.querySelector('.edit-indicator');
+  const stage = document.querySelector('.stage');
+  const sidebarNav = document.querySelector('.sidebar__nav');
+
+  function getTotalSlides() { return slides.length; }
+
+  function goToSlide(index) {
+    var total = getTotalSlides();
+    if (index < 0 || index >= total) return;
+    slides[currentSlide].classList.remove('slide--active');
+    sidebarItems[currentSlide]?.classList.remove('sidebar__item--active');
+    currentSlide = index;
+    slides[currentSlide].classList.add('slide--active');
+    sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+    updateProgress();
+    sidebarItems[currentSlide]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (notesVisible) updateNotesContent();
+  }
+
+  function nextSlide() { goToSlide(currentSlide + 1); }
+  function prevSlide() { goToSlide(currentSlide - 1); }
+
+  function updateProgress() {
+    var total = getTotalSlides();
+    var pct = ((currentSlide + 1) / total) * 100;
+    if (progressFill) progressFill.style.width = pct + '%';
+    if (progressText) progressText.textContent = (currentSlide + 1) + ' / ' + total;
+  }
+
+  function bindSidebarClicks() {
+    sidebarItems.forEach(function (item, i) { item.onclick = function () { goToSlide(i); }; });
+  }
+  bindSidebarClicks();
+
+  function renumberSidebar() {
+    sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+    sidebarItems.forEach(function (item, i) {
+      var numEl = item.querySelector('.sidebar__item-number');
+      if (numEl) numEl.textContent = String(i + 1).padStart(2, '0');
+    });
+    bindSidebarClicks();
+  }
+
+  const editableSelectors = [
+    '.slide__title', '.slide__heading', '.slide__subheading',
+    '.slide__subtitle', '.slide__description', '.slide__bullet',
+    '.slide__quote', '.slide__attribution', '.card__title',
+    '.card__description', '.stat-card__value', '.stat-card__label',
+    '.stat-card__description', '.slide__takeaway', '.slide__cta-text',
+    '.badge', '.slide__table th', '.slide__table td'
+  ];
+
+  function enableEditMode() {
+    editMode = true;
+    presentation.classList.add('edit-mode');
+    document.querySelectorAll(editableSelectors.join(', ')).forEach(function (el) { el.setAttribute('contenteditable', 'true'); });
+    document.querySelectorAll('.sidebar__item-label').forEach(function (label) { label.setAttribute('contenteditable', 'true'); });
+    addImageOverlays();
+    addDragHandles();
+    addDeleteButtons();
+    addListRowControls();
+    addSidebarDragHandles();
+  }
+
+  (function bindSidebarLabelGuards() {
+    var sidebarEl = document.querySelector('.sidebar');
+    if (!sidebarEl) return;
+    sidebarEl.addEventListener('mousedown', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      e.stopPropagation(); e.stopImmediatePropagation();
+      setTimeout(function () { label.focus(); }, 0);
+    }, true);
+    sidebarEl.addEventListener('click', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      e.stopPropagation(); e.stopImmediatePropagation(); e.preventDefault();
+    }, true);
+    sidebarEl.addEventListener('keydown', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      if (e.key === 'Enter') { e.preventDefault(); label.blur(); }
+    }, true);
+  })();
+
+  function disableEditMode() {
+    editMode = false;
+    presentation.classList.remove('edit-mode');
+    document.querySelectorAll('[contenteditable="true"]').forEach(function (el) { el.removeAttribute('contenteditable'); });
+    removeImageOverlays(); removeDragHandles(); removeDeleteButtons(); removeListRowControls(); removeSidebarDragHandles();
+  }
+
+  function toggleEditMode() { if (editMode) { disableEditMode(); } else { enableEditMode(); } }
+
+  function addImageOverlays() {
+    document.querySelectorAll('.slide__image').forEach(function (img) {
+      if (img.parentElement.querySelector('.image-replace-overlay')) return;
+      var wrapper = document.createElement('div');
+      wrapper.style.position = 'relative'; wrapper.style.display = 'inline-block';
+      img.parentNode.insertBefore(wrapper, img); wrapper.appendChild(img);
+      var overlay = document.createElement('div');
+      overlay.className = 'image-replace-overlay';
+      var btn = document.createElement('button');
+      btn.className = 'image-replace-btn'; btn.textContent = 'Replace Image';
+      btn.addEventListener('click', function () { var url = prompt('Paste new image URL (or base64 data URI):'); if (url) img.src = url; });
+      overlay.appendChild(btn); wrapper.appendChild(overlay);
+    });
+  }
+
+  function removeImageOverlays() {
+    document.querySelectorAll('.image-replace-overlay').forEach(function (overlay) {
+      var wrapper = overlay.parentElement;
+      var img = wrapper.querySelector('.slide__image');
+      if (img && wrapper.parentElement) { wrapper.parentElement.insertBefore(img, wrapper); wrapper.remove(); }
+    });
+  }
+
+  var dragState = null;
+
+  function addDragHandles() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.drag-handle')) return;
+      if (el.classList.contains('add-row-btn')) return;
+      var handle = document.createElement('div');
+      handle.className = 'drag-handle';
+      handle.addEventListener('mousedown', function (e) { startDrag(e, el); });
+      el.appendChild(handle);
+    });
+  }
+
+  function removeDragHandles() { if (dragState) handleDragEnd(); document.querySelectorAll('.drag-handle').forEach(function (h) { h.remove(); }); }
+
+  function addDeleteButtons() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.delete-element-btn')) return;
+      if (el.classList.contains('add-row-btn')) return;
+      var btn = document.createElement('button');
+      btn.className = 'delete-element-btn'; btn.title = 'Delete this element';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var preview = el.textContent.trim().substring(0, 40);
+        if (preview.length > 37) preview = preview.substring(0, 37) + '...';
+        if (confirm('Delete this element?\n\n"' + preview + '"')) { el.remove(); }
+      });
+      el.appendChild(btn);
+    });
+  }
+
+  function removeDeleteButtons() { document.querySelectorAll('.delete-element-btn').forEach(function (btn) { btn.remove(); }); }
+
+  var ROW_LIST_SELECTOR = '.slide__bullets, .slide__takeaways';
+
+  function rowItemClassFor(list) { return list.classList.contains('slide__bullets') ? 'slide__bullet' : 'slide__takeaway'; }
+
+  function addRowDeleteBtn(li) {
+    if (li.querySelector(':scope > .row-delete-btn')) return;
+    var btn = document.createElement('button');
+    btn.className = 'row-delete-btn'; btn.type = 'button'; btn.title = 'Delete row';
+    btn.setAttribute('contenteditable', 'false');
+    btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    btn.addEventListener('click', function (e) { e.stopPropagation(); li.remove(); });
+    li.appendChild(btn);
+  }
+
+  function addListRowControls() {
+    document.querySelectorAll(ROW_LIST_SELECTOR).forEach(function (list) {
+      list.querySelectorAll(':scope > li').forEach(addRowDeleteBtn);
+      var next = list.nextElementSibling;
+      if (next && next.classList && next.classList.contains('add-row-btn')) return;
+      var btn = document.createElement('button');
+      btn.className = 'add-row-btn'; btn.type = 'button'; btn.textContent = '+ Add row';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var li = document.createElement('li');
+        li.className = rowItemClassFor(list); li.setAttribute('contenteditable', 'true'); li.textContent = 'New item';
+        list.appendChild(li); addRowDeleteBtn(li); li.focus();
+        var range = document.createRange(); range.selectNodeContents(li);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      });
+      list.parentNode.insertBefore(btn, list.nextSibling);
+    });
+  }
+
+  function removeListRowControls() { document.querySelectorAll('.row-delete-btn, .add-row-btn').forEach(function (el) { el.remove(); }); }
+
+  function startDrag(e, el) {
+    e.preventDefault(); dragState = { el: el, container: el.parentElement }; el.classList.add('dragging');
+    document.addEventListener('mousemove', handleDragMove); document.addEventListener('mouseup', handleDragEnd);
+  }
+
+  function handleDragMove(e) {
+    if (!dragState) return; e.preventDefault();
+    var container = dragState.container; var dragEl = dragState.el;
+    var children = Array.from(container.children);
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i]; if (child === dragEl) continue;
+      var rect = child.getBoundingClientRect(); var midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) { container.insertBefore(dragEl, child); return; }
+    }
+    container.appendChild(dragEl);
+  }
+
+  function handleDragEnd() {
+    if (!dragState) return; dragState.el.classList.remove('dragging'); dragState = null;
+    document.removeEventListener('mousemove', handleDragMove); document.removeEventListener('mouseup', handleDragEnd);
+  }
+
+  var sidebarDrag = null;
+
+  function addSidebarDragHandles() {
+    document.querySelectorAll('.sidebar__item').forEach(function (item) {
+      if (item.querySelector(':scope > .sidebar__drag-handle')) return;
+      var h = document.createElement('span');
+      h.className = 'sidebar__drag-handle'; h.setAttribute('contenteditable', 'false'); h.setAttribute('draggable', 'false'); h.title = 'Drag to reorder';
+      h.addEventListener('mousedown', function (e) { startSidebarDrag(e, item); });
+      item.insertBefore(h, item.firstChild);
+    });
+  }
+
+  function removeSidebarDragHandles() { document.querySelectorAll('.sidebar__drag-handle').forEach(function (el) { el.remove(); }); }
+
+  function startSidebarDrag(e, li) {
+    if (!editMode) return; e.preventDefault(); e.stopPropagation();
+    var liveItems = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    var map = new Map(); liveItems.forEach(function (it, i) { map.set(it, slides[i]); });
+    sidebarDrag = { li: li, itemToSlide: map, activeSlideEl: slides[currentSlide], startY: e.clientY, moved: false };
+    li.classList.add('sidebar__item--dragging');
+    document.addEventListener('mousemove', handleSidebarDragMove); document.addEventListener('mouseup', handleSidebarDragEnd);
+  }
+
+  function handleSidebarDragMove(e) {
+    if (!sidebarDrag) return; e.preventDefault();
+    if (!sidebarDrag.moved && Math.abs(e.clientY - sidebarDrag.startY) < 4) return;
+    sidebarDrag.moved = true;
+    var dragEl = sidebarDrag.li; var siblings = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    for (var i = 0; i < siblings.length; i++) {
+      var sib = siblings[i]; if (sib === dragEl) continue;
+      var rect = sib.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) { sidebarNav.insertBefore(dragEl, sib); return; }
+    }
+    sidebarNav.appendChild(dragEl);
+  }
+
+  function handleSidebarDragEnd() {
+    if (!sidebarDrag) return; var d = sidebarDrag;
+    d.li.classList.remove('sidebar__item--dragging');
+    document.removeEventListener('mousemove', handleSidebarDragMove); document.removeEventListener('mouseup', handleSidebarDragEnd);
+    sidebarDrag = null; if (!d.moved) return;
+    Array.from(sidebarNav.querySelectorAll('.sidebar__item')).forEach(function (li) { var slideEl = d.itemToSlide.get(li); if (slideEl) stage.appendChild(slideEl); });
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar();
+    currentSlide = Math.max(0, slides.indexOf(d.activeSlideEl)); updateProgress(); suppressNextSidebarClick();
+  }
+
+  function suppressNextSidebarClick() {
+    var sidebarEl = document.querySelector('.sidebar'); if (!sidebarEl) return;
+    var handler = function (e) { e.stopPropagation(); e.preventDefault(); sidebarEl.removeEventListener('click', handler, true); };
+    sidebarEl.addEventListener('click', handler, true);
+    setTimeout(function () { sidebarEl.removeEventListener('click', handler, true); }, 0);
+  }
+
+  function addSlide() {
+    if (!editMode) return;
+    var newNum = currentSlide + 2;
+    var section = document.createElement('section');
+    section.className = 'slide slide--heading-bullets'; section.setAttribute('data-slide', String(newNum)); section.setAttribute('data-chapter', 'New Slide'); section.setAttribute('data-notes', '');
+    section.innerHTML = '<div class="slide__content"><div class="badge badge--step" contenteditable="true">New Section</div><h2 class="slide__heading" contenteditable="true">Slide Title</h2><p class="slide__subheading" contenteditable="true">Subtitle goes here</p><ul class="slide__bullets"><li class="slide__bullet" contenteditable="true">First point</li><li class="slide__bullet" contenteditable="true">Second point</li></ul></div>';
+    var currentSlideEl = slides[currentSlide];
+    if (currentSlideEl.nextElementSibling) { stage.insertBefore(section, currentSlideEl.nextElementSibling); } else { stage.appendChild(section); }
+    var li = document.createElement('li'); li.className = 'sidebar__item';
+    li.innerHTML = '<span class="sidebar__item-number">' + String(newNum).padStart(2, '0') + '</span><span class="sidebar__item-label">New Slide</span>';
+    var currentSidebarItem = sidebarItems[currentSlide];
+    if (currentSidebarItem && currentSidebarItem.nextElementSibling) { sidebarNav.insertBefore(li, currentSidebarItem.nextElementSibling); } else { sidebarNav.appendChild(li); }
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar(); addSidebarDragHandles(); updateProgress(); goToSlide(currentSlide + 1);
+  }
+
+  function deleteSlide() {
+    if (!editMode) return; var total = getTotalSlides(); if (total <= 1) return;
+    if (!confirm('Delete this slide?')) return;
+    var slideToRemove = slides[currentSlide]; var sidebarToRemove = sidebarItems[currentSlide]; var targetIndex = currentSlide;
+    if (currentSlide >= total - 1) { targetIndex = currentSlide - 1; }
+    slideToRemove.classList.remove('slide--active'); if (sidebarToRemove) sidebarToRemove.classList.remove('sidebar__item--active');
+    slideToRemove.remove(); if (sidebarToRemove) sidebarToRemove.remove();
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar();
+    currentSlide = Math.max(0, Math.min(targetIndex, getTotalSlides() - 1));
+    slides[currentSlide].classList.add('slide--active'); sidebarItems[currentSlide]?.classList.add('sidebar__item--active'); updateProgress();
+  }
+
+  function execCommand(cmd) { document.execCommand(cmd, false, null); }
+
+  function changeFontSize(delta) {
+    var sel = window.getSelection(); if (!sel.rangeCount) return;
+    var el = sel.anchorNode?.parentElement; if (!el) return;
+    var current = parseFloat(window.getComputedStyle(el).fontSize); el.style.fontSize = (current + delta) + 'px';
+  }
+
+  function addBullet() {
+    var activeSlide = slides[currentSlide]; var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways'); if (!list) return;
+    var item = document.createElement('li'); item.className = list.querySelector('li')?.className || ''; item.textContent = 'New item'; item.setAttribute('contenteditable', 'true'); list.appendChild(item); item.focus();
+  }
+
+  function removeBullet() {
+    var activeSlide = slides[currentSlide]; var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways'); if (!list) return;
+    var items = list.querySelectorAll('li'); if (items.length > 1) { items[items.length - 1].remove(); }
+  }
+
+  var REMOVABLE_EMPTY_SELECTOR = '.slide__subheading, .slide__subtitle, .slide__description, .slide__bullet, .slide__takeaway';
+
+  function isEditableEl(node) { return !!(node && node.nodeType === 1 && node.matches && node.matches(editableSelectors.join(', '))); }
+
+  function placeCaretAtEnd(node) {
+    if (!node) return;
+    try { node.focus(); var range = document.createRange(); range.selectNodeContents(node); range.collapse(false); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); } catch (err) {}
+  }
+
+  function focusTargetAfterRemoval(el) {
+    if (el.tagName === 'LI') {
+      var prevRow = el.previousElementSibling;
+      while (prevRow && prevRow.tagName !== 'LI') prevRow = prevRow.previousElementSibling;
+      if (prevRow) return prevRow;
+      var listSib = el.parentNode ? el.parentNode.previousElementSibling : null;
+      while (listSib && !isEditableEl(listSib)) { var innerLi = listSib.querySelector ? listSib.querySelector('li') : null; if (innerLi) return innerLi; listSib = listSib.previousElementSibling; }
+      return listSib;
+    }
+    var sib = el.previousElementSibling; while (sib && !isEditableEl(sib)) sib = sib.previousElementSibling; return sib;
+  }
+
+  function addSubtext() {
+    if (!editMode) return; var activeSlide = slides[currentSlide]; var content = activeSlide && activeSlide.querySelector('.slide__content'); if (!content) return;
+    var existing = content.querySelector('.slide__subheading'); if (existing) { placeCaretAtEnd(existing); return; }
+    var p = document.createElement('p'); p.className = 'slide__subheading'; p.setAttribute('contenteditable', 'true'); p.textContent = 'Subtitle goes here';
+    var heading = content.querySelector('.slide__heading');
+    if (heading && heading.nextSibling) { content.insertBefore(p, heading.nextSibling); } else if (heading) { content.appendChild(p); } else { var badge = content.querySelector('.badge'); if (badge && badge.nextSibling) content.insertBefore(p, badge.nextSibling); else content.insertBefore(p, content.firstChild); }
+    addDeleteButtons();
+    try { p.focus(); var range = document.createRange(); range.selectNodeContents(p); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); } catch (err) { p.focus(); }
+  }
+
+  function insertImageFromDataUrl(dataUrl) {
+    var activeSlide = slides[currentSlide]; var content = activeSlide.querySelector('.slide__content'); if (!content) return;
+    var img = document.createElement('img'); img.className = 'slide__hero-image'; img.src = dataUrl; img.alt = 'Pasted image';
+    var insertBefore = content.querySelector('.slide__bullets, .slide__table-wrapper, .slide__cards, .slide__stats-grid, .slide__takeaways, .slide__quote-wrapper, .slide__cta');
+    if (insertBefore) { content.insertBefore(img, insertBefore); } else { content.appendChild(img); }
+    if (editMode) { addImageOverlays(); addDragHandles(); addDeleteButtons(); }
+  }
+
+  function blobToDataUrl(blob, cb) { var reader = new FileReader(); reader.onload = function () { cb(reader.result); }; reader.readAsDataURL(blob); }
+
+  function getActiveTable() { var activeSlide = slides[currentSlide]; return activeSlide ? activeSlide.querySelector('.slide__table') : null; }
+  function getFocusedCell() { var sel = window.getSelection(); if (!sel || sel.rangeCount === 0) return null; var node = sel.anchorNode; if (!node) return null; if (node.nodeType === 3) node = node.parentNode; return node.closest ? node.closest('td, th') : null; }
+
+  function addTableRow() {
+    var table = getActiveTable(); if (!table) return; var tbody = table.querySelector('tbody'); if (!tbody) return;
+    var lastRow = tbody.querySelector('tr:last-child'); var colCount = lastRow ? lastRow.children.length : (table.querySelector('thead tr')?.children.length || 2);
+    var tr = document.createElement('tr');
+    for (var i = 0; i < colCount; i++) { var td = document.createElement('td'); td.textContent = 'New'; if (editMode) td.setAttribute('contenteditable', 'true'); tr.appendChild(td); }
+    tbody.appendChild(tr);
+  }
+
+  function removeTableRow() {
+    var table = getActiveTable(); if (!table) return; var tbody = table.querySelector('tbody'); if (!tbody) return;
+    var rows = tbody.querySelectorAll('tr'); if (rows.length <= 1) return;
+    var cell = getFocusedCell(); var targetRow = (cell && tbody.contains(cell)) ? cell.parentNode : rows[rows.length - 1];
+    if (targetRow && targetRow.parentNode === tbody) targetRow.remove();
+  }
+
+  function addTableCol() {
+    var table = getActiveTable(); if (!table) return;
+    var theadRow = table.querySelector('thead tr');
+    if (theadRow) { var th = document.createElement('th'); th.textContent = 'New'; if (editMode) th.setAttribute('contenteditable', 'true'); theadRow.appendChild(th); }
+    table.querySelectorAll('tbody tr').forEach(function (tr) { var td = document.createElement('td'); td.textContent = 'New'; if (editMode) td.setAttribute('contenteditable', 'true'); tr.appendChild(td); });
+  }
+
+  function removeTableCol() {
+    var table = getActiveTable(); if (!table) return;
+    var theadRow = table.querySelector('thead tr'); var bodyRows = table.querySelectorAll('tbody tr');
+    var totalCols = theadRow ? theadRow.children.length : (bodyRows[0] ? bodyRows[0].children.length : 0); if (totalCols <= 1) return;
+    var cell = getFocusedCell(); var colIndex = -1;
+    if (cell) { var row = cell.parentNode; colIndex = Array.prototype.indexOf.call(row.children, cell); }
+    if (colIndex < 0) colIndex = totalCols - 1;
+    if (theadRow && theadRow.children[colIndex]) { theadRow.removeChild(theadRow.children[colIndex]); }
+    bodyRows.forEach(function (tr) { if (tr.children[colIndex]) tr.removeChild(tr.children[colIndex]); });
+  }
+
+  function addImage() {
+    var input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none';
+    input.addEventListener('change', function () { var file = input.files && input.files[0]; if (!file) return; blobToDataUrl(file, insertImageFromDataUrl); });
+    document.body.appendChild(input); input.click(); setTimeout(function () { input.remove(); }, 1000);
+  }
+
+  document.addEventListener('paste', function (e) {
+    if (!editMode) return; var items = e.clipboardData && e.clipboardData.items; if (!items) return;
+    for (var i = 0; i < items.length; i++) { var item = items[i]; if (item.kind === 'file' && item.type.indexOf('image/') === 0) { e.preventDefault(); var blob = item.getAsFile(); if (blob) blobToDataUrl(blob, insertImageFromDataUrl); return; } }
+  });
+
+  (function injectNewToolbarButtons() {
+    if (!editToolbar) return;
+    function makeBtn(action, label, title) { var b = document.createElement('button'); b.className = 'edit-toolbar__btn'; b.dataset.action = action; b.textContent = label; if (title) b.title = title; return b; }
+    function makeSep() { var s = document.createElement('div'); s.className = 'edit-toolbar__separator'; return s; }
+    var addBulletBtn = editToolbar.querySelector('[data-action="add-bullet"]');
+    var anchor = addBulletBtn || null;
+    function insertBeforeAnchor(node) { if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(node, anchor); else editToolbar.appendChild(node); }
+    if (!editToolbar.querySelector('[data-action="add-image"]')) { insertBeforeAnchor(makeBtn('add-image', '+ Image', 'Insert image')); insertBeforeAnchor(makeSep()); }
+    if (!editToolbar.querySelector('[data-action="add-subtext"]')) { insertBeforeAnchor(makeBtn('add-subtext', '+ Subtext', 'Add subtitle line')); }
+    if (!editToolbar.querySelector('[data-action="add-row"]')) {
+      var addSlideBtn = editToolbar.querySelector('[data-action="add-slide"]'); var tableAnchor = addSlideBtn || null;
+      function insertBeforeTableAnchor(node) { if (tableAnchor && tableAnchor.parentNode) tableAnchor.parentNode.insertBefore(node, tableAnchor); else editToolbar.appendChild(node); }
+      insertBeforeTableAnchor(makeBtn('add-row', '+ Row', 'Add table row')); insertBeforeTableAnchor(makeBtn('remove-row', '- Row', 'Remove table row'));
+      insertBeforeTableAnchor(makeBtn('add-col', '+ Col', 'Add table column')); insertBeforeTableAnchor(makeBtn('remove-col', '- Col', 'Remove table column'));
+      insertBeforeTableAnchor(makeSep());
+    }
+  })();
+
+  function savePresentation() {
+    var wasEditing = editMode; if (wasEditing) disableEditMode();
+    var notesPanel = document.querySelector('.notes-panel'); if (notesPanel) notesPanel.style.display = 'none';
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    if (notesPanel && notesVisible) notesPanel.style.display = 'block';
+    if (wasEditing) enableEditMode();
+    if (window.showSaveFilePicker) { saveWithFileSystemAccess(html); } else { saveWithDownload(html); }
+  }
+
+  function saveWithFileSystemAccess(html) {
+    if (fileHandle) { writeToHandle(fileHandle, html); } else {
+      var suggestedName = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+      window.showSaveFilePicker({ suggestedName: suggestedName, types: [{ description: 'HTML Files', accept: { 'text/html': ['.html'] } }] })
+        .then(function (handle) { fileHandle = handle; writeToHandle(handle, html); })
+        .catch(function (err) { if (err.name !== 'AbortError') { console.error('Save failed:', err); showToast('Save failed', true); } });
+    }
+  }
+
+  function writeToHandle(handle, content) {
+    handle.createWritable().then(function (writable) { return writable.write(content).then(function () { return writable.close(); }); })
+      .then(function () { showToast('Saved!'); }).catch(function (err) { console.error('Write failed:', err); showToast('Save failed', true); fileHandle = null; });
+  }
+
+  function saveWithDownload(html) {
+    var blob = new Blob([html], { type: 'text/html' }); var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = document.title.replace(/\s+/g, '-').toLowerCase() + '.html'; a.click(); URL.revokeObjectURL(a.href); showToast('Downloaded!');
+  }
+
+  function showToast(message, isError) {
+    var existing = document.querySelector('.save-toast'); if (existing) existing.remove();
+    var toast = document.createElement('div'); toast.className = 'save-toast' + (isError ? ' save-toast--error' : ''); toast.textContent = message; document.body.appendChild(toast);
+    requestAnimationFrame(function () { toast.classList.add('save-toast--visible'); });
+    setTimeout(function () { toast.classList.remove('save-toast--visible'); setTimeout(function () { toast.remove(); }, 300); }, 2000);
+  }
+
+  function createNotesPanel() {
+    var panel = document.createElement('div'); panel.className = 'notes-panel';
+    panel.innerHTML = '<div class="notes-panel__header"><span class="notes-panel__title">Talking Points</span><span class="notes-panel__hint">T</span><button class="notes-panel__close">&times;</button></div><ul class="notes-panel__list"></ul>';
+    panel.style.display = 'none'; document.body.appendChild(panel);
+    panel.querySelector('.notes-panel__close').addEventListener('click', function () { toggleNotes(); });
+    return panel;
+  }
+
+  var notesPanelEl = createNotesPanel();
+
+  function updateNotesContent() {
+    var list = notesPanelEl.querySelector('.notes-panel__list'); var currentSlideEl = slides[currentSlide];
+    var notesData = currentSlideEl ? currentSlideEl.dataset.notes : '';
+    if (!notesData || notesData.trim() === '') { list.innerHTML = '<li class="notes-panel__empty">No notes for this slide</li>'; return; }
+    var points = notesData.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+    list.innerHTML = points.map(function (p) { return '<li class="notes-panel__item">' + p + '</li>'; }).join('');
+  }
+
+  function toggleNotes() { notesVisible = !notesVisible; notesPanelEl.style.display = notesVisible ? 'block' : 'none'; if (notesVisible) updateNotesContent(); }
+
+  document.querySelectorAll('.edit-toolbar__btn').forEach(function (btn) {
+    var action = btn.dataset.action; if (!action) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      switch (action) {
+        case 'bold': execCommand('bold'); break;
+        case 'italic': execCommand('italic'); break;
+        case 'font-up': changeFontSize(2); break;
+        case 'font-down': changeFontSize(-2); break;
+        case 'add-bullet': addBullet(); break;
+        case 'remove-bullet': removeBullet(); break;
+        case 'add-subtext': addSubtext(); break;
+        case 'add-image': addImage(); break;
+        case 'add-row': addTableRow(); break;
+        case 'remove-row': removeTableRow(); break;
+        case 'add-col': addTableCol(); break;
+        case 'remove-col': removeTableCol(); break;
+        case 'add-slide': addSlide(); break;
+        case 'delete-slide': deleteSlide(); break;
+        case 'save': savePresentation(); break;
+      }
+    });
+  });
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen().then(function () { isFullscreen = true; presentation.classList.add('presentation--fullscreen'); }).catch(function () {}); }
+    else { document.exitFullscreen(); isFullscreen = false; presentation.classList.remove('presentation--fullscreen'); }
+  }
+
+  document.addEventListener('fullscreenchange', function () { if (!document.fullscreenElement) { isFullscreen = false; presentation.classList.remove('presentation--fullscreen'); } });
+
+  document.addEventListener('keydown', function (e) {
+    var isEditing = e.target.isContentEditable;
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); savePresentation(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'e') { e.preventDefault(); toggleEditMode(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') { if (editMode) { e.preventDefault(); deleteSlide(); return; } }
+    if (e.key === 'Escape') { if (editMode) { disableEditMode(); } return; }
+    if (editMode && isEditing && (e.key === 'Backspace' || e.key === 'Delete')) {
+      var delTarget = e.target;
+      var delText = delTarget && delTarget.textContent ? delTarget.textContent.replace(/[​﻿]/g, '').trim() : '';
+      if (delTarget && delTarget.matches && delTarget.matches(REMOVABLE_EMPTY_SELECTOR) && delText === '') { e.preventDefault(); var nextFocus = focusTargetAfterRemoval(delTarget); delTarget.remove(); if (nextFocus) placeCaretAtEnd(nextFocus); return; }
+    }
+    if (isEditing) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nextSlide(); break;
+      case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prevSlide(); break;
+      case 'f': case 'F11': e.preventDefault(); toggleFullscreen(); break;
+      case 't': e.preventDefault(); toggleNotes(); break;
+      case 'Home': e.preventDefault(); goToSlide(0); break;
+      case 'End': e.preventDefault(); goToSlide(getTotalSlides() - 1); break;
+    }
+  });
+
+  var touchStartX = 0;
+  document.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+  document.addEventListener('touchend', function (e) { var diff = e.changedTouches[0].screenX - touchStartX; if (Math.abs(diff) > 50) { if (diff > 0) prevSlide(); else nextSlide(); } }, { passive: true });
+
+  goToSlide(0);
+})();
+</script><div class="notes-panel" style="display: none;"><div class="notes-panel__header"><span class="notes-panel__title">Talking Points</span><span class="notes-panel__hint">T</span><button class="notes-panel__close">×</button></div><ul class="notes-panel__list"></ul></div>
+
+
+
+</body></html>

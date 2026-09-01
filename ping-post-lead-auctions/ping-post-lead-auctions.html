@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1">
+  <title>Ping Post: The Lead Auction System That 3x's Your Prices</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f0d0a;
+      --surface: #161310;
+      --card-bg: #1c1915;
+      --card-border: #2e2820;
+      --primary: #C7963F;
+      --primary-glow: rgba(199, 150, 63, 0.15);
+      --secondary: #7c3aed;
+      --text: #ffffff;
+      --text-muted: #9a9080;
+      --text-accent: #C7963F;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --font-heading: Inter, system-ui, sans-serif;
+      --font-body: Inter, system-ui, sans-serif;
+      --font-mono: JetBrains Mono, monospace;
+      --title-size: 3.5rem;
+      --heading-size: 2.5rem;
+      --subheading-size: 1.5rem;
+      --body-size: 1.125rem;
+      --bullet-size: 1.25rem;
+      --caption-size: 0.875rem;
+      --content-padding: 80px;
+      --card-radius: 16px;
+      --sidebar-width: 260px;
+      --transition-duration: 300ms;
+    }
+
+    /* ==========================================================================
+       HTML Slide Designer - Base Theme
+       ========================================================================== */
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .presentation {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      background: var(--surface);
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      padding: 32px 0;
+      overflow-y: auto;
+      z-index: 10;
+      transition: transform var(--transition-duration) ease;
+    }
+
+    .sidebar__logo {
+      padding: 0 24px 32px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 24px;
+    }
+
+    .sidebar__nav {
+      list-style: none;
+      padding: 0 12px;
+      flex: 1;
+    }
+
+    .sidebar__item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 150ms ease;
+      margin-bottom: 4px;
+      font-size: var(--caption-size);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .sidebar__item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    .sidebar__item--active {
+      background: var(--primary-glow);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .sidebar__item-number {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    .sidebar__item-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar__progress {
+      padding: 16px 24px;
+      border-top: 1px solid var(--card-border);
+      margin-top: auto;
+    }
+
+    .sidebar__progress-bar {
+      width: 100%;
+      height: 3px;
+      background: var(--card-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .sidebar__progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 2px;
+      transition: width var(--transition-duration) ease;
+    }
+
+    .sidebar__progress-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .stage {
+      flex: 1;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition-duration) ease;
+      padding: var(--content-padding);
+    }
+
+    .slide--active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .slide__content {
+      width: 100%;
+      max-width: 1400px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .slide__content--centered {
+      align-items: center;
+      text-align: center;
+    }
+
+    .slide__bullets,
+    .slide__takeaways {
+      text-align: left;
+    }
+
+    .slide__title {
+      font-family: var(--font-heading);
+      font-size: var(--title-size);
+      font-weight: 700;
+      line-height: 1.1;
+      color: #1a1a1a;
+      letter-spacing: -0.02em;
+    }
+
+    .slide__heading {
+      font-family: var(--font-heading);
+      font-size: var(--heading-size);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #1a1a1a;
+      letter-spacing: -0.01em;
+    }
+
+    .slide__subheading {
+      font-size: var(--subheading-size);
+      font-weight: 500;
+      color: #666666;
+      line-height: 1.4;
+    }
+
+    .slide__subtitle {
+      font-size: var(--subheading-size);
+      font-weight: 400;
+      color: #666666;
+      margin-top: -16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      width: fit-content;
+    }
+
+    .badge--step {
+      border: 1.5px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+    }
+
+    .badge--recommended {
+      border: 1.5px solid var(--primary);
+      background: var(--primary);
+      color: var(--bg);
+    }
+
+    .slide__bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .slide__bullet {
+      font-size: var(--bullet-size);
+      font-weight: 400;
+      color: #1a1a1a;
+      padding-left: 28px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .slide__bullet::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .slide__hero-image {
+      width: 100%;
+      max-height: 55vh;
+      border-radius: var(--card-radius);
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .slide__stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      width: 100%;
+    }
+
+    .stat-card {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: var(--card-radius);
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .stat-card__value {
+      font-family: var(--font-heading);
+      font-size: var(--title-size);
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-card__label {
+      font-size: var(--subheading-size);
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .stat-card__description {
+      font-size: var(--caption-size);
+      color: #666666;
+    }
+
+    .slide__quote-wrapper {
+      max-width: 900px;
+      position: relative;
+    }
+
+    .slide__quote-mark {
+      font-family: Georgia, serif;
+      font-size: 8rem;
+      color: var(--primary);
+      opacity: 0.3;
+      line-height: 1;
+      position: absolute;
+      top: -40px;
+      left: -20px;
+    }
+
+    .slide__quote {
+      font-family: var(--font-heading);
+      font-size: var(--heading-size);
+      font-weight: 500;
+      font-style: italic;
+      line-height: 1.4;
+      color: #1a1a1a;
+      position: relative;
+      z-index: 1;
+    }
+
+    .slide__attribution {
+      display: block;
+      margin-top: 24px;
+      font-size: var(--body-size);
+      font-style: normal;
+      color: #666666;
+    }
+
+    .slide__takeaways {
+      list-style: none;
+      counter-reset: takeaway;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .slide__takeaway {
+      counter-increment: takeaway;
+      font-size: var(--bullet-size);
+      color: #1a1a1a;
+      padding-left: 48px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .slide__takeaway::before {
+      content: counter(takeaway);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary-glow);
+      color: var(--primary);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide__cta {
+      margin-top: 16px;
+    }
+
+    .slide__cta-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 14px 32px;
+      background: var(--primary);
+      color: var(--bg);
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: var(--body-size);
+      text-decoration: none;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .slide__cta-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px var(--primary-glow);
+    }
+
+    .slide__cta-text {
+      font-size: var(--subheading-size);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .slide__diagram-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 420px;
+      width: 100%;
+    }
+
+    .slide__diagram-wrapper .mermaid {
+      width: 100%;
+      min-height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide__diagram-wrapper .mermaid svg {
+      min-height: 350px;
+      width: 100% !important;
+      max-width: 100%;
+      height: auto !important;
+    }
+
+    .slide__cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      width: 100%;
+    }
+
+    .card {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px var(--primary-glow);
+    }
+
+    .card__body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card__title {
+      font-family: var(--font-heading);
+      font-size: var(--subheading-size);
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .card__description {
+      font-size: var(--body-size);
+      color: #666666;
+      line-height: 1.5;
+    }
+
+    .image-placeholder {
+      background: #f8f9fa;
+      border: 2px dashed #e0e0e0;
+      border-radius: var(--card-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      color: #666666;
+      font-style: italic;
+      font-size: var(--caption-size);
+      width: 100%;
+      min-height: 300px;
+    }
+
+    /* Comparison table styles */
+    .slide__table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .slide__table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      font-size: var(--body-size);
+    }
+
+    .slide__table th {
+      padding: 16px 24px;
+      font-weight: 700;
+      text-align: left;
+      color: #ffffff;
+      font-size: var(--bullet-size);
+    }
+
+    .slide__table th:first-child {
+      background: #374151;
+    }
+
+    .slide__table th.table-col--highlight {
+      background: var(--primary);
+      color: var(--bg);
+    }
+
+    .slide__table th.table-col--default {
+      background: #6b7280;
+    }
+
+    .slide__table td {
+      padding: 14px 24px;
+      border-bottom: 1px solid #e0e0e0;
+      color: #1a1a1a;
+      font-weight: 400;
+    }
+
+    .slide__table td:first-child {
+      font-weight: 600;
+      color: #374151;
+      background: #f9fafb;
+    }
+
+    .slide__table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .slide__table tr:nth-child(even) td:not(:first-child) {
+      background: #f9fafb;
+    }
+
+    /* Edit mode styles */
+    .edit-mode .slide__title,
+    .edit-mode .slide__heading,
+    .edit-mode .slide__subheading,
+    .edit-mode .slide__subtitle,
+    .edit-mode .slide__description,
+    .edit-mode .slide__bullet,
+    .edit-mode .slide__quote,
+    .edit-mode .slide__attribution,
+    .edit-mode .card__title,
+    .edit-mode .card__description,
+    .edit-mode .stat-card__value,
+    .edit-mode .stat-card__label,
+    .edit-mode .stat-card__description,
+    .edit-mode .slide__takeaway,
+    .edit-mode .slide__cta-text,
+    .edit-mode .badge {
+      outline: 1px dashed rgba(0, 0, 0, 0.15);
+      outline-offset: 4px;
+      cursor: text;
+    }
+
+    .edit-mode [contenteditable="true"]:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .edit-toolbar {
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-width);
+      right: 0;
+      height: 48px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--card-border);
+      display: none;
+      align-items: center;
+      padding: 0 24px;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .edit-mode .edit-toolbar {
+      display: flex;
+    }
+
+    .edit-toolbar__btn {
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+
+    .edit-toolbar__btn:hover {
+      background: var(--card-bg);
+      border-color: var(--primary);
+    }
+
+    .edit-toolbar__separator {
+      width: 1px;
+      height: 24px;
+      background: var(--card-border);
+      margin: 0 4px;
+    }
+
+    .edit-toolbar__spacer {
+      flex: 1;
+    }
+
+    .edit-toolbar__btn--save {
+      background: var(--primary);
+      color: var(--bg);
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+
+    .edit-toolbar__btn--danger {
+      color: var(--error);
+      border-color: var(--error);
+    }
+
+    .edit-indicator {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      padding: 8px 16px;
+      background: var(--primary);
+      color: var(--bg);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      z-index: 100;
+      display: none;
+    }
+
+    .edit-mode .edit-indicator {
+      display: block;
+    }
+
+    .edit-mode .slide__content > * {
+      position: relative;
+    }
+
+    .drag-handle {
+      position: absolute;
+      left: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: grab;
+      opacity: 0;
+      transition: opacity 150ms ease;
+      user-select: none;
+      z-index: 10;
+    }
+
+    .drag-handle::before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 14px;
+      background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
+      background-size: 4px 4.5px;
+    }
+
+    .edit-mode .slide__content > *:hover > .drag-handle {
+      opacity: 0.5;
+    }
+
+    .delete-element-btn {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 150ms ease, color 150ms ease;
+      user-select: none;
+      z-index: 10;
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .delete-element-btn::before {
+      content: '\00D7';
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .edit-mode .slide__content > *:hover > .delete-element-btn {
+      opacity: 0.5;
+    }
+
+    .delete-element-btn:hover {
+      opacity: 1 !important;
+      color: var(--error);
+    }
+
+    .presentation--fullscreen .sidebar {
+      display: none;
+    }
+
+    .save-toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      padding: 12px 24px;
+      background: var(--success);
+      color: #ffffff;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      z-index: 300;
+      opacity: 0;
+      transform: translateY(-12px);
+      transition: opacity 300ms ease, transform 300ms ease;
+      pointer-events: none;
+    }
+
+    .save-toast--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .notes-panel {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 360px;
+      max-height: 280px;
+      background: rgba(22, 19, 16, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: var(--card-radius);
+      z-index: 200;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      font-family: var(--font-body);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+    }
+
+    .notes-panel__header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .notes-panel__title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+    }
+
+    .notes-panel__hint {
+      font-size: 0.625rem;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .notes-panel__close {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+
+    .notes-panel__close:hover {
+      color: #ffffff;
+    }
+
+    .notes-panel__list {
+      list-style: none;
+      padding: 12px 16px;
+      margin: 0;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .notes-panel__item {
+      font-size: 0.875rem;
+      color: #ffffff;
+      padding: 6px 0 6px 20px;
+      position: relative;
+      line-height: 1.4;
+    }
+
+    .notes-panel__item::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .notes-panel__empty {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 6px 0;
+      list-style: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="presentation">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <span style="font-family: var(--font-heading); font-weight: 700; font-size: 1rem; color: var(--primary);">GREAT MARKETING AI</span>
+      </div>
+      <ul class="sidebar__nav">
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">01</span>
+          <span class="sidebar__item-label">Hook</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">02</span>
+          <span class="sidebar__item-label">The Problem</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">03</span>
+          <span class="sidebar__item-label">What Is Ping Post</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">04</span>
+          <span class="sidebar__item-label">Coffee Shop Analogy</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">05</span>
+          <span class="sidebar__item-label">Ping + Post</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">06</span>
+          <span class="sidebar__item-label">Ping vs Post Fields</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">07</span>
+          <span class="sidebar__item-label">The Speed</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">08</span>
+          <span class="sidebar__item-label">Traditional vs Ping Post</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">09</span>
+          <span class="sidebar__item-label">Home Improvement Case</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">10</span>
+          <span class="sidebar__item-label">Plot Twist</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">11</span>
+          <span class="sidebar__item-label">Post Rejects</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">12</span>
+          <span class="sidebar__item-label">Insurance Case</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">13</span>
+          <span class="sidebar__item-label">Buyer Relationships</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">14</span>
+          <span class="sidebar__item-label">The #1 Mistake</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">15</span>
+          <span class="sidebar__item-label">Buyer Network</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">16</span>
+          <span class="sidebar__item-label">Solar Case Study</span>
+        </li>
+        <li class="sidebar__item sidebar__item--active">
+          <span class="sidebar__item-number">17</span>
+          <span class="sidebar__item-label">Recap</span>
+        </li>
+        <li class="sidebar__item">
+          <span class="sidebar__item-number">18</span>
+          <span class="sidebar__item-label">Next Steps</span>
+        </li>
+      </ul>
+      <div class="sidebar__progress">
+        <div class="sidebar__progress-bar">
+          <div class="sidebar__progress-fill" style="width: 94.4444%;"></div>
+        </div>
+        <p class="sidebar__progress-text">17 / 18</p>
+      </div>
+    </aside>
+
+    <!-- Slides -->
+    <main class="stage">
+
+      <!-- Slide 1: Hook / Title -->
+      <section class="slide slide--title" data-slide="1" data-chapter="Hook" data-notes="Open big|This is the technology nobody talks about|Tease the $50 to $150 transformation">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">Pay-Per-Lead Playbook</div>
+          <h1 class="slide__title">Ping Post: The Lead Auction System That 3x's Your Prices</h1>
+          <p class="slide__subtitle">How one technology turns $50 leads into $150 leads — overnight</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: The Problem -->
+      <section class="slide slide--heading-bullets" data-slide="2" data-chapter="The Problem" data-notes="Most agencies sell to one buyer|They have no idea what the lead is really worth|This is the gap ping post closes">
+        <div class="slide__content">
+          <div class="badge badge--step">The Problem</div>
+          <img class="slide__hero-image" src="images/slide-02-leaving-money-table.png" alt="Agencies selling leads to a single buyer and leaving cash on the table">
+          <p class="slide__subheading">90% of pay-per-lead agencies have never even heard of ping post</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">One buyer sets your entire price ceiling</li>
+            <li class="slide__bullet">No competition = no price discovery</li>
+            <li class="slide__bullet">Thousands left on the table every day</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 3: What is Ping Post -->
+      <section class="slide slide--quote" data-slide="3" data-chapter="What Is Ping Post" data-notes="Define it in one sentence|Auction house for leads|Under 200 milliseconds — let that land">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--recommended">The Big Idea</div>
+          <div class="slide__quote-wrapper">
+            <div class="slide__quote-mark">"</div>
+            <blockquote class="slide__quote">Ping post is an auction house for leads — but the entire auction happens in under 200 milliseconds.</blockquote>
+            <cite class="slide__attribution">Faster than the time it takes to blink</cite>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Coffee Shop Analogy -->
+      <section class="slide slide--heading-bullets" data-slide="4" data-chapter="Coffee Shop Analogy" data-notes="Walk through the analogy slowly|Five shops bid on every customer|Customer that was worth $3 sells for $7">
+        <div class="slide__content">
+          <div class="badge badge--step">Analogy</div>
+          <img class="slide__hero-image" src="images/slide-04-coffee-shop-auction.png" alt="Five coffee shops bidding on a customer in a real-time auction">
+          <p class="slide__subheading">Imagine five coffee shops bidding on every single customer who walks in</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">First buyer would have paid $3</li>
+            <li class="slide__bullet">Highest bidder pays $7</li>
+            <li class="slide__bullet">Same customer, more than double the revenue</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 5: Ping + Post Two Phases -->
+      <section class="slide slide--heading-bullets" data-slide="5" data-chapter="Ping + Post" data-notes="The name gives it away|Ping = test the waters|Post = deliver to the highest bidder">
+        <div class="slide__content">
+          <div class="badge badge--step">How It Works</div>
+          <img class="slide__hero-image" src="images/slide-05-ping-post-explained.png" alt="Ping post two-phase auction explained: ping fans out, post delivers to winner">
+          <p class="slide__subheading">Two separate phases, both happening in milliseconds</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">PING: send basic info, collect bids</li>
+            <li class="slide__bullet">POST: deliver full lead to highest bidder</li>
+            <li class="slide__bullet">Sequential handshake — buyer must ACK to win</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 6: Ping vs Post Field Breakdown -->
+      <section class="slide slide--heading-bullets" data-slide="6" data-chapter="Ping vs Post Fields" data-notes="Get specific here|Ping = decision-making fields|Post = the PII you need to actually contact the lead">
+        <div class="slide__content">
+          <div class="badge badge--recommended">What's Actually Sent</div>
+          <h2 class="slide__heading">Ping vs Post: What's In Each Phase</h2>
+          <div class="slide__table-wrapper">
+            <table class="slide__table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="table-col--default">PING (Bid Phase)</th>
+                  <th class="table-col--highlight">POST (Delivery Phase)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Purpose</td>
+                  <td>Buyer makes a bid decision</td>
+                  <td>Buyer contacts the lead</td>
+                </tr>
+                <tr>
+                  <td>Always Sent</td>
+                  <td>ZIP / Geo, Age</td>
+                  <td>Name, Phone, Email, Address</td>
+                </tr>
+                <tr>
+                  <td>Legal Vertical</td>
+                  <td>Incident date, injury type</td>
+                  <td>Full PII + case details</td>
+                </tr>
+                <tr>
+                  <td>Health/Insurance</td>
+                  <td>Income range, household size</td>
+                  <td>Full PII + medical history</td>
+                </tr>
+                <tr>
+                  <td>Contains PII?</td>
+                  <td>No</td>
+                  <td>Yes — only winner gets it</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: The Speed Stats -->
+      <section class="slide slide--stats-numbers" data-slide="6" data-chapter="The Speed" data-notes="Stress how fast this is|Faster than a finger snap|Before they could refresh the browser">
+        <div class="slide__content">
+          <div class="badge badge--recommended">The Speed</div>
+          <h2 class="slide__heading">Faster Than You Can Blink</h2>
+          <div class="slide__stats-grid">
+            <div class="stat-card">
+              <div class="stat-card__value">200ms</div>
+              <div class="stat-card__label">Total Auction Time</div>
+              <div class="stat-card__description">Ping + bids + post — all in under a fifth of a second</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">Dozens</div>
+              <div class="stat-card__label">Buyers Pinged</div>
+              <div class="stat-card__description">Multiple bidders compete for every single lead</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">1</div>
+              <div class="stat-card__label">Winner Per Lead</div>
+              <div class="stat-card__description">Highest bidder gets the full lead delivered</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Traditional vs Ping Post Table -->
+      <section class="slide slide--heading-bullets" data-slide="7" data-chapter="Traditional vs Ping Post" data-notes="Walk through each row|Same lead, same quality|Just a different selling method">
+        <div class="slide__content">
+          <div class="badge badge--recommended">The Real Numbers</div>
+          <h2 class="slide__heading">Traditional vs Ping Post</h2>
+          <div class="slide__table-wrapper">
+            <table class="slide__table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="table-col--default">Traditional</th>
+                  <th class="table-col--highlight">Ping Post</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Buyers Per Lead</td>
+                  <td>1</td>
+                  <td>4–8+</td>
+                </tr>
+                <tr>
+                  <td>Price Discovery</td>
+                  <td>Guesswork</td>
+                  <td>Real-time auction</td>
+                </tr>
+                <tr>
+                  <td>Sale Speed</td>
+                  <td>Hours / Days</td>
+                  <td>Under 200ms</td>
+                </tr>
+                <tr>
+                  <td>Example Lead</td>
+                  <td>$50</td>
+                  <td>$150</td>
+                </tr>
+                <tr>
+                  <td>Revenue Lift</td>
+                  <td>Baseline</td>
+                  <td>2x – 3x</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Home Improvement Case Study -->
+      <section class="slide slide--heading-bullets" data-slide="8" data-chapter="Home Improvement Case" data-notes="Real client example|Four contractors bidding on the same lead|$60 became $140">
+        <div class="slide__content">
+          <div class="badge badge--step">Case Study #1</div>
+          <img class="slide__hero-image" src="images/slide-08-home-improvement-bidding.png" alt="Four home improvement contractors bidding on the same lead">
+          <p class="slide__subheading">A home improvement client more than doubled their lead price overnight</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Before: $60 per lead from one buyer</li>
+            <li class="slide__bullet">After: 4 contractors bidding, $140 winning bid</li>
+            <li class="slide__bullet">Same lead, same quality, 2.3x the revenue</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 9: Plot Twist - Some Sell For Less -->
+      <section class="slide slide--heading-bullets" data-slide="9" data-chapter="Plot Twist" data-notes="This is the honest truth|Bad leads get exposed in public auctions|Ping post reveals true market value">
+        <div class="slide__content">
+          <div class="badge badge--step">Plot Twist</div>
+          <img class="slide__hero-image" src="images/slide-10-quality-exposed.png" alt="Public auctions expose true lead quality versus private sales">
+          <p class="slide__subheading">Some leads actually sell for LESS — and that's a feature, not a bug</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Private sale: buyers overpay on questionable leads</li>
+            <li class="slide__bullet">Public auction: market exposes true value</li>
+            <li class="slide__bullet">Garbage in = garbage prices out</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 11: Post Rejects -->
+      <section class="slide slide--card-grid" data-slide="11" data-chapter="Post Rejects" data-notes="Hidden failure mode nobody talks about|Buyer wins the bid but then rejects the post|Know these 4 reasons cold">
+        <div class="slide__content">
+          <div class="badge badge--step">The Hidden Failure Mode</div>
+          <h2 class="slide__heading">4 Reasons a Post Gets Rejected</h2>
+          <div class="slide__cards">
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">Filter Set Mismatch</h3>
+                <p class="card__description">Full PII reveals a field that fails the buyer's filter — too old, wrong city, wrong vehicle.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">Duplicate Detection</h3>
+                <p class="card__description">Buyer's CRM already has this lead. Auto-rejected before it ever gets contacted.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">Lead Scoring / TCPA Fail</h3>
+                <p class="card__description">Third-party API check kills it: bad phone, low score, TCPA non-compliant.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">Missing Required Fields</h3>
+                <p class="card__description">Post arrives malformed or incomplete. Buyer's system rejects automatically.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12: Insurance Case Study -->
+      <section class="slide slide--stats-numbers" data-slide="10" data-chapter="Insurance Case" data-notes="Insurance agency, 8 buyers|Premium leads went up, weak ones went down|Average still climbed 52%">
+        <div class="slide__content">
+          <div class="badge badge--recommended">Case Study #2</div>
+          <h2 class="slide__heading">Life Insurance: Market Discovery in Action</h2>
+          <div class="slide__stats-grid">
+            <div class="stat-card">
+              <div class="stat-card__value">$25</div>
+              <div class="stat-card__label">Before (Flat Rate)</div>
+              <div class="stat-card__description">One buyer, paid the same for every lead</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">$38</div>
+              <div class="stat-card__label">After (Avg)</div>
+              <div class="stat-card__description">8 buyers competing — premium leads hit $60</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value">+52%</div>
+              <div class="stat-card__label">Revenue Lift</div>
+              <div class="stat-card__description">And clarity on which leads to generate more of</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Buyer Relationships -->
+      <section class="slide slide--quote" data-slide="11" data-chapter="Buyer Relationships" data-notes="Higher prices are only half the story|Buyers only pay for leads they want|Win-win flywheel">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--recommended">The Real Magic</div>
+          <div class="slide__quote-wrapper">
+            <div class="slide__quote-mark">"</div>
+            <blockquote class="slide__quote">Buyers only pay for the leads they actively bid on. Higher conversions for them = higher prices for you. It's a flywheel.</blockquote>
+            <cite class="slide__attribution">Why ping post buyers pay more, willingly</cite>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 12: The #1 Mistake -->
+      <section class="slide slide--heading-bullets" data-slide="12" data-chapter="The #1 Mistake" data-notes="This is where most agencies fail|Tech is the easy part|Buyer network is the hard part">
+        <div class="slide__content">
+          <div class="badge badge--step">The #1 Mistake</div>
+          <img class="slide__hero-image" src="images/slide-13-buyer-network-80-20.png" alt="Tech is 20%, buyer network is 80% of ping post success">
+          <p class="slide__subheading">Tech is 20% of success. Your buyer network is the other 80%.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Most agencies obsess over the platform</li>
+            <li class="slide__bullet">Two buyers = no real auction</li>
+            <li class="slide__bullet">The buyer network is where the money is</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 13: Buyer Network Requirements -->
+      <section class="slide slide--card-grid" data-slide="13" data-chapter="Buyer Network" data-notes="Walk through each requirement|4 to 6 minimum|Hungry, funded, fast">
+        <div class="slide__content">
+          <div class="badge badge--recommended">What a Real Buyer Network Looks Like</div>
+          <h2 class="slide__heading"><br></h2>
+          <div class="slide__cards">
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">4–6+ Active</h3>
+                <p class="card__description">Per lead type. Fewer than 4 and the auction stops working.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">Hungry</h3>
+                <p class="card__description">Need leads now. Slow buyers kill momentum and lower bids.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">Well-Funded</h3>
+                <p class="card__description">Real budget. Tire-kickers won't bid up your premium leads.</p>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card__body">
+                <h3 class="card__title">Fast to Respond</h3>
+                <p class="card__description">Sub-200ms bid response. Slow APIs lose the auction every time.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 14: Solar Case Study -->
+      <section class="slide slide--heading-bullets" data-slide="14" data-chapter="Solar Case Study" data-notes="The full picture|Three months building the network|$80K to $150K per month with the same ad spend">
+        <div class="slide__content">
+          <div class="badge badge--step">Case Study #3</div>
+          <img class="slide__hero-image" src="images/slide-15-solar-case-study.png" alt="Solar lead generation case study with 7 buyers and revenue growth">
+          <p class="slide__subheading"><br></p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet"><br></li>
+            <li class="slide__bullet"><br></li>
+            <li class="slide__bullet"><br></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 15: Recap -->
+      <section class="slide slide--recap slide--active" data-slide="15" data-chapter="Recap" data-notes="Read each takeaway|This is the screenshot moment|Ping post is auction + network">
+        <div class="slide__content">
+          <h2 class="slide__heading">Ping Post Recap</h2>
+          <ol class="slide__takeaways">
+            <li class="slide__takeaway">Ping post is a real-time lead auction (under 200ms)</li>
+            <li class="slide__takeaway">Quality leads sell for 2x–3x more than traditional methods</li>
+            <li class="slide__takeaway">Two phases: PING tests bids, POST delivers to winner</li>
+            <li class="slide__takeaway">Buyer relationships are key</li>
+            <li class="slide__takeaway">Tech is 20%. Your buyer network is the other 80%</li>
+            <li class="slide__takeaway">4–6+ hungry, funded, fast buyers per lead type</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Slide 16: CTA -->
+      <section class="slide slide--title" data-slide="16" data-chapter="Next Steps" data-notes="Clear CTA|Book the call|Subscribe and comment">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--recommended">Take Action</div>
+          <h1 class="slide__title">Set Up Ping Post For Your Agency</h1>
+          <p class="slide__subtitle">We'll walk through your current lead flow and show you where ping post fits</p>
+          <div class="slide__cta">
+            <a class="slide__cta-link" href="https://greatmarketing.ai">Book a Free Strategy Call with Great Marketing AI</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Edit Toolbar -->
+    <div class="edit-toolbar">
+      <button class="edit-toolbar__btn" data-action="bold"><b>B</b></button>
+      <button class="edit-toolbar__btn" data-action="italic"><i>I</i></button>
+      <div class="edit-toolbar__separator"></div>
+      <button class="edit-toolbar__btn" data-action="font-up">A+</button>
+      <button class="edit-toolbar__btn" data-action="font-down">A-</button>
+      <div class="edit-toolbar__separator"></div>
+      <button class="edit-toolbar__btn" data-action="add-image" title="Insert image (or paste with Cmd/Ctrl+V)">+ Image</button><div class="edit-toolbar__separator"></div><button class="edit-toolbar__btn" data-action="add-bullet">+ Bullet</button>
+      <button class="edit-toolbar__btn" data-action="remove-bullet">- Bullet</button>
+      <div class="edit-toolbar__separator"></div>
+      <button class="edit-toolbar__btn" data-action="add-row" title="Add row to table">+ Row</button><button class="edit-toolbar__btn" data-action="remove-row" title="Remove last row">- Row</button><button class="edit-toolbar__btn" data-action="add-col" title="Add column to table">+ Col</button><button class="edit-toolbar__btn" data-action="remove-col" title="Remove last column">- Col</button><div class="edit-toolbar__separator"></div><button class="edit-toolbar__btn" data-action="add-slide">+ Slide</button>
+      <button class="edit-toolbar__btn edit-toolbar__btn--danger" data-action="delete-slide">Delete Slide</button>
+      <div class="edit-toolbar__spacer"></div>
+      <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save">Save (Ctrl+S)</button>
+    </div>
+
+    <!-- Edit Indicator -->
+    <div class="edit-indicator">Edit Mode (Ctrl+E to exit)</div>
+
+  </div><!-- /presentation -->
+
+  <script>
+    /**
+     * Slide Engine - Navigation, Edit Mode, Slide Management, and Fullscreen
+     */
+    (function () {
+      'use strict';
+
+      let currentSlide = 0;
+      let editMode = false;
+      let isFullscreen = false;
+      let notesVisible = false;
+      let fileHandle = null;
+      let slides = Array.from(document.querySelectorAll('.slide'));
+      let sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+      const progressFill = document.querySelector('.sidebar__progress-fill');
+      const progressText = document.querySelector('.sidebar__progress-text');
+      const presentation = document.querySelector('.presentation');
+      const editToolbar = document.querySelector('.edit-toolbar');
+      const editIndicator = document.querySelector('.edit-indicator');
+      const stage = document.querySelector('.stage');
+      const sidebarNav = document.querySelector('.sidebar__nav');
+
+      function getTotalSlides() { return slides.length; }
+
+      function goToSlide(index) {
+        var total = getTotalSlides();
+        if (index < 0 || index >= total) return;
+        slides[currentSlide].classList.remove('slide--active');
+        sidebarItems[currentSlide]?.classList.remove('sidebar__item--active');
+        currentSlide = index;
+        slides[currentSlide].classList.add('slide--active');
+        sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+        updateProgress();
+        sidebarItems[currentSlide]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        if (notesVisible) updateNotesContent();
+      }
+
+      function nextSlide() { goToSlide(currentSlide + 1); }
+      function prevSlide() { goToSlide(currentSlide - 1); }
+
+      function updateProgress() {
+        var total = getTotalSlides();
+        var pct = ((currentSlide + 1) / total) * 100;
+        if (progressFill) progressFill.style.width = pct + '%';
+        if (progressText) progressText.textContent = (currentSlide + 1) + ' / ' + total;
+      }
+
+      function bindSidebarClicks() {
+        sidebarItems.forEach(function (item, i) {
+          item.onclick = function () { goToSlide(i); };
+        });
+      }
+      bindSidebarClicks();
+
+      function renumberSidebar() {
+        sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+        sidebarItems.forEach(function (item, i) {
+          var numEl = item.querySelector('.sidebar__item-number');
+          if (numEl) numEl.textContent = String(i + 1).padStart(2, '0');
+        });
+        bindSidebarClicks();
+      }
+
+      const editableSelectors = [
+        '.slide__title', '.slide__heading', '.slide__subheading',
+        '.slide__subtitle', '.slide__description', '.slide__bullet',
+        '.slide__quote', '.slide__attribution', '.card__title',
+        '.card__description', '.stat-card__value', '.stat-card__label',
+        '.stat-card__description', '.slide__takeaway', '.slide__cta-text',
+        '.badge'
+      ];
+
+      function enableEditMode() {
+        editMode = true;
+        presentation.classList.add('edit-mode');
+        document.querySelectorAll(editableSelectors.join(', ')).forEach(function (el) {
+          el.setAttribute('contenteditable', 'true');
+        });
+        addDragHandles();
+        addDeleteButtons();
+      }
+
+      function disableEditMode() {
+        editMode = false;
+        presentation.classList.remove('edit-mode');
+        document.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
+          el.removeAttribute('contenteditable');
+        });
+        removeDragHandles();
+        removeDeleteButtons();
+      }
+
+      function toggleEditMode() {
+        if (editMode) disableEditMode();
+        else enableEditMode();
+      }
+
+      function addDragHandles() {
+        document.querySelectorAll('.slide__content > *').forEach(function (el) {
+          if (el.querySelector('.drag-handle')) return;
+          var handle = document.createElement('div');
+          handle.className = 'drag-handle';
+          handle.addEventListener('mousedown', function (e) { startDrag(e, el); });
+          el.appendChild(handle);
+        });
+      }
+
+      function removeDragHandles() {
+        if (dragState) handleDragEnd();
+        document.querySelectorAll('.drag-handle').forEach(function (h) { h.remove(); });
+      }
+
+      function addDeleteButtons() {
+        document.querySelectorAll('.slide__content > *').forEach(function (el) {
+          if (el.querySelector('.delete-element-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'delete-element-btn';
+          btn.title = 'Delete this element';
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var preview = el.textContent.trim().substring(0, 40);
+            if (preview.length > 37) preview = preview.substring(0, 37) + '...';
+            if (confirm('Delete this element?\n\n"' + preview + '"')) el.remove();
+          });
+          el.appendChild(btn);
+        });
+      }
+
+      function removeDeleteButtons() {
+        document.querySelectorAll('.delete-element-btn').forEach(function (b) { b.remove(); });
+      }
+
+      var dragState = null;
+      function startDrag(e, el) {
+        e.preventDefault();
+        dragState = { el: el, container: el.parentElement };
+        el.classList.add('dragging');
+        document.addEventListener('mousemove', handleDragMove);
+        document.addEventListener('mouseup', handleDragEnd);
+      }
+      function handleDragMove(e) {
+        if (!dragState) return;
+        e.preventDefault();
+        var container = dragState.container;
+        var dragEl = dragState.el;
+        var children = Array.from(container.children);
+        for (var i = 0; i < children.length; i++) {
+          var child = children[i];
+          if (child === dragEl) continue;
+          var rect = child.getBoundingClientRect();
+          var midY = rect.top + rect.height / 2;
+          if (e.clientY < midY) { container.insertBefore(dragEl, child); return; }
+        }
+        container.appendChild(dragEl);
+      }
+      function handleDragEnd() {
+        if (!dragState) return;
+        dragState.el.classList.remove('dragging');
+        dragState = null;
+        document.removeEventListener('mousemove', handleDragMove);
+        document.removeEventListener('mouseup', handleDragEnd);
+      }
+
+      function addSlide() {
+        if (!editMode) return;
+        var newNum = currentSlide + 2;
+        var section = document.createElement('section');
+        section.className = 'slide slide--heading-bullets';
+        section.setAttribute('data-slide', String(newNum));
+        section.setAttribute('data-chapter', 'New Slide');
+        section.setAttribute('data-notes', '');
+        section.innerHTML =
+          '<div class="slide__content">' +
+            '<div class="badge badge--step" contenteditable="true">New Section</div>' +
+            '<h2 class="slide__heading" contenteditable="true">Slide Title</h2>' +
+            '<p class="slide__subheading" contenteditable="true">Subtitle goes here</p>' +
+            '<ul class="slide__bullets">' +
+              '<li class="slide__bullet" contenteditable="true">First point</li>' +
+              '<li class="slide__bullet" contenteditable="true">Second point</li>' +
+              '<li class="slide__bullet" contenteditable="true">Third point</li>' +
+            '</ul>' +
+          '</div>';
+        var currentSlideEl = slides[currentSlide];
+        if (currentSlideEl.nextElementSibling) stage.insertBefore(section, currentSlideEl.nextElementSibling);
+        else stage.appendChild(section);
+        var li = document.createElement('li');
+        li.className = 'sidebar__item';
+        li.innerHTML = '<span class="sidebar__item-number">' + String(newNum).padStart(2, '0') + '</span><span class="sidebar__item-label">New Slide</span>';
+        var currentSidebarItem = sidebarItems[currentSlide];
+        if (currentSidebarItem && currentSidebarItem.nextElementSibling) sidebarNav.insertBefore(li, currentSidebarItem.nextElementSibling);
+        else sidebarNav.appendChild(li);
+        slides = Array.from(document.querySelectorAll('.slide'));
+        renumberSidebar();
+        updateProgress();
+        goToSlide(currentSlide + 1);
+      }
+
+      function deleteSlide() {
+        if (!editMode) return;
+        var total = getTotalSlides();
+        if (total <= 1) return;
+        if (!confirm('Delete this slide?')) return;
+        var slideToRemove = slides[currentSlide];
+        var sidebarToRemove = sidebarItems[currentSlide];
+        var targetIndex = currentSlide;
+        if (currentSlide >= total - 1) targetIndex = currentSlide - 1;
+        slideToRemove.classList.remove('slide--active');
+        if (sidebarToRemove) sidebarToRemove.classList.remove('sidebar__item--active');
+        slideToRemove.remove();
+        if (sidebarToRemove) sidebarToRemove.remove();
+        slides = Array.from(document.querySelectorAll('.slide'));
+        renumberSidebar();
+        currentSlide = Math.max(0, Math.min(targetIndex, getTotalSlides() - 1));
+        slides[currentSlide].classList.add('slide--active');
+        sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+        updateProgress();
+      }
+
+      function execCommand(cmd) { document.execCommand(cmd, false, null); }
+
+      function changeFontSize(delta) {
+        var sel = window.getSelection();
+        if (!sel.rangeCount) return;
+        var el = sel.anchorNode?.parentElement;
+        if (!el) return;
+        var current = parseFloat(window.getComputedStyle(el).fontSize);
+        el.style.fontSize = (current + delta) + 'px';
+      }
+
+      function addBullet() {
+        var activeSlide = slides[currentSlide];
+        var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways');
+        if (!list) return;
+        var item = document.createElement('li');
+        item.className = list.querySelector('li')?.className || '';
+        item.textContent = 'New item';
+        item.setAttribute('contenteditable', 'true');
+        list.appendChild(item);
+        item.focus();
+      }
+
+      function removeBullet() {
+        var activeSlide = slides[currentSlide];
+        var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways');
+        if (!list) return;
+        var items = list.querySelectorAll('li');
+        if (items.length > 1) items[items.length - 1].remove();
+      }
+
+      function savePresentation() {
+        var wasEditing = editMode;
+        if (wasEditing) disableEditMode();
+        var notesPanel = document.querySelector('.notes-panel');
+        if (notesPanel) notesPanel.style.display = 'none';
+        var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        if (notesPanel && notesVisible) notesPanel.style.display = 'block';
+        if (wasEditing) enableEditMode();
+        if (window.showSaveFilePicker) saveWithFileSystemAccess(html);
+        else saveWithDownload(html);
+      }
+
+      function saveWithFileSystemAccess(html) {
+        if (fileHandle) { writeToHandle(fileHandle, html); return; }
+        var suggestedName = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+        window.showSaveFilePicker({
+          suggestedName: suggestedName,
+          types: [{ description: 'HTML Files', accept: { 'text/html': ['.html'] } }]
+        }).then(function (handle) { fileHandle = handle; writeToHandle(handle, html); })
+        .catch(function (err) { if (err.name !== 'AbortError') showToast('Save failed', true); });
+      }
+
+      function writeToHandle(handle, content) {
+        handle.createWritable().then(function (writable) {
+          return writable.write(content).then(function () { return writable.close(); });
+        }).then(function () { showToast('Saved!'); })
+        .catch(function () { showToast('Save failed', true); fileHandle = null; });
+      }
+
+      function saveWithDownload(html) {
+        var blob = new Blob([html], { type: 'text/html' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast('Downloaded!');
+      }
+
+      function showToast(message, isError) {
+        var existing = document.querySelector('.save-toast');
+        if (existing) existing.remove();
+        var toast = document.createElement('div');
+        toast.className = 'save-toast' + (isError ? ' save-toast--error' : '');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        requestAnimationFrame(function () { toast.classList.add('save-toast--visible'); });
+        setTimeout(function () {
+          toast.classList.remove('save-toast--visible');
+          setTimeout(function () { toast.remove(); }, 300);
+        }, 2000);
+      }
+
+      function createNotesPanel() {
+        var panel = document.createElement('div');
+        panel.className = 'notes-panel';
+        panel.innerHTML =
+          '<div class="notes-panel__header">' +
+            '<span class="notes-panel__title">Talking Points</span>' +
+            '<span class="notes-panel__hint">T</span>' +
+            '<button class="notes-panel__close">&times;</button>' +
+          '</div>' +
+          '<ul class="notes-panel__list"></ul>';
+        panel.style.display = 'none';
+        document.body.appendChild(panel);
+        panel.querySelector('.notes-panel__close').addEventListener('click', function () { toggleNotes(); });
+        return panel;
+      }
+
+      var notesPanelEl = createNotesPanel();
+
+      function updateNotesContent() {
+        var list = notesPanelEl.querySelector('.notes-panel__list');
+        var currentSlideEl = slides[currentSlide];
+        var notesData = currentSlideEl ? currentSlideEl.dataset.notes : '';
+        if (!notesData || notesData.trim() === '') {
+          list.innerHTML = '<li class="notes-panel__empty">No notes for this slide</li>';
+          return;
+        }
+        var points = notesData.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+        list.innerHTML = points.map(function (p) { return '<li class="notes-panel__item">' + p + '</li>'; }).join('');
+      }
+
+      function toggleNotes() {
+        notesVisible = !notesVisible;
+        notesPanelEl.style.display = notesVisible ? 'block' : 'none';
+        if (notesVisible) updateNotesContent();
+      }
+
+      document.querySelectorAll('.edit-toolbar__btn').forEach(function (btn) {
+        var action = btn.dataset.action;
+        if (!action) return;
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          switch (action) {
+            case 'bold': execCommand('bold'); break;
+            case 'italic': execCommand('italic'); break;
+            case 'font-up': changeFontSize(2); break;
+            case 'font-down': changeFontSize(-2); break;
+            case 'add-bullet': addBullet(); break;
+            case 'remove-bullet': removeBullet(); break;
+            case 'add-slide': addSlide(); break;
+            case 'delete-slide': deleteSlide(); break;
+            case 'save': savePresentation(); break;
+          }
+        });
+      });
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().then(function () {
+            isFullscreen = true;
+            presentation.classList.add('presentation--fullscreen');
+          }).catch(function () {});
+        } else {
+          document.exitFullscreen();
+          isFullscreen = false;
+          presentation.classList.remove('presentation--fullscreen');
+        }
+      }
+
+      document.addEventListener('fullscreenchange', function () {
+        if (!document.fullscreenElement) {
+          isFullscreen = false;
+          presentation.classList.remove('presentation--fullscreen');
+        }
+      });
+
+      document.addEventListener('keydown', function (e) {
+        var isEditing = e.target.isContentEditable;
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); savePresentation(); return; }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'e') { e.preventDefault(); toggleEditMode(); return; }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'd') { if (editMode) { e.preventDefault(); deleteSlide(); return; } }
+        if (e.key === 'Escape') { if (editMode) disableEditMode(); return; }
+        if (isEditing) return;
+        switch (e.key) {
+          case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nextSlide(); break;
+          case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prevSlide(); break;
+          case 'f': case 'F11': e.preventDefault(); toggleFullscreen(); break;
+          case 't': e.preventDefault(); toggleNotes(); break;
+          case 'Home': e.preventDefault(); goToSlide(0); break;
+          case 'End': e.preventDefault(); goToSlide(getTotalSlides() - 1); break;
+        }
+      });
+
+      var touchStartX = 0;
+      document.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+      document.addEventListener('touchend', function (e) {
+        var diff = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(diff) > 50) { if (diff > 0) prevSlide(); else nextSlide(); }
+      }, { passive: true });
+
+      if (typeof mermaid !== 'undefined') {
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'dark',
+          themeVariables: {
+            darkMode: true,
+            primaryColor: '#C7963F',
+            primaryTextColor: '#ffffff',
+            primaryBorderColor: '#2e2820',
+            lineColor: '#9a9080',
+            secondaryColor: '#161310',
+            tertiaryColor: '#1c1915',
+            fontSize: '22px'
+          }
+        });
+      }
+
+      goToSlide(0);
+    })();
+  </script><div class="notes-panel" style="display: none;"><div class="notes-panel__header"><span class="notes-panel__title">Talking Points</span><span class="notes-panel__hint">T</span><button class="notes-panel__close">×</button></div><ul class="notes-panel__list"></ul></div><div class="notes-panel" style="display: none;"><div class="notes-panel__header"><span class="notes-panel__title">Talking Points</span><span class="notes-panel__hint">T</span><button class="notes-panel__close">×</button></div><ul class="notes-panel__list"></ul></div><div class="notes-panel" style="display: none;"><div class="notes-panel__header"><span class="notes-panel__title">Talking Points</span><span class="notes-panel__hint">T</span><button class="notes-panel__close">×</button></div><ul class="notes-panel__list"></ul></div>
+
+  <!-- Edit Extensions: image insert, clipboard paste, sidebar rename, table editing -->
+  <style>
+    .edit-mode .sidebar__item-label {
+      outline: 1px dashed rgba(255, 255, 255, 0.2);
+      outline-offset: 2px;
+      cursor: text;
+      border-radius: 3px;
+    }
+    .edit-mode .sidebar__item-label:focus {
+      outline: 2px solid var(--primary);
+    }
+    .edit-mode .slide__table th,
+    .edit-mode .slide__table td {
+      outline: 1px dashed rgba(0, 0, 0, 0.15);
+      outline-offset: -2px;
+      cursor: text;
+    }
+  </style>
+  <script>
+    (function () {
+      'use strict';
+      var presentation = document.querySelector('.presentation');
+      var editToolbar = document.querySelector('.edit-toolbar');
+      if (!presentation || !editToolbar) return;
+
+      function isEditMode() { return presentation.classList.contains('edit-mode'); }
+      function getActiveSlide() { return document.querySelector('.slide.slide--active'); }
+      function getActiveTable() {
+        var s = getActiveSlide();
+        return s ? s.querySelector('.slide__table') : null;
+      }
+      function getFocusedCell() {
+        var sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return null;
+        var node = sel.anchorNode;
+        if (!node) return null;
+        if (node.nodeType === 3) node = node.parentNode;
+        return node.closest ? node.closest('td, th') : null;
+      }
+
+      /* ---------- Insert image ---------- */
+      function insertImageFromDataUrl(dataUrl) {
+        var s = getActiveSlide();
+        if (!s) return;
+        var content = s.querySelector('.slide__content');
+        if (!content) return;
+        var img = document.createElement('img');
+        img.className = 'slide__hero-image';
+        img.src = dataUrl;
+        img.alt = 'Inserted image';
+        var insertBefore = content.querySelector('.slide__bullets, .slide__table-wrapper, .slide__cards, .slide__stats-grid, .slide__takeaways, .slide__quote-wrapper, .slide__cta');
+        if (insertBefore) content.insertBefore(img, insertBefore);
+        else content.appendChild(img);
+      }
+      function blobToDataUrl(blob, cb) {
+        var r = new FileReader();
+        r.onload = function () { cb(r.result); };
+        r.readAsDataURL(blob);
+      }
+      function addImage() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.style.display = 'none';
+        input.addEventListener('change', function () {
+          var f = input.files && input.files[0];
+          if (f) blobToDataUrl(f, insertImageFromDataUrl);
+        });
+        document.body.appendChild(input);
+        input.click();
+        setTimeout(function () { input.remove(); }, 1000);
+      }
+
+      /* ---------- Clipboard paste ---------- */
+      document.addEventListener('paste', function (e) {
+        if (!isEditMode()) return;
+        var items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+        for (var i = 0; i < items.length; i++) {
+          var it = items[i];
+          if (it.kind === 'file' && it.type.indexOf('image/') === 0) {
+            e.preventDefault();
+            var blob = it.getAsFile();
+            if (blob) blobToDataUrl(blob, insertImageFromDataUrl);
+            return;
+          }
+        }
+      });
+
+      /* ---------- Table edit ---------- */
+      function makeCellEditable(cell) {
+        if (isEditMode()) cell.setAttribute('contenteditable', 'true');
+      }
+      function addRow() {
+        var t = getActiveTable();
+        if (!t) return;
+        var tbody = t.querySelector('tbody');
+        if (!tbody) return;
+        var last = tbody.querySelector('tr:last-child');
+        var cols = last ? last.children.length : (t.querySelector('thead tr')?.children.length || 2);
+        var tr = document.createElement('tr');
+        for (var i = 0; i < cols; i++) {
+          var td = document.createElement('td');
+          td.textContent = 'New';
+          makeCellEditable(td);
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      }
+      function removeRow() {
+        var t = getActiveTable();
+        if (!t) return;
+        var tbody = t.querySelector('tbody');
+        if (!tbody) return;
+        var rows = tbody.querySelectorAll('tr');
+        if (rows.length <= 1) return;
+        var cell = getFocusedCell();
+        var targetRow = (cell && tbody.contains(cell)) ? cell.parentNode : rows[rows.length - 1];
+        if (targetRow && targetRow.parentNode === tbody) targetRow.remove();
+      }
+      function addCol() {
+        var t = getActiveTable();
+        if (!t) return;
+        var theadRow = t.querySelector('thead tr');
+        if (theadRow) {
+          var th = document.createElement('th');
+          th.textContent = 'New';
+          makeCellEditable(th);
+          theadRow.appendChild(th);
+        }
+        t.querySelectorAll('tbody tr').forEach(function (tr) {
+          var td = document.createElement('td');
+          td.textContent = 'New';
+          makeCellEditable(td);
+          tr.appendChild(td);
+        });
+      }
+      function removeCol() {
+        var t = getActiveTable();
+        if (!t) return;
+        var theadRow = t.querySelector('thead tr');
+        var bodyRows = t.querySelectorAll('tbody tr');
+        var totalCols = theadRow ? theadRow.children.length : (bodyRows[0] ? bodyRows[0].children.length : 0);
+        if (totalCols <= 1) return;
+        var cell = getFocusedCell();
+        var colIndex = -1;
+        if (cell) {
+          var row = cell.parentNode;
+          colIndex = Array.prototype.indexOf.call(row.children, cell);
+        }
+        if (colIndex < 0) colIndex = totalCols - 1;
+        if (theadRow && theadRow.children[colIndex]) theadRow.removeChild(theadRow.children[colIndex]);
+        bodyRows.forEach(function (tr) {
+          if (tr.children[colIndex]) tr.removeChild(tr.children[colIndex]);
+        });
+      }
+
+      /* ---------- Inject toolbar buttons ---------- */
+      function makeBtn(action, label, title) {
+        var b = document.createElement('button');
+        b.className = 'edit-toolbar__btn';
+        b.dataset.action = action;
+        b.textContent = label;
+        if (title) b.title = title;
+        b.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (action === 'add-image') addImage();
+          else if (action === 'add-row') addRow();
+          else if (action === 'remove-row') removeRow();
+          else if (action === 'add-col') addCol();
+          else if (action === 'remove-col') removeCol();
+        });
+        return b;
+      }
+      function makeSep() {
+        var s = document.createElement('div');
+        s.className = 'edit-toolbar__separator';
+        return s;
+      }
+      var addBulletBtn = editToolbar.querySelector('[data-action="add-bullet"]');
+      var addSlideBtn = editToolbar.querySelector('[data-action="add-slide"]');
+      function insertBefore(node, anchor) {
+        if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(node, anchor);
+        else editToolbar.appendChild(node);
+      }
+      if (!editToolbar.querySelector('[data-action="add-image"]')) {
+        insertBefore(makeBtn('add-image', '+ Image', 'Insert image (or paste with Cmd/Ctrl+V)'), addBulletBtn);
+        insertBefore(makeSep(), addBulletBtn);
+      }
+      if (!editToolbar.querySelector('[data-action="add-row"]')) {
+        insertBefore(makeBtn('add-row', '+ Row', 'Add row to table'), addSlideBtn);
+        insertBefore(makeBtn('remove-row', '- Row', 'Remove last row'), addSlideBtn);
+        insertBefore(makeBtn('add-col', '+ Col', 'Add column to table'), addSlideBtn);
+        insertBefore(makeBtn('remove-col', '- Col', 'Remove last column'), addSlideBtn);
+        insertBefore(makeSep(), addSlideBtn);
+      }
+
+      /* ---------- Sidebar label edit + table cell edit on edit-mode toggle ---------- */
+      function applyEditableExtras(on) {
+        document.querySelectorAll('.sidebar__item-label').forEach(function (label) {
+          if (on) {
+            label.setAttribute('contenteditable', 'true');
+          } else {
+            label.removeAttribute('contenteditable');
+          }
+        });
+        document.querySelectorAll('.slide__table th, .slide__table td').forEach(function (cell) {
+          if (on) cell.setAttribute('contenteditable', 'true');
+          else cell.removeAttribute('contenteditable');
+        });
+      }
+
+      // Capture-phase mousedown on the sidebar: when in edit mode and clicking a label,
+      // stop the event before it reaches the <li>'s onclick navigator. Manually focus the label.
+      var sidebarEl = document.querySelector('.sidebar');
+      if (sidebarEl) {
+        sidebarEl.addEventListener('mousedown', function (e) {
+          if (!isEditMode()) return;
+          var label = e.target.closest('.sidebar__item-label');
+          if (!label) return;
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          // Focus the label so the user can type
+          setTimeout(function () { label.focus(); }, 0);
+        }, true); // capture phase
+        sidebarEl.addEventListener('click', function (e) {
+          if (!isEditMode()) return;
+          var label = e.target.closest('.sidebar__item-label');
+          if (!label) return;
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }, true);
+        sidebarEl.addEventListener('keydown', function (e) {
+          if (!isEditMode()) return;
+          var label = e.target.closest('.sidebar__item-label');
+          if (!label) return;
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            label.blur();
+          }
+        }, true);
+      }
+
+      // Watch for edit-mode class toggle on .presentation
+      var mo = new MutationObserver(function () {
+        applyEditableExtras(isEditMode());
+      });
+      mo.observe(presentation, { attributes: true, attributeFilter: ['class'] });
+      // Apply once in case edit mode is already on
+      if (isEditMode()) applyEditableExtras(true);
+    })();
+  </script>
+
+</body></html>

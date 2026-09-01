@@ -1,0 +1,1 @@
+{"provider": "openai", "model": "gpt-image-2", "images": 1, "quality": "medium", "input_tokens": 779, "output_tokens": 1372, "calls": 1}

@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, initial-scale=1" />
+  <title>Lead Distro AI – Full Platform Walkthrough</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f0d0a;
+      --surface: #161310;
+      --card-bg: #1c1915;
+      --card-border: #2e2820;
+      --primary: #C7963F;
+      --primary-glow: rgba(199, 150, 63, 0.15);
+      --secondary: #7c3aed;
+      --text: #ffffff;
+      --text-muted: #9a9080;
+      --text-accent: #C7963F;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --font-heading: Inter, system-ui, sans-serif;
+      --font-body: Inter, system-ui, sans-serif;
+      --font-mono: JetBrains Mono, monospace;
+      --title-size: 3.5rem;
+      --heading-size: 2.5rem;
+      --subheading-size: 1.5rem;
+      --body-size: 1.125rem;
+      --bullet-size: 1.25rem;
+      --caption-size: 0.875rem;
+      --content-padding: 80px;
+      --card-radius: 16px;
+      --sidebar-width: 260px;
+      --transition-duration: 300ms;
+    }
+
+    /* ==========================================================================
+       HTML Slide Designer - Base Theme
+       ========================================================================== */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: var(--bg); color: var(--text);
+      font-family: var(--font-body); font-size: var(--body-size);
+      line-height: 1.5; -webkit-font-smoothing: antialiased;
+    }
+
+    .presentation { display: flex; width: 100vw; height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width); min-width: var(--sidebar-width);
+      background: var(--surface); border-right: 1px solid var(--card-border);
+      display: flex; flex-direction: column; padding: 32px 0;
+      overflow-y: auto; z-index: 10; transition: transform var(--transition-duration) ease;
+    }
+    .sidebar--hidden { transform: translateX(calc(-1 * var(--sidebar-width))); position: absolute; left: 0; top: 0; bottom: 0; }
+    .sidebar__logo { padding: 0 24px 32px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
+    .sidebar__logo img { max-width: 120px; height: auto; }
+    .sidebar__nav { list-style: none; padding: 0 12px; flex: 1; }
+    .sidebar__item {
+      display: flex; align-items: center; gap: 12px; padding: 10px 16px;
+      border-radius: 8px; cursor: pointer; transition: all 150ms ease;
+      margin-bottom: 4px; font-size: var(--caption-size); color: var(--text-muted); font-weight: 500;
+    }
+    .sidebar__item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .sidebar__item--active { background: var(--primary-glow); color: var(--primary); font-weight: 600; }
+    .sidebar__item-number { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; min-width: 28px; text-align: center; }
+    .sidebar__item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar__progress { padding: 16px 24px; border-top: 1px solid var(--card-border); margin-top: auto; }
+    .sidebar__progress-bar { width: 100%; height: 3px; background: var(--card-border); border-radius: 2px; overflow: hidden; }
+    .sidebar__progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width var(--transition-duration) ease; }
+    .sidebar__progress-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: center; }
+
+    /* Stage */
+    .stage { flex: 1; position: relative; overflow-x: hidden; overflow-y: auto; display: flex; align-items: center; justify-content: center; background: #ffffff; }
+
+    /* Slides */
+    .slide {
+      position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; opacity: 0; pointer-events: none;
+      transition: opacity var(--transition-duration) ease; padding: var(--content-padding);
+    }
+    .slide--active { opacity: 1; pointer-events: auto; }
+
+    .slide__content {
+      width: 100%; max-width: 1400px; display: flex; flex-direction: column;
+      gap: 32px; align-items: center; text-align: center;
+    }
+    .slide__content--centered { align-items: center; text-align: center; }
+    .slide__content--split { flex-direction: row; align-items: center; gap: 64px; }
+    .slide__stats-grid, .slide__cards { width: 100%; }
+    .slide__bullets, .slide__takeaways { text-align: left; }
+
+    /* Typography */
+    .slide__title { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; line-height: 1.1; color: #1a1a1a; letter-spacing: -0.02em; }
+    .slide__heading { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 700; line-height: 1.2; color: #1a1a1a; letter-spacing: -0.01em; }
+    .slide__subheading { font-size: var(--subheading-size); font-weight: 500; color: #666666; line-height: 1.4; }
+    .slide__subtitle { font-size: var(--subheading-size); font-weight: 400; color: #666666; margin-top: -16px; }
+    .slide__description { font-size: var(--body-size); color: #666666; line-height: 1.6; }
+
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
+    .badge--step { border: 1.5px solid var(--primary); background: transparent; color: var(--primary); }
+    .badge--recommended { border: 1.5px solid var(--primary); background: var(--primary); color: var(--bg); }
+
+    /* Bullets */
+    .slide__bullets { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .slide__bullet { font-size: var(--bullet-size); font-weight: 400; color: #1a1a1a; padding-left: 28px; position: relative; line-height: 1.5; }
+    .slide__bullet::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+
+    /* Hero image */
+    .slide__hero-image { width: 100%; max-height: 55vh; border-radius: var(--card-radius); object-fit: contain; display: block; margin: 0 auto; }
+    .slide__image { max-width: 100%; max-height: 75vh; border-radius: var(--card-radius); object-fit: cover; }
+
+    /* Split */
+    .slide__text-side { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+    .slide__image-side { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+    /* Cards */
+    .slide__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: var(--card-radius); overflow: hidden; transition: transform 150ms ease, box-shadow 150ms ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .card__body { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .card__title { font-family: var(--font-heading); font-size: var(--subheading-size); font-weight: 600; color: #1a1a1a; }
+    .card__description { font-size: var(--body-size); color: #666666; line-height: 1.5; }
+
+    /* Quote */
+    .slide__quote-wrapper { max-width: 900px; position: relative; }
+    .slide__quote-mark { font-family: Georgia, serif; font-size: 8rem; color: var(--primary); opacity: 0.3; line-height: 1; position: absolute; top: -40px; left: -20px; }
+    .slide__quote { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 500; font-style: italic; line-height: 1.4; color: #1a1a1a; position: relative; z-index: 1; }
+    .slide__attribution { display: block; margin-top: 24px; font-size: var(--body-size); font-style: normal; color: #666666; }
+
+    /* Stats */
+    .slide__stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+    .stat-card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: var(--card-radius); padding: 40px 32px; text-align: center; }
+    .stat-card__value { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 8px; }
+    .stat-card__label { font-size: var(--subheading-size); font-weight: 600; color: #1a1a1a; margin-bottom: 8px; }
+    .stat-card__description { font-size: var(--caption-size); color: #666666; }
+
+    /* Recap */
+    .slide__takeaways { list-style: none; counter-reset: takeaway; display: flex; flex-direction: column; gap: 16px; }
+    .slide__takeaway { counter-increment: takeaway; font-size: var(--bullet-size); color: #1a1a1a; padding-left: 48px; position: relative; line-height: 1.5; }
+    .slide__takeaway::before { content: counter(takeaway); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--primary-glow); color: var(--primary); font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+    /* CTA */
+    .slide__cta { margin-top: 16px; }
+    .slide__cta-link { display: inline-flex; align-items: center; padding: 14px 32px; background: var(--primary); color: var(--bg); border-radius: 100px; font-weight: 600; font-size: var(--body-size); text-decoration: none; transition: transform 150ms ease, box-shadow 150ms ease; }
+    .slide__cta-link:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .slide__cta-text { font-size: var(--subheading-size); color: var(--primary); font-weight: 600; }
+
+    /* Full image */
+    .slide--full-image { padding: 0; }
+    .slide__bg-image { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; }
+    .slide__overlay { position: absolute; inset: 0; z-index: 1; display: flex; padding: var(--content-padding); }
+    .slide__overlay--bottom { align-items: flex-end; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 80%); }
+    .slide__heading--overlay { text-shadow: 0 2px 12px rgba(0,0,0,0.8); color: #ffffff; }
+    .slide__subheading--overlay { text-shadow: 0 2px 8px rgba(0,0,0,0.8); color: #ffffff; }
+
+    /* Edit mode */
+    .edit-mode .slide__title, .edit-mode .slide__heading, .edit-mode .slide__subheading,
+    .edit-mode .slide__subtitle, .edit-mode .slide__description, .edit-mode .slide__bullet,
+    .edit-mode .slide__quote, .edit-mode .slide__attribution, .edit-mode .card__title,
+    .edit-mode .card__description, .edit-mode .stat-card__value, .edit-mode .stat-card__label,
+    .edit-mode .stat-card__description, .edit-mode .slide__takeaway, .edit-mode .slide__cta-text,
+    .edit-mode .badge, .edit-mode .slide__table th, .edit-mode .slide__table td {
+      outline: 1px dashed rgba(0,0,0,0.15); outline-offset: 4px; cursor: text;
+    }
+    .edit-mode .sidebar__item-label { outline: 1px dashed rgba(255,255,255,0.2); outline-offset: 2px; cursor: text; border-radius: 3px; }
+    .edit-mode .sidebar__item-label:focus { outline: 2px solid var(--primary); }
+    .edit-mode [contenteditable="true"]:focus { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 4px; }
+    .edit-mode .slide__image, .edit-mode .card__image-wrapper { position: relative; cursor: pointer; }
+    .edit-mode .image-replace-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 150ms ease; border-radius: var(--card-radius); pointer-events: none; }
+    .edit-mode .slide__image:hover + .image-replace-overlay, .edit-mode .image-replace-overlay:hover { opacity: 1; pointer-events: auto; }
+    .image-replace-btn { padding: 8px 20px; background: var(--primary); color: var(--bg); border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+
+    /* Edit toolbar */
+    .edit-toolbar { position: fixed; top: 0; left: var(--sidebar-width); right: 0; height: 48px; background: var(--surface); border-bottom: 1px solid var(--card-border); display: none; align-items: center; padding: 0 24px; gap: 8px; z-index: 100; }
+    .edit-mode .edit-toolbar { display: flex; }
+    .edit-toolbar__btn { padding: 6px 12px; background: transparent; border: 1px solid var(--card-border); border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer; transition: all 150ms ease; }
+    .edit-toolbar__btn:hover { background: var(--card-bg); border-color: var(--primary); }
+    .edit-toolbar__btn--active { background: var(--primary-glow); border-color: var(--primary); color: var(--primary); }
+    .edit-toolbar__separator { width: 1px; height: 24px; background: var(--card-border); margin: 0 4px; }
+    .edit-toolbar__spacer { flex: 1; }
+    .edit-toolbar__btn--save { background: var(--primary); color: var(--bg); border-color: var(--primary); font-weight: 600; }
+    .edit-toolbar__btn--save:hover { opacity: 0.9; }
+    .edit-toolbar__btn--danger { color: var(--error); border-color: var(--error); }
+    .edit-toolbar__btn--danger:hover { background: rgba(239,68,68,0.15); border-color: var(--error); }
+
+    /* Drag handles */
+    .edit-mode .slide__content > * { position: relative; }
+    .drag-handle { position: absolute; left: -40px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: grab; opacity: 0; transition: opacity 150ms ease; user-select: none; z-index: 10; }
+    .drag-handle::before { content: ''; display: block; width: 8px; height: 14px; background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px); background-size: 4px 4.5px; }
+    .edit-mode .slide__content > *:hover > .drag-handle { opacity: 0.5; }
+    .drag-handle:hover { opacity: 1 !important; color: var(--primary); }
+    .edit-mode .slide__content > .dragging { opacity: 0.3; }
+
+    /* Delete buttons */
+    .delete-element-btn { position: absolute; right: -40px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; opacity: 0; transition: opacity 150ms ease, color 150ms ease; user-select: none; z-index: 10; background: none; border: none; padding: 0; font-size: 16px; line-height: 1; }
+    .delete-element-btn::before { content: '\00D7'; font-size: 20px; font-weight: 700; }
+    .edit-mode .slide__content > *:hover > .delete-element-btn { opacity: 0.5; }
+    .delete-element-btn:hover { opacity: 1 !important; color: var(--error, #ef4444); }
+
+    /* Row controls */
+    .edit-mode .slide__bullet, .edit-mode .slide__takeaway { position: relative; }
+    .row-delete-btn { position: absolute; right: -32px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; opacity: 0; transition: opacity 150ms ease, color 150ms ease; z-index: 10; background: none; border: none; padding: 0; line-height: 1; }
+    .row-delete-btn::before { content: '\00D7'; font-size: 18px; font-weight: 700; }
+    .edit-mode li:hover > .row-delete-btn { opacity: 0.5; }
+    .row-delete-btn:hover { opacity: 1 !important; color: var(--error, #ef4444); }
+    .edit-mode .slide__subheading, .edit-mode .slide__subtitle, .edit-mode .slide__description, .edit-mode .slide__bullet, .edit-mode .slide__takeaway { min-height: 1.2em; }
+    .add-row-btn { display: none; margin-top: 0.5rem; padding: 0.4rem 0.85rem; font-size: 0.8125rem; font-family: inherit; font-weight: 500; color: var(--text-muted); background: transparent; border: 1px dashed currentColor; border-radius: 6px; cursor: pointer; opacity: 0.6; transition: opacity 150ms ease, color 150ms ease; }
+    .edit-mode .add-row-btn { display: inline-flex; }
+    .add-row-btn:hover { color: var(--primary); opacity: 1; }
+
+    /* Sidebar drag */
+    .sidebar__drag-handle { flex: 0 0 auto; width: 14px; height: 18px; margin-right: 2px; cursor: grab; color: var(--text-muted); opacity: 0.35; transition: opacity 150ms ease, color 150ms ease; background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px); background-size: 4px 4.5px; background-position: center; background-repeat: round; user-select: none; }
+    .edit-mode .sidebar__item:hover > .sidebar__drag-handle { opacity: 0.7; }
+    .sidebar__drag-handle:hover { opacity: 1 !important; color: var(--primary); }
+    .sidebar__drag-handle:active { cursor: grabbing; }
+    .sidebar__item--dragging { opacity: 0.6; background: var(--card-bg); outline: 1px dashed var(--primary); }
+
+    /* Edit indicator */
+    .edit-indicator { position: fixed; bottom: 16px; right: 16px; padding: 8px 16px; background: var(--primary); color: var(--bg); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; z-index: 100; display: none; }
+    .edit-mode .edit-indicator { display: block; }
+
+    /* Fullscreen */
+    .presentation--fullscreen .sidebar { display: none; }
+
+    /* Save toast */
+    .save-toast { position: fixed; top: 24px; right: 24px; padding: 12px 24px; background: var(--success, #22c55e); color: #ffffff; border-radius: 8px; font-size: 0.875rem; font-weight: 600; font-family: var(--font-body); z-index: 300; opacity: 0; transform: translateY(-12px); transition: opacity 300ms ease, transform 300ms ease; pointer-events: none; }
+    .save-toast--visible { opacity: 1; transform: translateY(0); }
+    .save-toast--error { background: var(--error, #ef4444); }
+
+    /* Notes panel */
+    .notes-panel { position: fixed; bottom: 24px; right: 24px; width: 360px; max-height: 280px; background: rgba(22,19,16,0.95); border: 1px solid var(--card-border, #2e2820); border-radius: var(--card-radius, 16px); z-index: 200; overflow: hidden; display: flex; flex-direction: column; font-family: var(--font-body); box-shadow: 0 8px 32px rgba(0,0,0,0.4); backdrop-filter: blur(12px); }
+    .notes-panel__header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--card-border, #2e2820); }
+    .notes-panel__title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary, #C7963F); }
+    .notes-panel__hint { font-size: 0.625rem; font-family: var(--font-mono, monospace); background: rgba(255,255,255,0.1); color: var(--text-muted, #9a9080); padding: 2px 6px; border-radius: 4px; }
+    .notes-panel__close { margin-left: auto; background: none; border: none; color: var(--text-muted, #9a9080); font-size: 1.25rem; cursor: pointer; padding: 0 4px; line-height: 1; }
+    .notes-panel__close:hover { color: #ffffff; }
+    .notes-panel__list { list-style: none; padding: 12px 16px; margin: 0; overflow-y: auto; flex: 1; }
+    .notes-panel__item { font-size: 0.875rem; color: #ffffff; padding: 6px 0 6px 20px; position: relative; line-height: 1.4; }
+    .notes-panel__item::before { content: ''; position: absolute; left: 4px; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--primary, #C7963F); }
+    .notes-panel__empty { font-size: 0.875rem; color: var(--text-muted, #9a9080); font-style: italic; padding: 6px 0; list-style: none; }
+
+    /* Table styles */
+    .slide__table-wrapper { width: 100%; overflow-x: auto; }
+    .slide__table { width: 100%; border-collapse: collapse; font-size: var(--body-size); }
+    .slide__table th { background: var(--primary); color: #fff; padding: 14px 20px; text-align: left; font-weight: 700; font-size: 1rem; }
+    .slide__table td { padding: 12px 20px; border-bottom: 1px solid #e0e0e0; color: #1a1a1a; font-size: var(--body-size); }
+    .slide__table tr:nth-child(even) td { background: #f8f9fa; }
+    .slide__table tr:last-child td { border-bottom: none; }
+    .slide__table th:first-child { border-radius: 12px 0 0 0; }
+    .slide__table th:last-child { border-radius: 0 12px 0 0; }
+
+    /* Image placeholder fallback */
+    .image-placeholder { background: #f8f9fa; border: 2px dashed #e0e0e0; border-radius: var(--card-radius); display: flex; align-items: center; justify-content: center; padding: 40px; color: #666666; font-style: italic; font-size: var(--caption-size); min-height: 300px; width: 100%; }
+  </style>
+</head>
+<body>
+<div class="presentation">
+
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <span style="font-family: var(--font-heading); font-weight: 700; font-size: 1rem; color: var(--primary);">LEAD DISTRO AI</span>
+    </div>
+    <ul class="sidebar__nav">
+      <li class="sidebar__item sidebar__item--active" onclick="goToSlide(0)">
+        <span class="sidebar__item-number">01</span>
+        <span class="sidebar__item-label">Welcome</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(1)">
+        <span class="sidebar__item-number">02</span>
+        <span class="sidebar__item-label">The Problem</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(2)">
+        <span class="sidebar__item-number">03</span>
+        <span class="sidebar__item-label">What You'll See</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(3)">
+        <span class="sidebar__item-number">04</span>
+        <span class="sidebar__item-label">Lead Routing</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(4)">
+        <span class="sidebar__item-number">05</span>
+        <span class="sidebar__item-label">Routing Types</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(5)">
+        <span class="sidebar__item-number">06</span>
+        <span class="sidebar__item-label">Buyer Portals</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(6)">
+        <span class="sidebar__item-number">07</span>
+        <span class="sidebar__item-label">Key Insight</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(7)">
+        <span class="sidebar__item-number">08</span>
+        <span class="sidebar__item-label">Lead Scoring</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(8)">
+        <span class="sidebar__item-number">09</span>
+        <span class="sidebar__item-label">Checkpoint</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(9)">
+        <span class="sidebar__item-number">10</span>
+        <span class="sidebar__item-label">Dashboards</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(10)">
+        <span class="sidebar__item-number">11</span>
+        <span class="sidebar__item-label">Ads Integration</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(11)">
+        <span class="sidebar__item-number">12</span>
+        <span class="sidebar__item-label">Profitability</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(12)">
+        <span class="sidebar__item-number">13</span>
+        <span class="sidebar__item-label">Reports</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(13)">
+        <span class="sidebar__item-number">14</span>
+        <span class="sidebar__item-label">AI + MCP</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(14)">
+        <span class="sidebar__item-number">15</span>
+        <span class="sidebar__item-label">Recap</span>
+      </li>
+      <li class="sidebar__item" onclick="goToSlide(15)">
+        <span class="sidebar__item-number">16</span>
+        <span class="sidebar__item-label">Get Started</span>
+      </li>
+    </ul>
+    <div class="sidebar__progress">
+      <div class="sidebar__progress-bar">
+        <div class="sidebar__progress-fill" style="width: 6.25%"></div>
+      </div>
+      <div class="sidebar__progress-text">1 / 16</div>
+    </div>
+  </nav>
+
+  <!-- Slide Stage -->
+  <main class="stage">
+
+    <!-- Slide 01: Title / Hook -->
+    <section class="slide slide--title slide--active" data-slide="1" data-chapter="Welcome" data-notes="Welcome viewers warmly|Tell them this is the full platform, start to finish|Set the tone: one place, no duct-taped stack">
+      <div class="slide__content slide__content--centered">
+        <h1 class="slide__title">Lead Distro AI</h1>
+        <p class="slide__subtitle">The full platform walkthrough. One place. No spreadsheets. No duct-taped stack.</p>
+      </div>
+    </section>
+
+    <!-- Slide 02: The Problem -->
+    <section class="slide slide--heading-bullets" data-slide="2" data-chapter="The Problem" data-notes="Call out the real frustration|Make them feel seen before you offer the fix|Three specific pains, not vague complaints">
+      <div class="slide__content">
+        <div class="badge badge--step">The Problem</div>
+        <img class="slide__hero-image" src="images/slide-02-problem-chaos.png" alt="The chaos of managing lead distribution across disconnected tools" />
+        <p class="slide__subheading">Managing lead distribution without the right system</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Routing rules buried in spreadsheets, impossible to scale</li>
+          <li class="slide__bullet">Chasing buyers over email for every data question</li>
+          <li class="slide__bullet">Three separate tools just to see one performance picture</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 03: What You'll See -->
+    <section class="slide slide--heading-bullets" data-slide="3" data-chapter="Overview" data-notes="Set the roadmap for the whole video|Viewers know where they are in the journey|Six areas, start to finish">
+      <div class="slide__content">
+        <div class="badge badge--step">In This Video</div>
+        <h2 class="slide__heading">Here's What We'll Cover</h2>
+        <p class="slide__subheading">Six platform areas, from the foundation to the AI layer</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Pay-per-call and lead routing in a single system</li>
+          <li class="slide__bullet">Buyer portals with self-service data access</li>
+          <li class="slide__bullet">Lead scoring and smart routing rules</li>
+          <li class="slide__bullet">Customizable dashboards with Meta and Google Ads pulled in</li>
+          <li class="slide__bullet">Automated scheduled reports for buyers and clients</li>
+          <li class="slide__bullet">MCP: your AI assistant connected to your live account data</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 04: Pay-Per-Call + Lead Routing -->
+    <section class="slide slide--heading-bullets" data-slide="4" data-chapter="Lead Routing" data-notes="This is the foundation, stress that point|Unified means no bolt-on call tracking tools|Pause on 'set your rules once, routes automatically from there'">
+      <div class="slide__content">
+        <div class="badge badge--step">Step 01</div>
+        <img class="slide__hero-image" src="images/slide-04-routing-system.png" alt="Unified pay-per-call and lead routing in one system" />
+        <p class="slide__subheading">Call tracking, routing, and attribution in one place</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Set your routing rules once and the system runs them automatically</li>
+          <li class="slide__bullet">Call tracking lives right alongside your lead data</li>
+          <li class="slide__bullet">No bolt-on tools, no manual syncing between platforms</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 05: Routing Types -->
+    <section class="slide slide--card-grid" data-slide="5" data-chapter="Lead Routing" data-notes="Walk through each type quickly|These are the three modes|Stress that you pick once and the system handles it">
+      <div class="slide__content">
+        <div class="badge badge--step">Routing Types</div>
+        <h2 class="slide__heading">Three Ways to Route Your Leads</h2>
+        <div class="slide__cards">
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Round Robin</h3>
+              <p class="card__description">Leads rotate evenly across all active buyers. Simple, fair distribution with no manual management.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Priority-Based</h3>
+              <p class="card__description">Your top buyer gets leads first. When they hit capacity, the next buyer in the queue picks up automatically.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <h3 class="card__title">Cap-Based</h3>
+              <p class="card__description">Each buyer has a daily or monthly cap. The system respects every limit and stops routing when they're full.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 06: Buyer Portals -->
+    <section class="slide slide--heading-bullets" data-slide="6" data-chapter="Buyer Portals" data-notes="Paint the picture of constant buyer email requests first|Then contrast: the portal answers all of that|Buyers have their own login, their own view, their own data">
+      <div class="slide__content">
+        <div class="badge badge--step">Step 02</div>
+        <img class="slide__hero-image" src="images/slide-06-buyer-portals.png" alt="Buyer portal with individual login and self-service performance data" />
+        <p class="slide__subheading">Every buyer gets their own login and their own view</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Leads received, leads converted, performance over any time period</li>
+          <li class="slide__bullet">No more manual reports on demand, no more email threads</li>
+          <li class="slide__bullet">Buyers answer their own questions without involving your team</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 07: Middleman Quote -->
+    <section class="slide slide--quote" data-slide="7" data-chapter="Buyer Portals" data-notes="Let this land|Pause here, do not rush it|Short and punchy, it's the whole idea in one sentence">
+      <div class="slide__content slide__content--centered">
+        <div class="slide__quote-wrapper">
+          <div class="slide__quote-mark">"</div>
+          <blockquote class="slide__quote">You stop being the middleman for every data question. The portal is the middleman.</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 08: Lead Scoring -->
+    <section class="slide slide--heading-bullets" data-slide="8" data-chapter="Lead Scoring" data-notes="This is the automation layer on top of routing|Set the criteria once|The system does the sorting, not your team">
+      <div class="slide__content">
+        <div class="badge badge--step">Step 03</div>
+        <img class="slide__hero-image" src="images/slide-08-lead-scoring.png" alt="Automated lead scoring sends best leads to top buyers" />
+        <p class="slide__subheading">Your best leads go to your best buyers, automatically</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Set your scoring criteria once, the system runs from there</li>
+          <li class="slide__bullet">Highest-scored leads route to your top buyers first</li>
+          <li class="slide__bullet">The system does the sorting so your team does not have to</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 09: Checkpoint -->
+    <section class="slide slide--stats" data-slide="9" data-chapter="Checkpoint" data-notes="Brief breathing room for the viewer|Three things locked in so far|Signal there's more coming and it gets better">
+      <div class="slide__content">
+        <div class="badge badge--step">Checkpoint</div>
+        <h2 class="slide__heading">Three Pillars Down</h2>
+        <div class="slide__stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__value">01</div>
+            <div class="stat-card__label">Pay-Per-Call + Routing</div>
+            <div class="stat-card__description">One platform, no extra tools bolted on</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">02</div>
+            <div class="stat-card__label">Buyer Portals</div>
+            <div class="stat-card__description">Self-service access to their own performance data</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value">03</div>
+            <div class="stat-card__label">Lead Scoring</div>
+            <div class="stat-card__description">Best leads to best buyers, sorted automatically</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Dashboards -->
+    <section class="slide slide--heading-bullets" data-slide="10" data-chapter="Dashboards" data-notes="Dashboards are table stakes now, say that|The key is what you connect to them|Set up the reveal for the next slide">
+      <div class="slide__content">
+        <div class="badge badge--step">Step 04</div>
+        <img class="slide__hero-image" src="images/slide-10-dashboards.png" alt="Customizable dashboards for teams, clients, and buyers" />
+        <p class="slide__subheading">Build the view your team, your clients, and your buyers actually need</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Fully customizable dashboard views for any stakeholder</li>
+          <li class="slide__bullet">Lead volume and buyer performance visible in one place</li>
+          <li class="slide__bullet">Every stakeholder gets the clear picture they need</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 11: Meta + Google Ads Integration -->
+    <section class="slide slide--heading-bullets" data-slide="11" data-chapter="Dashboards" data-notes="This is the moment of the video|Stress the no-switching-tabs part|Real-time profitability clarity in one screen">
+      <div class="slide__content">
+        <div class="badge badge--recommended">The Real Unlock</div>
+        <img class="slide__hero-image" src="images/slide-11-ads-integration.png" alt="Meta Ads and Google Ads data pulled into one Lead Distro AI dashboard" />
+        <p class="slide__subheading">Meta Ads and Google Ads data pulled in directly, right inside the same dashboard</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Ad spend, cost per lead, revenue, and margin all in one screen</li>
+          <li class="slide__bullet">Not in a spreadsheet, not across three browser tabs</li>
+          <li class="slide__bullet">See exactly which campaigns are profitable without pulling anything manually</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 12: Profitability Stats -->
+    <section class="slide slide--stats" data-slide="12" data-chapter="Profitability" data-notes="Let the four numbers speak|This is the profitability moment|No other tool in their stack shows all four together">
+      <div class="slide__content">
+        <div class="badge badge--step">Profitability Clarity</div>
+        <h2 class="slide__heading">All Four Numbers, One Dashboard</h2>
+        <div class="slide__stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__value" style="font-size: 2rem;">Ad Spend</div>
+            <div class="stat-card__label">From Meta and Google</div>
+            <div class="stat-card__description">Updated automatically, no manual pulls</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" style="font-size: 2rem;">Cost Per Lead</div>
+            <div class="stat-card__label">Real CPL</div>
+            <div class="stat-card__description">No spreadsheet formulas, no lag</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" style="font-size: 2rem;">Revenue</div>
+            <div class="stat-card__label">What Buyers Pay You</div>
+            <div class="stat-card__description">Tracked alongside the spend that generated it</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__value" style="font-size: 2rem;">Margin</div>
+            <div class="stat-card__label">The Number That Matters</div>
+            <div class="stat-card__description">Profitability at a glance, not at end of month</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 13: Scheduled Reports -->
+    <section class="slide slide--heading-bullets" data-slide="13" data-chapter="Automation" data-notes="Call out the can-you-send-me-last-months-numbers email|This kills that request permanently|Set it once and walk away">
+      <div class="slide__content">
+        <div class="badge badge--step">Step 05</div>
+        <img class="slide__hero-image" src="images/slide-13-scheduled-reports.png" alt="Automated scheduled email reports sent to buyers and clients" />
+        <p class="slide__subheading">Automated performance reports on whatever cadence you set</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Weekly, monthly, or custom cadences for any recipient</li>
+          <li class="slide__bullet">Reports go to buyers, clients, and your team without you lifting a finger</li>
+          <li class="slide__bullet">No more manual report requests, the system handles it</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 14: MCP -->
+    <section class="slide slide--heading-bullets" data-slide="14" data-chapter="AI + MCP" data-notes="Explain MCP simply: a bridge between AI tools and your account|This is the future differentiator|Pause and let it sink in before moving on">
+      <div class="slide__content">
+        <div class="badge badge--step">Step 06</div>
+        <img class="slide__hero-image" src="images/slide-14-mcp-ai.png" alt="MCP connects an AI assistant directly to live Lead Distro AI account data" />
+        <p class="slide__subheading">Connect your AI assistant to your live Lead Distro AI data</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">MCP (Model Context Protocol) is a bridge between AI tools and your live account</li>
+          <li class="slide__bullet">Ask your AI questions about campaigns, buyers, and lead flow</li>
+          <li class="slide__bullet">Real answers from your actual live data, not summaries or generic responses</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 15: Full Recap -->
+    <section class="slide slide--recap" data-slide="15" data-chapter="Recap" data-notes="Move through these quickly, they already know all six|Just lock in the full picture|Then set up the CTA">
+      <div class="slide__content">
+        <h2 class="slide__heading">The Full Platform, Top to Bottom</h2>
+        <ol class="slide__takeaways">
+          <li class="slide__takeaway">Pay-per-call and lead routing in one platform, no extra tools</li>
+          <li class="slide__takeaway">Buyer portals so every buyer accesses their own data</li>
+          <li class="slide__takeaway">Lead scoring routes the best leads to the right buyers automatically</li>
+          <li class="slide__takeaway">Customizable dashboards with Meta and Google Ads data pulled in</li>
+          <li class="slide__takeaway">Automated scheduled reports for buyers and clients, zero manual effort</li>
+          <li class="slide__takeaway">MCP layer so AI connects directly to your live account data</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Slide 16: CTA -->
+    <section class="slide slide--title" data-slide="16" data-chapter="Get Started" data-notes="One clear action, no options|Say the URL out loud|Repeat it twice before moving off the slide">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--recommended">Ready to See It Live?</div>
+        <h1 class="slide__title">Book a Personalized Demo</h1>
+        <p class="slide__subtitle">leaddistroai.com/demo</p>
+        <div class="slide__cta">
+          <a class="slide__cta-link" href="https://leaddistroai.com/demo">Get Your Demo</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Edit Toolbar -->
+  <div class="edit-toolbar">
+    <button class="edit-toolbar__btn" data-action="bold" title="Bold (Cmd+B)"><b>B</b></button>
+    <button class="edit-toolbar__btn" data-action="italic" title="Italic (Cmd+I)"><i>I</i></button>
+    <button class="edit-toolbar__btn" data-action="font-up" title="Increase font size">A+</button>
+    <button class="edit-toolbar__btn" data-action="font-down" title="Decrease font size">A-</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-bullet" title="Add bullet point">+ Bullet</button>
+    <button class="edit-toolbar__btn" data-action="remove-bullet" title="Remove last bullet">- Bullet</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-slide" title="Add new slide after current">+ Slide</button>
+    <button class="edit-toolbar__btn edit-toolbar__btn--danger" data-action="delete-slide" title="Delete current slide (Cmd+D)">Delete Slide</button>
+    <div class="edit-toolbar__spacer"></div>
+    <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save" title="Save presentation (Cmd+S)">Save</button>
+  </div>
+
+  <!-- Edit Indicator -->
+  <div class="edit-indicator">Edit Mode</div>
+
+</div><!-- /presentation -->
+
+<script>
+/**
+ * Slide Engine - Navigation, Edit Mode, Slide Management, and Fullscreen
+ */
+(function () {
+  'use strict';
+
+  let currentSlide = 0;
+  let editMode = false;
+  let isFullscreen = false;
+  let notesVisible = false;
+  let fileHandle = null;
+  let slides = Array.from(document.querySelectorAll('.slide'));
+  let sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+  const progressFill = document.querySelector('.sidebar__progress-fill');
+  const progressText = document.querySelector('.sidebar__progress-text');
+  const presentation = document.querySelector('.presentation');
+  const editToolbar = document.querySelector('.edit-toolbar');
+  const editIndicator = document.querySelector('.edit-indicator');
+  const stage = document.querySelector('.stage');
+  const sidebarNav = document.querySelector('.sidebar__nav');
+
+  function getTotalSlides() { return slides.length; }
+
+  function goToSlide(index) {
+    var total = getTotalSlides();
+    if (index < 0 || index >= total) return;
+    slides[currentSlide].classList.remove('slide--active');
+    sidebarItems[currentSlide]?.classList.remove('sidebar__item--active');
+    currentSlide = index;
+    slides[currentSlide].classList.add('slide--active');
+    sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+    updateProgress();
+    sidebarItems[currentSlide]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (notesVisible) updateNotesContent();
+  }
+
+  function nextSlide() { goToSlide(currentSlide + 1); }
+  function prevSlide() { goToSlide(currentSlide - 1); }
+
+  function updateProgress() {
+    var total = getTotalSlides();
+    var pct = ((currentSlide + 1) / total) * 100;
+    if (progressFill) progressFill.style.width = pct + '%';
+    if (progressText) progressText.textContent = (currentSlide + 1) + ' / ' + total;
+  }
+
+  function bindSidebarClicks() {
+    sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+    sidebarItems.forEach(function (item, i) { item.onclick = function () { goToSlide(i); }; });
+  }
+  bindSidebarClicks();
+
+  function renumberSidebar() {
+    sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+    sidebarItems.forEach(function (item, i) {
+      var numEl = item.querySelector('.sidebar__item-number');
+      if (numEl) numEl.textContent = String(i + 1).padStart(2, '0');
+    });
+    bindSidebarClicks();
+  }
+
+  const editableSelectors = [
+    '.slide__title', '.slide__heading', '.slide__subheading', '.slide__subtitle',
+    '.slide__description', '.slide__bullet', '.slide__quote', '.slide__attribution',
+    '.card__title', '.card__description', '.stat-card__value', '.stat-card__label',
+    '.stat-card__description', '.slide__takeaway', '.slide__cta-text', '.badge',
+    '.slide__table th', '.slide__table td'
+  ];
+
+  function enableEditMode() {
+    editMode = true;
+    presentation.classList.add('edit-mode');
+    document.querySelectorAll(editableSelectors.join(', ')).forEach(function (el) { el.setAttribute('contenteditable', 'true'); });
+    document.querySelectorAll('.sidebar__item-label').forEach(function (label) { label.setAttribute('contenteditable', 'true'); });
+    addImageOverlays(); addDragHandles(); addDeleteButtons(); addListRowControls(); addSidebarDragHandles();
+  }
+
+  (function bindSidebarLabelGuards() {
+    var sidebarEl = document.querySelector('.sidebar');
+    if (!sidebarEl) return;
+    sidebarEl.addEventListener('mousedown', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      e.stopPropagation(); e.stopImmediatePropagation();
+      setTimeout(function () { label.focus(); }, 0);
+    }, true);
+    sidebarEl.addEventListener('click', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      e.stopPropagation(); e.stopImmediatePropagation(); e.preventDefault();
+    }, true);
+    sidebarEl.addEventListener('keydown', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      if (e.key === 'Enter') { e.preventDefault(); label.blur(); }
+    }, true);
+  })();
+
+  function disableEditMode() {
+    editMode = false;
+    presentation.classList.remove('edit-mode');
+    document.querySelectorAll('[contenteditable="true"]').forEach(function (el) { el.removeAttribute('contenteditable'); });
+    removeImageOverlays(); removeDragHandles(); removeDeleteButtons(); removeListRowControls(); removeSidebarDragHandles();
+  }
+
+  function toggleEditMode() { if (editMode) { disableEditMode(); } else { enableEditMode(); } }
+
+  function addImageOverlays() {
+    document.querySelectorAll('.slide__image').forEach(function (img) {
+      if (img.parentElement.querySelector('.image-replace-overlay')) return;
+      var wrapper = document.createElement('div');
+      wrapper.style.position = 'relative'; wrapper.style.display = 'inline-block';
+      img.parentNode.insertBefore(wrapper, img); wrapper.appendChild(img);
+      var overlay = document.createElement('div'); overlay.className = 'image-replace-overlay';
+      var btn = document.createElement('button'); btn.className = 'image-replace-btn'; btn.textContent = 'Replace Image';
+      btn.addEventListener('click', function () { var url = prompt('Paste new image URL:'); if (url) img.src = url; });
+      overlay.appendChild(btn); wrapper.appendChild(overlay);
+    });
+  }
+
+  function removeImageOverlays() {
+    document.querySelectorAll('.image-replace-overlay').forEach(function (overlay) {
+      var wrapper = overlay.parentElement; var img = wrapper.querySelector('.slide__image');
+      if (img && wrapper.parentElement) { wrapper.parentElement.insertBefore(img, wrapper); wrapper.remove(); }
+    });
+  }
+
+  var dragState = null;
+
+  function addDragHandles() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.drag-handle')) return; if (el.classList.contains('add-row-btn')) return;
+      var handle = document.createElement('div'); handle.className = 'drag-handle';
+      handle.addEventListener('mousedown', function (e) { startDrag(e, el); }); el.appendChild(handle);
+    });
+  }
+
+  function removeDragHandles() { if (dragState) handleDragEnd(); document.querySelectorAll('.drag-handle').forEach(function (h) { h.remove(); }); }
+
+  function addDeleteButtons() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.delete-element-btn')) return; if (el.classList.contains('add-row-btn')) return;
+      var btn = document.createElement('button'); btn.className = 'delete-element-btn'; btn.title = 'Delete this element';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var preview = el.textContent.trim().substring(0, 40);
+        if (preview.length > 37) preview = preview.substring(0, 37) + '...';
+        if (confirm('Delete this element?\n\n"' + preview + '"')) { el.remove(); }
+      });
+      el.appendChild(btn);
+    });
+  }
+
+  function removeDeleteButtons() { document.querySelectorAll('.delete-element-btn').forEach(function (b) { b.remove(); }); }
+
+  var ROW_LIST_SELECTOR = '.slide__bullets, .slide__takeaways';
+  function rowItemClassFor(list) { return list.classList.contains('slide__bullets') ? 'slide__bullet' : 'slide__takeaway'; }
+
+  function addRowDeleteBtn(li) {
+    if (li.querySelector(':scope > .row-delete-btn')) return;
+    var btn = document.createElement('button'); btn.className = 'row-delete-btn'; btn.type = 'button';
+    btn.setAttribute('contenteditable', 'false');
+    btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    btn.addEventListener('click', function (e) { e.stopPropagation(); li.remove(); });
+    li.appendChild(btn);
+  }
+
+  function addListRowControls() {
+    document.querySelectorAll(ROW_LIST_SELECTOR).forEach(function (list) {
+      list.querySelectorAll(':scope > li').forEach(addRowDeleteBtn);
+      var next = list.nextElementSibling;
+      if (next && next.classList && next.classList.contains('add-row-btn')) return;
+      var btn = document.createElement('button'); btn.className = 'add-row-btn'; btn.type = 'button'; btn.textContent = '+ Add row';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation(); var li = document.createElement('li'); li.className = rowItemClassFor(list);
+        li.setAttribute('contenteditable', 'true'); li.textContent = 'New item'; list.appendChild(li); addRowDeleteBtn(li); li.focus();
+        var range = document.createRange(); range.selectNodeContents(li); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      });
+      list.parentNode.insertBefore(btn, list.nextSibling);
+    });
+  }
+
+  function removeListRowControls() { document.querySelectorAll('.row-delete-btn, .add-row-btn').forEach(function (el) { el.remove(); }); }
+
+  function startDrag(e, el) {
+    e.preventDefault(); dragState = { el: el, container: el.parentElement }; el.classList.add('dragging');
+    document.addEventListener('mousemove', handleDragMove); document.addEventListener('mouseup', handleDragEnd);
+  }
+
+  function handleDragMove(e) {
+    if (!dragState) return; e.preventDefault();
+    var container = dragState.container; var dragEl = dragState.el;
+    var children = Array.from(container.children);
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i]; if (child === dragEl) continue;
+      var rect = child.getBoundingClientRect(); var midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) { container.insertBefore(dragEl, child); return; }
+    }
+    container.appendChild(dragEl);
+  }
+
+  function handleDragEnd() {
+    if (!dragState) return; dragState.el.classList.remove('dragging'); dragState = null;
+    document.removeEventListener('mousemove', handleDragMove); document.removeEventListener('mouseup', handleDragEnd);
+  }
+
+  var sidebarDrag = null;
+
+  function addSidebarDragHandles() {
+    document.querySelectorAll('.sidebar__item').forEach(function (item) {
+      if (item.querySelector(':scope > .sidebar__drag-handle')) return;
+      var h = document.createElement('span'); h.className = 'sidebar__drag-handle';
+      h.setAttribute('contenteditable', 'false'); h.setAttribute('draggable', 'false'); h.title = 'Drag to reorder';
+      h.addEventListener('mousedown', function (e) { startSidebarDrag(e, item); });
+      item.insertBefore(h, item.firstChild);
+    });
+  }
+
+  function removeSidebarDragHandles() { document.querySelectorAll('.sidebar__drag-handle').forEach(function (el) { el.remove(); }); }
+
+  function startSidebarDrag(e, li) {
+    if (!editMode) return; e.preventDefault(); e.stopPropagation();
+    var liveItems = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    var map = new Map(); liveItems.forEach(function (it, i) { map.set(it, slides[i]); });
+    sidebarDrag = { li: li, itemToSlide: map, activeSlideEl: slides[currentSlide], startY: e.clientY, moved: false };
+    li.classList.add('sidebar__item--dragging');
+    document.addEventListener('mousemove', handleSidebarDragMove); document.addEventListener('mouseup', handleSidebarDragEnd);
+  }
+
+  function handleSidebarDragMove(e) {
+    if (!sidebarDrag) return; e.preventDefault();
+    if (!sidebarDrag.moved && Math.abs(e.clientY - sidebarDrag.startY) < 4) return;
+    sidebarDrag.moved = true; var dragEl = sidebarDrag.li;
+    var siblings = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    for (var i = 0; i < siblings.length; i++) {
+      var sib = siblings[i]; if (sib === dragEl) continue;
+      var rect = sib.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) { sidebarNav.insertBefore(dragEl, sib); return; }
+    }
+    sidebarNav.appendChild(dragEl);
+  }
+
+  function handleSidebarDragEnd() {
+    if (!sidebarDrag) return; var d = sidebarDrag;
+    d.li.classList.remove('sidebar__item--dragging');
+    document.removeEventListener('mousemove', handleSidebarDragMove); document.removeEventListener('mouseup', handleSidebarDragEnd);
+    sidebarDrag = null; if (!d.moved) return;
+    Array.from(sidebarNav.querySelectorAll('.sidebar__item')).forEach(function (li) {
+      var slideEl = d.itemToSlide.get(li); if (slideEl) stage.appendChild(slideEl);
+    });
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar();
+    currentSlide = Math.max(0, slides.indexOf(d.activeSlideEl)); updateProgress(); suppressNextSidebarClick();
+  }
+
+  function suppressNextSidebarClick() {
+    var sidebarEl = document.querySelector('.sidebar'); if (!sidebarEl) return;
+    var handler = function (e) { e.stopPropagation(); e.preventDefault(); sidebarEl.removeEventListener('click', handler, true); };
+    sidebarEl.addEventListener('click', handler, true);
+    setTimeout(function () { sidebarEl.removeEventListener('click', handler, true); }, 0);
+  }
+
+  function addSlide() {
+    if (!editMode) return; var newNum = currentSlide + 2;
+    var section = document.createElement('section');
+    section.className = 'slide slide--heading-bullets'; section.setAttribute('data-slide', String(newNum));
+    section.setAttribute('data-chapter', 'New Slide'); section.setAttribute('data-notes', '');
+    section.innerHTML = '<div class="slide__content"><div class="badge badge--step" contenteditable="true">New Section</div><h2 class="slide__heading" contenteditable="true">Slide Title</h2><p class="slide__subheading" contenteditable="true">Subtitle goes here</p><ul class="slide__bullets"><li class="slide__bullet" contenteditable="true">First point</li><li class="slide__bullet" contenteditable="true">Second point</li><li class="slide__bullet" contenteditable="true">Third point</li></ul></div>';
+    var currentSlideEl = slides[currentSlide];
+    if (currentSlideEl.nextElementSibling) { stage.insertBefore(section, currentSlideEl.nextElementSibling); } else { stage.appendChild(section); }
+    var li = document.createElement('li'); li.className = 'sidebar__item';
+    li.innerHTML = '<span class="sidebar__item-number">' + String(newNum).padStart(2, '0') + '</span><span class="sidebar__item-label">New Slide</span>';
+    var currentSidebarItem = sidebarItems[currentSlide];
+    if (currentSidebarItem && currentSidebarItem.nextElementSibling) { sidebarNav.insertBefore(li, currentSidebarItem.nextElementSibling); } else { sidebarNav.appendChild(li); }
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar(); addSidebarDragHandles(); updateProgress(); goToSlide(currentSlide + 1);
+  }
+
+  function deleteSlide() {
+    if (!editMode) return; var total = getTotalSlides(); if (total <= 1) return;
+    if (!confirm('Delete this slide?')) return;
+    var slideToRemove = slides[currentSlide]; var sidebarToRemove = sidebarItems[currentSlide];
+    var targetIndex = currentSlide; if (currentSlide >= total - 1) { targetIndex = currentSlide - 1; }
+    slideToRemove.classList.remove('slide--active'); if (sidebarToRemove) sidebarToRemove.classList.remove('sidebar__item--active');
+    slideToRemove.remove(); if (sidebarToRemove) sidebarToRemove.remove();
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar();
+    currentSlide = Math.max(0, Math.min(targetIndex, getTotalSlides() - 1));
+    slides[currentSlide].classList.add('slide--active'); sidebarItems[currentSlide]?.classList.add('sidebar__item--active'); updateProgress();
+  }
+
+  function execCommand(cmd) { document.execCommand(cmd, false, null); }
+
+  function changeFontSize(delta) {
+    var sel = window.getSelection(); if (!sel.rangeCount) return;
+    var el = sel.anchorNode?.parentElement; if (!el) return;
+    var current = parseFloat(window.getComputedStyle(el).fontSize); el.style.fontSize = (current + delta) + 'px';
+  }
+
+  function addBullet() {
+    var activeSlide = slides[currentSlide]; var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways'); if (!list) return;
+    var item = document.createElement('li'); item.className = list.querySelector('li')?.className || '';
+    item.textContent = 'New item'; item.setAttribute('contenteditable', 'true'); list.appendChild(item); item.focus();
+  }
+
+  function removeBullet() {
+    var activeSlide = slides[currentSlide]; var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways'); if (!list) return;
+    var items = list.querySelectorAll('li'); if (items.length > 1) { items[items.length - 1].remove(); }
+  }
+
+  var REMOVABLE_EMPTY_SELECTOR = '.slide__subheading, .slide__subtitle, .slide__description, .slide__bullet, .slide__takeaway';
+
+  function isEditableEl(node) { return !!(node && node.nodeType === 1 && node.matches && node.matches(editableSelectors.join(', '))); }
+
+  function placeCaretAtEnd(node) {
+    if (!node) return;
+    try { node.focus(); var range = document.createRange(); range.selectNodeContents(node); range.collapse(false); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); } catch (err) {}
+  }
+
+  function focusTargetAfterRemoval(el) {
+    if (el.tagName === 'LI') {
+      var prevRow = el.previousElementSibling;
+      while (prevRow && prevRow.tagName !== 'LI') prevRow = prevRow.previousElementSibling;
+      if (prevRow) return prevRow;
+      var listSib = el.parentNode ? el.parentNode.previousElementSibling : null;
+      while (listSib && !isEditableEl(listSib)) { var innerLi = listSib.querySelector ? listSib.querySelector('li') : null; if (innerLi) return innerLi; listSib = listSib.previousElementSibling; }
+      return listSib;
+    }
+    var sib = el.previousElementSibling;
+    while (sib && !isEditableEl(sib)) sib = sib.previousElementSibling;
+    return sib;
+  }
+
+  function addSubtext() {
+    if (!editMode) return; var activeSlide = slides[currentSlide]; var content = activeSlide && activeSlide.querySelector('.slide__content'); if (!content) return;
+    var existing = content.querySelector('.slide__subheading'); if (existing) { placeCaretAtEnd(existing); return; }
+    var p = document.createElement('p'); p.className = 'slide__subheading'; p.setAttribute('contenteditable', 'true'); p.textContent = 'Subtitle goes here';
+    var heading = content.querySelector('.slide__heading');
+    if (heading && heading.nextSibling) { content.insertBefore(p, heading.nextSibling); } else if (heading) { content.appendChild(p); } else { var badge = content.querySelector('.badge'); if (badge && badge.nextSibling) content.insertBefore(p, badge.nextSibling); else content.insertBefore(p, content.firstChild); }
+    addDeleteButtons();
+    try { p.focus(); var range = document.createRange(); range.selectNodeContents(p); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range); } catch (err) { p.focus(); }
+  }
+
+  function insertImageFromDataUrl(dataUrl) {
+    var activeSlide = slides[currentSlide]; var content = activeSlide.querySelector('.slide__content'); if (!content) return;
+    var img = document.createElement('img'); img.className = 'slide__hero-image'; img.src = dataUrl; img.alt = 'Pasted image';
+    var insertBefore = content.querySelector('.slide__bullets, .slide__table-wrapper, .slide__cards, .slide__stats-grid, .slide__takeaways, .slide__quote-wrapper, .slide__cta');
+    if (insertBefore) { content.insertBefore(img, insertBefore); } else { content.appendChild(img); }
+    if (editMode) { addImageOverlays(); addDragHandles(); addDeleteButtons(); }
+  }
+
+  function blobToDataUrl(blob, cb) { var reader = new FileReader(); reader.onload = function () { cb(reader.result); }; reader.readAsDataURL(blob); }
+
+  function getActiveTable() { var activeSlide = slides[currentSlide]; return activeSlide ? activeSlide.querySelector('.slide__table') : null; }
+  function getFocusedCell() { var sel = window.getSelection(); if (!sel || sel.rangeCount === 0) return null; var node = sel.anchorNode; if (!node) return null; if (node.nodeType === 3) node = node.parentNode; return node.closest ? node.closest('td, th') : null; }
+
+  function addTableRow() {
+    var table = getActiveTable(); if (!table) return; var tbody = table.querySelector('tbody'); if (!tbody) return;
+    var lastRow = tbody.querySelector('tr:last-child'); var colCount = lastRow ? lastRow.children.length : 2;
+    var tr = document.createElement('tr');
+    for (var i = 0; i < colCount; i++) { var td = document.createElement('td'); td.textContent = 'New'; if (editMode) td.setAttribute('contenteditable', 'true'); tr.appendChild(td); }
+    tbody.appendChild(tr);
+  }
+
+  function removeTableRow() {
+    var table = getActiveTable(); if (!table) return; var tbody = table.querySelector('tbody'); if (!tbody) return;
+    var rows = tbody.querySelectorAll('tr'); if (rows.length <= 1) return;
+    var cell = getFocusedCell(); var targetRow = (cell && tbody.contains(cell)) ? cell.parentNode : rows[rows.length - 1];
+    if (targetRow && targetRow.parentNode === tbody) targetRow.remove();
+  }
+
+  function addTableCol() {
+    var table = getActiveTable(); if (!table) return;
+    var theadRow = table.querySelector('thead tr');
+    if (theadRow) { var th = document.createElement('th'); th.textContent = 'New'; if (editMode) th.setAttribute('contenteditable', 'true'); theadRow.appendChild(th); }
+    table.querySelectorAll('tbody tr').forEach(function (tr) { var td = document.createElement('td'); td.textContent = 'New'; if (editMode) td.setAttribute('contenteditable', 'true'); tr.appendChild(td); });
+  }
+
+  function removeTableCol() {
+    var table = getActiveTable(); if (!table) return;
+    var theadRow = table.querySelector('thead tr'); var bodyRows = table.querySelectorAll('tbody tr');
+    var totalCols = theadRow ? theadRow.children.length : (bodyRows[0] ? bodyRows[0].children.length : 0); if (totalCols <= 1) return;
+    var cell = getFocusedCell(); var colIndex = -1;
+    if (cell) { var row = cell.parentNode; colIndex = Array.prototype.indexOf.call(row.children, cell); }
+    if (colIndex < 0) colIndex = totalCols - 1;
+    if (theadRow && theadRow.children[colIndex]) { theadRow.removeChild(theadRow.children[colIndex]); }
+    bodyRows.forEach(function (tr) { if (tr.children[colIndex]) tr.removeChild(tr.children[colIndex]); });
+  }
+
+  function addImage() {
+    var input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none';
+    input.addEventListener('change', function () { var file = input.files && input.files[0]; if (!file) return; blobToDataUrl(file, insertImageFromDataUrl); });
+    document.body.appendChild(input); input.click(); setTimeout(function () { input.remove(); }, 1000);
+  }
+
+  document.addEventListener('paste', function (e) {
+    if (!editMode) return; var items = e.clipboardData && e.clipboardData.items; if (!items) return;
+    for (var i = 0; i < items.length; i++) { var item = items[i]; if (item.kind === 'file' && item.type.indexOf('image/') === 0) { e.preventDefault(); var blob = item.getAsFile(); if (blob) blobToDataUrl(blob, insertImageFromDataUrl); return; } }
+  });
+
+  (function injectNewToolbarButtons() {
+    if (!editToolbar) return;
+    function makeBtn(action, label, title) { var b = document.createElement('button'); b.className = 'edit-toolbar__btn'; b.dataset.action = action; b.textContent = label; if (title) b.title = title; return b; }
+    function makeSep() { var s = document.createElement('div'); s.className = 'edit-toolbar__separator'; return s; }
+    var addBulletBtn = editToolbar.querySelector('[data-action="add-bullet"]');
+    var anchor = addBulletBtn || null;
+    function insertBeforeAnchor(node) { if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(node, anchor); else editToolbar.appendChild(node); }
+    if (!editToolbar.querySelector('[data-action="add-image"]')) { insertBeforeAnchor(makeBtn('add-image', '+ Image', 'Insert image')); insertBeforeAnchor(makeSep()); }
+    if (!editToolbar.querySelector('[data-action="add-subtext"]')) { insertBeforeAnchor(makeBtn('add-subtext', '+ Subtext', 'Add a subtitle line')); }
+    if (!editToolbar.querySelector('[data-action="add-row"]')) {
+      var addSlideBtn = editToolbar.querySelector('[data-action="add-slide"]');
+      var tableAnchor = addSlideBtn || null;
+      function insertBeforeTableAnchor(node) { if (tableAnchor && tableAnchor.parentNode) tableAnchor.parentNode.insertBefore(node, tableAnchor); else editToolbar.appendChild(node); }
+      insertBeforeTableAnchor(makeBtn('add-row', '+ Row', 'Add row to table'));
+      insertBeforeTableAnchor(makeBtn('remove-row', '- Row', 'Remove row from table'));
+      insertBeforeTableAnchor(makeBtn('add-col', '+ Col', 'Add column to table'));
+      insertBeforeTableAnchor(makeBtn('remove-col', '- Col', 'Remove column from table'));
+      insertBeforeTableAnchor(makeSep());
+    }
+  })();
+
+  function savePresentation() {
+    var wasEditing = editMode; if (wasEditing) disableEditMode();
+    var notesPanel = document.querySelector('.notes-panel'); if (notesPanel) notesPanel.style.display = 'none';
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    if (notesPanel && notesVisible) notesPanel.style.display = 'block';
+    if (wasEditing) enableEditMode();
+    if (window.showSaveFilePicker) { saveWithFileSystemAccess(html); } else { saveWithDownload(html); }
+  }
+
+  function saveWithFileSystemAccess(html) {
+    if (fileHandle) { writeToHandle(fileHandle, html); } else {
+      var suggestedName = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+      window.showSaveFilePicker({ suggestedName: suggestedName, types: [{ description: 'HTML Files', accept: { 'text/html': ['.html'] } }] })
+        .then(function (handle) { fileHandle = handle; writeToHandle(handle, html); })
+        .catch(function (err) { if (err.name !== 'AbortError') showToast('Save failed', true); });
+    }
+  }
+
+  function writeToHandle(handle, content) {
+    handle.createWritable().then(function (writable) { return writable.write(content).then(function () { return writable.close(); }); })
+      .then(function () { showToast('Saved!'); })
+      .catch(function (err) { console.error('Write failed:', err); showToast('Save failed', true); fileHandle = null; });
+  }
+
+  function saveWithDownload(html) {
+    var blob = new Blob([html], { type: 'text/html' }); var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+    a.click(); URL.revokeObjectURL(a.href); showToast('Downloaded!');
+  }
+
+  function showToast(message, isError) {
+    var existing = document.querySelector('.save-toast'); if (existing) existing.remove();
+    var toast = document.createElement('div'); toast.className = 'save-toast' + (isError ? ' save-toast--error' : ''); toast.textContent = message;
+    document.body.appendChild(toast);
+    requestAnimationFrame(function () { toast.classList.add('save-toast--visible'); });
+    setTimeout(function () { toast.classList.remove('save-toast--visible'); setTimeout(function () { toast.remove(); }, 300); }, 2000);
+  }
+
+  function createNotesPanel() {
+    var panel = document.createElement('div'); panel.className = 'notes-panel';
+    panel.innerHTML = '<div class="notes-panel__header"><span class="notes-panel__title">Talking Points</span><span class="notes-panel__hint">T</span><button class="notes-panel__close">&times;</button></div><ul class="notes-panel__list"></ul>';
+    panel.style.display = 'none'; document.body.appendChild(panel);
+    panel.querySelector('.notes-panel__close').addEventListener('click', function () { toggleNotes(); });
+    return panel;
+  }
+
+  var notesPanelEl = createNotesPanel();
+
+  function updateNotesContent() {
+    var list = notesPanelEl.querySelector('.notes-panel__list'); var currentSlideEl = slides[currentSlide];
+    var notesData = currentSlideEl ? currentSlideEl.dataset.notes : '';
+    if (!notesData || notesData.trim() === '') { list.innerHTML = '<li class="notes-panel__empty">No notes for this slide</li>'; return; }
+    var points = notesData.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+    list.innerHTML = points.map(function (p) { return '<li class="notes-panel__item">' + p + '</li>'; }).join('');
+  }
+
+  function toggleNotes() { notesVisible = !notesVisible; notesPanelEl.style.display = notesVisible ? 'block' : 'none'; if (notesVisible) updateNotesContent(); }
+
+  document.querySelectorAll('.edit-toolbar__btn').forEach(function (btn) {
+    var action = btn.dataset.action; if (!action) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      switch (action) {
+        case 'bold': execCommand('bold'); break;
+        case 'italic': execCommand('italic'); break;
+        case 'font-up': changeFontSize(2); break;
+        case 'font-down': changeFontSize(-2); break;
+        case 'add-bullet': addBullet(); break;
+        case 'remove-bullet': removeBullet(); break;
+        case 'add-subtext': addSubtext(); break;
+        case 'add-image': addImage(); break;
+        case 'add-row': addTableRow(); break;
+        case 'remove-row': removeTableRow(); break;
+        case 'add-col': addTableCol(); break;
+        case 'remove-col': removeTableCol(); break;
+        case 'add-slide': addSlide(); break;
+        case 'delete-slide': deleteSlide(); break;
+        case 'save': savePresentation(); break;
+      }
+    });
+  });
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(function () { isFullscreen = true; presentation.classList.add('presentation--fullscreen'); }).catch(function () {});
+    } else { document.exitFullscreen(); isFullscreen = false; presentation.classList.remove('presentation--fullscreen'); }
+  }
+
+  document.addEventListener('fullscreenchange', function () { if (!document.fullscreenElement) { isFullscreen = false; presentation.classList.remove('presentation--fullscreen'); } });
+
+  document.addEventListener('keydown', function (e) {
+    var isEditing = e.target.isContentEditable;
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); savePresentation(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'e') { e.preventDefault(); toggleEditMode(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') { if (editMode) { e.preventDefault(); deleteSlide(); return; } }
+    if (e.key === 'Escape') { if (editMode) { disableEditMode(); } return; }
+    if (editMode && isEditing && (e.key === 'Backspace' || e.key === 'Delete')) {
+      var delTarget = e.target;
+      var delText = delTarget && delTarget.textContent ? delTarget.textContent.replace(/[​﻿]/g, '').trim() : '';
+      if (delTarget && delTarget.matches && delTarget.matches(REMOVABLE_EMPTY_SELECTOR) && delText === '') {
+        e.preventDefault(); var nextFocus = focusTargetAfterRemoval(delTarget); delTarget.remove(); if (nextFocus) placeCaretAtEnd(nextFocus); return;
+      }
+    }
+    if (isEditing) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nextSlide(); break;
+      case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prevSlide(); break;
+      case 'f': case 'F11': e.preventDefault(); toggleFullscreen(); break;
+      case 't': e.preventDefault(); toggleNotes(); break;
+      case 'Home': e.preventDefault(); goToSlide(0); break;
+      case 'End': e.preventDefault(); goToSlide(getTotalSlides() - 1); break;
+    }
+  });
+
+  var touchStartX = 0;
+  document.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+  document.addEventListener('touchend', function (e) { var diff = e.changedTouches[0].screenX - touchStartX; if (Math.abs(diff) > 50) { if (diff > 0) prevSlide(); else nextSlide(); } }, { passive: true });
+
+  goToSlide(0);
+})();
+</script>
+</body>
+</html>

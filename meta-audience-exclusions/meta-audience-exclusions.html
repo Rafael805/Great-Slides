@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, initial-scale=1" />
+  <title>How Meta Audience Exclusions Work (And Why They're Killing Your CPL)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f0d0a;
+      --surface: #161310;
+      --card-bg: #1c1915;
+      --card-border: #2e2820;
+      --primary: #C7963F;
+      --primary-glow: rgba(199, 150, 63, 0.15);
+      --secondary: #7c3aed;
+      --text: #ffffff;
+      --text-muted: #9a9080;
+      --text-accent: #C7963F;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --meta-blue: #1877F2;
+      --font-heading: Inter, system-ui, sans-serif;
+      --font-body: Inter, system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --title-size: 3.5rem;
+      --heading-size: 2.5rem;
+      --subheading-size: 1.5rem;
+      --body-size: 1.125rem;
+      --bullet-size: 1.25rem;
+      --caption-size: 0.875rem;
+      --content-padding: 80px;
+      --card-radius: 16px;
+      --sidebar-width: 260px;
+      --transition-duration: 300ms;
+    }
+
+    /* ==========================================================================
+       HTML Slide Designer - Base Theme
+       ========================================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      background: var(--bg); color: var(--text);
+      font-family: var(--font-body); font-size: var(--body-size);
+      line-height: 1.5; -webkit-font-smoothing: antialiased;
+    }
+    .presentation { display: flex; width: 100vw; height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width); min-width: var(--sidebar-width);
+      background: var(--surface); border-right: 1px solid var(--card-border);
+      display: flex; flex-direction: column; padding: 32px 0;
+      overflow-y: auto; z-index: 10;
+      transition: transform var(--transition-duration) ease;
+    }
+    .sidebar__logo { padding: 0 24px 32px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
+    .sidebar__nav { list-style: none; padding: 0 12px; flex: 1; }
+    .sidebar__item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px; border-radius: 8px; cursor: pointer;
+      transition: all 150ms ease; margin-bottom: 4px;
+      font-size: var(--caption-size); color: var(--text-muted); font-weight: 500;
+    }
+    .sidebar__item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .sidebar__item--active { background: var(--primary-glow); color: var(--primary); font-weight: 600; }
+    .sidebar__item-number { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; min-width: 28px; text-align: center; }
+    .sidebar__item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar__progress { padding: 16px 24px; border-top: 1px solid var(--card-border); margin-top: auto; }
+    .sidebar__progress-bar { width: 100%; height: 3px; background: var(--card-border); border-radius: 2px; overflow: hidden; }
+    .sidebar__progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width var(--transition-duration) ease; }
+    .sidebar__progress-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: center; }
+
+    /* Stage */
+    .stage { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+
+    /* Slides */
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--transition-duration) ease;
+      padding: var(--content-padding);
+      background: var(--bg);
+    }
+    .slide--active { opacity: 1; pointer-events: auto; }
+    .slide__content {
+      width: 100%; max-width: 1400px;
+      display: flex; flex-direction: column;
+      gap: 32px; align-items: center; text-align: center;
+    }
+    .slide__content--centered { align-items: center; text-align: center; }
+    .slide__stats-grid, .slide__cards { width: 100%; }
+    .slide__bullets, .slide__takeaways { text-align: left; }
+
+    /* Title slide special bg */
+    .slide--title {
+      background: radial-gradient(ellipse at 30% 50%, rgba(199,150,63,0.08) 0%, transparent 60%), var(--bg);
+    }
+    .slide--title .slide__title {
+      font-size: 3.8rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; line-height: 1.1; max-width: 900px;
+    }
+    .slide--title .slide__subtitle { font-size: 1.4rem; color: var(--text-muted); max-width: 700px; }
+
+    /* Typography */
+    .slide__title { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; line-height: 1.1; color: var(--text); letter-spacing: -0.02em; }
+    .slide__heading { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 700; line-height: 1.2; color: var(--text); letter-spacing: -0.01em; }
+    .slide__subheading { font-size: var(--subheading-size); font-weight: 500; color: var(--text-muted); line-height: 1.4; }
+    .slide__subtitle { font-size: var(--subheading-size); font-weight: 400; color: var(--text-muted); margin-top: -16px; }
+    .slide__description { font-size: var(--body-size); color: var(--text-muted); line-height: 1.6; }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; padding: 6px 16px;
+      border-radius: 100px; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em; width: fit-content;
+    }
+    .badge--step { border: 1.5px solid var(--primary); background: transparent; color: var(--primary); }
+    .badge--recommended { border: 1.5px solid var(--primary); background: var(--primary); color: var(--bg); }
+    .badge--meta { border: 1.5px solid var(--meta-blue); background: rgba(24,119,242,0.12); color: var(--meta-blue); }
+    .badge--danger { border: 1.5px solid var(--error); background: rgba(239,68,68,0.12); color: var(--error); }
+    .badge--success { border: 1.5px solid var(--success); background: rgba(16,185,129,0.12); color: var(--success); }
+
+    /* Bullets */
+    .slide__bullets { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .slide__bullet {
+      font-size: var(--bullet-size); font-weight: 400; color: var(--text);
+      padding-left: 28px; position: relative; line-height: 1.5;
+    }
+    .slide__bullet::before {
+      content: ''; position: absolute; left: 0; top: 10px;
+      width: 8px; height: 8px; border-radius: 50%; background: var(--primary);
+    }
+
+    /* Hero Image */
+    .slide__hero-image { width: 100%; max-height: 52vh; border-radius: var(--card-radius); object-fit: contain; display: block; margin: 0 auto; }
+
+    /* Cards */
+    .slide__cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--card-radius); overflow: hidden;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+      padding: 32px;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .card__body { display: flex; flex-direction: column; gap: 12px; text-align: left; }
+    .card__icon { font-size: 2rem; margin-bottom: 8px; }
+    .card__title { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: var(--text); }
+    .card__description { font-size: var(--body-size); color: var(--text-muted); line-height: 1.6; }
+    .card--accent-green { border-color: var(--success); box-shadow: 0 0 24px rgba(16,185,129,0.08); }
+    .card--accent-gold { border-color: var(--primary); box-shadow: 0 0 24px rgba(199,150,63,0.08); }
+    .card--accent-red { border-color: var(--error); box-shadow: 0 0 24px rgba(239,68,68,0.08); }
+
+    /* Diagram */
+    .slide__diagram-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 440px; width: 100%; }
+    .slide__diagram-wrapper .mermaid { width: 100%; min-height: 400px; display: flex; align-items: center; justify-content: center; }
+    .slide__diagram-wrapper .mermaid svg { min-height: 380px; width: 100% !important; max-width: 100%; height: auto !important; }
+
+    /* Quote */
+    .slide--quote { background: radial-gradient(ellipse at 70% 50%, rgba(199,150,63,0.06) 0%, transparent 60%), var(--bg); }
+    .slide__quote-wrapper { max-width: 1000px; position: relative; padding: 40px 60px; }
+    .slide__quote-mark { font-family: Georgia, serif; font-size: 8rem; color: var(--primary); opacity: 0.3; line-height: 1; position: absolute; top: -20px; left: 0; }
+    .slide__quote { font-family: var(--font-heading); font-size: 2rem; font-weight: 600; font-style: italic; line-height: 1.5; color: var(--text); position: relative; z-index: 1; }
+    .slide__attribution { display: block; margin-top: 24px; font-size: var(--body-size); font-style: normal; color: var(--primary); font-weight: 600; }
+
+    /* Stats */
+    .slide__stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); padding: 40px 32px; text-align: center; }
+    .stat-card__value { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 8px; }
+    .stat-card__label { font-size: var(--subheading-size); font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .stat-card__description { font-size: var(--caption-size); color: var(--text-muted); }
+
+    /* Recap */
+    .slide__takeaways { list-style: none; counter-reset: takeaway; display: flex; flex-direction: column; gap: 20px; }
+    .slide__takeaway {
+      counter-increment: takeaway; font-size: var(--bullet-size);
+      color: var(--text); padding-left: 52px; position: relative; line-height: 1.5;
+    }
+    .slide__takeaway::before {
+      content: counter(takeaway); position: absolute; left: 0; top: 0;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--primary-glow); border: 1.5px solid var(--primary);
+      color: var(--primary); font-family: var(--font-mono);
+      font-size: 0.875rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* CTA */
+    .slide__cta { margin-top: 16px; }
+    .slide__cta-text { font-size: var(--subheading-size); color: var(--primary); font-weight: 600; }
+
+    /* Edit mode toolbar */
+    .edit-toolbar {
+      position: fixed; top: 0; left: var(--sidebar-width); right: 0;
+      height: 48px; background: var(--surface); border-bottom: 1px solid var(--card-border);
+      display: none; align-items: center; padding: 0 24px; gap: 8px; z-index: 100;
+    }
+    .edit-mode .edit-toolbar { display: flex; }
+    .edit-toolbar__btn {
+      padding: 6px 12px; background: transparent; border: 1px solid var(--card-border);
+      border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer;
+    }
+    .edit-toolbar__btn:hover { background: var(--card-bg); border-color: var(--primary); }
+    .edit-toolbar__btn--save { background: var(--primary); color: var(--bg); border-color: var(--primary); font-weight: 600; }
+    .edit-toolbar__btn--danger { color: var(--error); border-color: var(--error); }
+    .edit-toolbar__separator { width: 1px; height: 24px; background: var(--card-border); margin: 0 4px; }
+    .edit-toolbar__spacer { flex: 1; }
+    .edit-indicator { position: fixed; bottom: 16px; right: 16px; padding: 8px 16px; background: var(--primary); color: var(--bg); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; z-index: 100; display: none; }
+    .edit-mode .edit-indicator { display: block; }
+    .save-toast { position: fixed; top: 24px; right: 24px; padding: 12px 24px; background: var(--success); color: #fff; border-radius: 8px; font-size: 0.875rem; font-weight: 600; z-index: 300; opacity: 0; transform: translateY(-12px); transition: opacity 300ms ease, transform 300ms ease; pointer-events: none; }
+    .save-toast--visible { opacity: 1; transform: translateY(0); }
+    .save-toast--error { background: var(--error); }
+    .notes-panel { position: fixed; bottom: 24px; right: 24px; width: 360px; max-height: 280px; background: rgba(22,19,16,0.95); border: 1px solid var(--card-border); border-radius: var(--card-radius); z-index: 200; overflow: hidden; display: flex; flex-direction: column; font-family: var(--font-body); box-shadow: 0 8px 32px rgba(0,0,0,0.4); backdrop-filter: blur(12px); }
+    .notes-panel__header { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--card-border); }
+    .notes-panel__title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); }
+    .notes-panel__hint { font-size: 0.625rem; font-family: var(--font-mono); background: rgba(255,255,255,0.1); color: var(--text-muted); padding: 2px 6px; border-radius: 4px; }
+    .notes-panel__close { margin-left: auto; background: none; border: none; color: var(--text-muted); font-size: 1.25rem; cursor: pointer; padding: 0 4px; line-height: 1; }
+    .notes-panel__list { list-style: none; padding: 12px 16px; margin: 0; overflow-y: auto; flex: 1; }
+    .notes-panel__item { font-size: 0.875rem; color: #fff; padding: 6px 0 6px 20px; position: relative; line-height: 1.4; }
+    .notes-panel__item::before { content: ''; position: absolute; left: 4px; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+    .notes-panel__empty { font-size: 0.875rem; color: var(--text-muted); font-style: italic; padding: 6px 0; list-style: none; }
+    .presentation--fullscreen .sidebar { display: none; }
+    .drag-handle { position: absolute; left: -40px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: grab; opacity: 0; transition: opacity 150ms ease; user-select: none; z-index: 10; }
+    .drag-handle::before { content: ''; display: block; width: 8px; height: 14px; background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px); background-size: 4px 4.5px; }
+    .edit-mode .slide__content > *:hover > .drag-handle { opacity: 0.5; }
+    .drag-handle:hover { opacity: 1 !important; color: var(--primary); }
+    .edit-mode .slide__content > .dragging { opacity: 0.3; }
+    .delete-element-btn { position: absolute; right: -40px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; opacity: 0; transition: opacity 150ms ease, color 150ms ease; user-select: none; z-index: 10; background: none; border: none; padding: 0; font-size: 16px; line-height: 1; }
+    .delete-element-btn::before { content: '\00D7'; font-size: 20px; font-weight: 700; }
+    .edit-mode .slide__content > *:hover > .delete-element-btn { opacity: 0.5; }
+    .delete-element-btn:hover { opacity: 1 !important; color: var(--error); }
+    .edit-mode .slide__bullet, .edit-mode .slide__takeaway { position: relative; }
+    .row-delete-btn { position: absolute; right: -32px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; opacity: 0; transition: opacity 150ms ease, color 150ms ease; z-index: 10; background: none; border: none; padding: 0; line-height: 1; }
+    .row-delete-btn::before { content: '\00D7'; font-size: 18px; font-weight: 700; }
+    .edit-mode li:hover > .row-delete-btn { opacity: 0.5; }
+    .row-delete-btn:hover { opacity: 1 !important; color: var(--error); }
+    .add-row-btn { display: none; margin-top: 0.5rem; padding: 0.4rem 0.85rem; font-size: 0.8125rem; font-family: inherit; font-weight: 500; color: var(--text-muted); background: transparent; border: 1px dashed currentColor; border-radius: 6px; cursor: pointer; opacity: 0.6; }
+    .edit-mode .add-row-btn { display: inline-flex; }
+    .add-row-btn:hover { color: var(--primary); opacity: 1; }
+    .edit-mode .slide__title, .edit-mode .slide__heading, .edit-mode .slide__subheading, .edit-mode .slide__bullet, .edit-mode .slide__quote, .edit-mode .slide__attribution, .edit-mode .card__title, .edit-mode .card__description, .edit-mode .slide__takeaway, .edit-mode .badge { outline: 1px dashed rgba(255,255,255,0.15); outline-offset: 4px; cursor: text; }
+    .edit-mode [contenteditable="true"]:focus { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 4px; }
+    .edit-mode .slide__table th, .edit-mode .slide__table td { outline: 1px dashed rgba(255,255,255,0.15); }
+    .edit-mode .sidebar__item-label { outline: 1px dashed rgba(255,255,255,0.2); outline-offset: 2px; cursor: text; border-radius: 3px; }
+    .edit-mode .sidebar__item-label:focus { outline: 2px solid var(--primary); }
+    .image-replace-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 150ms ease; border-radius: var(--card-radius); pointer-events: none; }
+    .edit-mode .slide__image:hover + .image-replace-overlay, .edit-mode .image-replace-overlay:hover { opacity: 1; pointer-events: auto; }
+    .image-replace-btn { padding: 8px 20px; background: var(--primary); color: var(--bg); border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+
+    /* Funnel diagram on slide 4 */
+    .budget-leak-diagram { width: 100%; display: flex; gap: 48px; align-items: center; justify-content: center; padding: 20px 0; }
+    .campaign-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); padding: 24px 32px; flex: 1; max-width: 280px; text-align: center; }
+    .campaign-box h3 { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .campaign-box p { font-size: 0.9rem; color: var(--text-muted); }
+    .overlap-person { background: rgba(239,68,68,0.15); border: 2px solid var(--error); border-radius: 50%; width: 120px; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0; }
+    .overlap-person .icon { font-size: 2rem; }
+    .overlap-person p { font-size: 0.75rem; font-weight: 700; color: var(--error); text-align: center; line-height: 1.3; }
+    .arrow { font-size: 2rem; color: var(--text-muted); flex-shrink: 0; }
+    .result-box { background: rgba(239,68,68,0.1); border: 1px solid var(--error); border-radius: var(--card-radius); padding: 20px 28px; text-align: center; }
+    .result-box h3 { font-size: 1.1rem; font-weight: 700; color: var(--error); margin-bottom: 8px; }
+    .result-box p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* Waterfall diagram on slide 7 */
+    .waterfall { width: 100%; display: flex; flex-direction: column; gap: 0; align-items: center; }
+    .waterfall-row { display: flex; align-items: center; gap: 24px; width: 100%; max-width: 900px; }
+    .waterfall-layer {
+      flex: 1; border-radius: 12px; padding: 20px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: relative;
+    }
+    .waterfall-layer--top { background: rgba(24,119,242,0.15); border: 1px solid rgba(24,119,242,0.4); }
+    .waterfall-layer--mid { background: rgba(199,150,63,0.12); border: 1px solid rgba(199,150,63,0.4); margin: 0 24px; }
+    .waterfall-layer--bottom { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.4); margin: 0 48px; }
+    .waterfall-layer--retention { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.4); margin: 0 72px; }
+    .waterfall-label { text-align: left; }
+    .waterfall-label h4 { font-weight: 700; font-size: 1rem; color: var(--text); }
+    .waterfall-label p { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+    .waterfall-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 100px; }
+    .tag--blue { background: rgba(24,119,242,0.2); color: #1877F2; }
+    .tag--gold { background: rgba(199,150,63,0.2); color: var(--primary); }
+    .tag--green { background: rgba(16,185,129,0.2); color: var(--success); }
+    .tag--purple { background: rgba(124,58,237,0.2); color: var(--secondary); }
+    .waterfall-arrow { width: 100%; display: flex; justify-content: center; padding: 6px 0; }
+    .waterfall-arrow::after { content: '↓'; font-size: 1.25rem; color: var(--text-muted); }
+    .exclusion-tag { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+<div class="presentation">
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar__logo">
+      <span style="font-family: var(--font-heading); font-weight: 700; font-size: 1rem; color: var(--primary);">GREAT MARKETING AI</span>
+    </div>
+    <ul class="sidebar__nav">
+      <li class="sidebar__item sidebar__item--active">
+        <span class="sidebar__item-number">01</span>
+        <span class="sidebar__item-label">Hook</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">02</span>
+        <span class="sidebar__item-label">What Are Exclusions</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">03</span>
+        <span class="sidebar__item-label">The Budget Leak</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">04</span>
+        <span class="sidebar__item-label">Self-Competition</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">05</span>
+        <span class="sidebar__item-label">3 Core Exclusions</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">06</span>
+        <span class="sidebar__item-label">How to Build It</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">07</span>
+        <span class="sidebar__item-label">Waterfall Structure</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">08</span>
+        <span class="sidebar__item-label">Common Mistakes</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">09</span>
+        <span class="sidebar__item-label">Audit Checklist</span>
+      </li>
+      <li class="sidebar__item">
+        <span class="sidebar__item-number">10</span>
+        <span class="sidebar__item-label">Engagement CTA</span>
+      </li>
+    </ul>
+    <div class="sidebar__progress">
+      <div class="sidebar__progress-bar">
+        <div class="sidebar__progress-fill" style="width: 10%"></div>
+      </div>
+      <div class="sidebar__progress-text">1 / 10</div>
+    </div>
+  </nav>
+
+  <!-- Stage -->
+  <main class="stage">
+
+    <!-- Slide 1: Hook / Title -->
+    <section class="slide slide--title slide--active"
+      data-slide="1" data-chapter="Hook"
+      data-notes="Open with the self-competition claim — let it sit|Pause after 'Meta is charging you for it'|This is the hook — don't rush past it">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--meta">Agency Playbook</div>
+        <h1 class="slide__title">Your Campaigns Are Competing Against Each Other</h1>
+        <p class="slide__subtitle">How Meta audience exclusions work — and why skipping them is burning your CPL</p>
+      </div>
+    </section>
+
+    <!-- Slide 2: What Are Exclusions (hero image) -->
+    <section class="slide slide--heading-bullets"
+      data-slide="2" data-chapter="What Are Exclusions"
+      data-notes="One sentence definition before anything else|Emphasize: this is a setting, not a strategy — it's just a list of who to skip|'You already have these audiences — you just need to plug them in'">
+      <div class="slide__content">
+        <div class="badge badge--step">The Basics</div>
+        <img class="slide__hero-image" src="images/slide-02-what-are-exclusions.png" alt="What Are Audience Exclusions" />
+        <p class="slide__subheading">Tell Meta exactly who <em>not</em> to show your ads to</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Set at the ad set level inside Meta Ads Manager</li>
+          <li class="slide__bullet">Built from custom audiences you already have</li>
+          <li class="slide__bullet">Runs automatically — no ongoing management required</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 3: The Budget Leak — Quote -->
+    <section class="slide slide--quote"
+      data-slide="3" data-chapter="The Budget Leak"
+      data-notes="This is the emotional core — the 'why should I care' slide|Read it slowly|Pause on 'you pay for the competition — twice'|Then say 'I'll show you exactly how this happens on the next slide'">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--danger">The Problem</div>
+        <div class="slide__quote-wrapper">
+          <div class="slide__quote-mark">"</div>
+          <blockquote class="slide__quote">When prospecting and retargeting run without exclusions, both campaigns bid for the same person in the same auction. Meta charges you more — for both.</blockquote>
+          <cite class="slide__attribution">The self-competition problem</cite>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Self-Competition Diagram -->
+    <section class="slide slide--diagram"
+      data-slide="4" data-chapter="Self-Competition"
+      data-notes="Walk through left to right — budget splits, both reach same person|That middle circle is where the money disappears|Stress: Meta doesn't protect you from this — it's your job to set exclusions|'Every account I audit has this problem'">
+      <div class="slide__content">
+        <div class="badge badge--danger">The Invisible Budget Leak</div>
+        <h2 class="slide__heading">Prospecting vs. Retargeting: No Exclusions</h2>
+        <div style="width: 100%;">
+          <div class="budget-leak-diagram">
+            <div class="campaign-box">
+              <h3>Prospecting Campaign</h3>
+              <p>Cold audiences, new reach</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="overlap-person">
+              <div class="icon">🧑</div>
+              <p>Same<br/>Person</p>
+            </div>
+            <div class="arrow">←</div>
+            <div class="campaign-box">
+              <h3>Retargeting Campaign</h3>
+              <p>Warm audiences, site visitors</p>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:center; margin-top: 24px;">
+            <div class="result-box">
+              <h3>Both Campaigns Bid Against Each Other</h3>
+              <p>Meta runs an auction — your two campaigns compete, driving up your own CPL</p>
+            </div>
+          </div>
+        </div>
+        <ul class="slide__bullets" style="max-width: 700px;">
+          <li class="slide__bullet">One budget funds two campaigns fighting for the same person</li>
+          <li class="slide__bullet">Your CPL climbs without any change in creative or targeting</li>
+          <li class="slide__bullet">Meta's algorithm does exactly what you told it — you didn't tell it to skip anyone</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 5: The 3 Core Exclusions (Card Grid) -->
+    <section class="slide slide--card-grid"
+      data-slide="5" data-chapter="3 Core Exclusions"
+      data-notes="Three types — every account needs all three|Recent Converters: don't pay to acquire someone you already paid to acquire|Retargeting: keep funnel lanes clean|Disqualified: niche-specific, depends on your vertical|'If you leave after this slide, you have what you need to fix most accounts'">
+      <div class="slide__content">
+        <div class="badge badge--recommended">The Fix</div>
+        <h2 class="slide__heading">3 Exclusions Every Account Needs</h2>
+        <div class="slide__cards">
+          <div class="card card--accent-green">
+            <div class="card__body">
+              <div class="card__icon">✅</div>
+              <h3 class="card__title">Recent Converters</h3>
+              <p class="card__description">Anyone who already took the action you're optimizing for — a lead, a purchase, a sign-up. Don't pay to acquire someone twice.</p>
+              <span class="badge badge--success" style="margin-top: 8px;">Protect CPL</span>
+            </div>
+          </div>
+          <div class="card card--accent-gold">
+            <div class="card__body">
+              <div class="card__icon">🎯</div>
+              <h3 class="card__title">Active Retargeting Audiences</h3>
+              <p class="card__description">Exclude your retargeting audiences from prospecting campaigns. Stop both campaigns from bidding on the same warm traffic.</p>
+              <span class="badge badge--step" style="margin-top: 8px;">Stop Overlap</span>
+            </div>
+          </div>
+          <div class="card card--accent-red">
+            <div class="card__body">
+              <div class="card__icon">🚫</div>
+              <h3 class="card__title">Disqualified Traffic</h3>
+              <p class="card__description">Audiences that signal wrong fit for your niche — wrong geography, wrong language, low-quality engagement signals. Cut waste at the source.</p>
+              <span class="badge badge--danger" style="margin-top: 8px;">Improve Quality</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: How to Build It (hero image) -->
+    <section class="slide slide--heading-bullets"
+      data-slide="6" data-chapter="How to Build It"
+      data-notes="Stress: ad set level, not campaign level — this trips people up|You need the custom audience to exist first before you can exclude it|'Go into one of your active ad sets right now and check if Exclusions is empty — it probably is'">
+      <div class="slide__content">
+        <div class="badge badge--step">Step by Step</div>
+        <img class="slide__hero-image" src="images/slide-06-build-exclusions.png" alt="How to Build Exclusions in Ads Manager" />
+        <p class="slide__subheading">Where to find exclusions in Meta Ads Manager</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Step 1: Create your custom audience first (converters, retargeting list, disqualified)</li>
+          <li class="slide__bullet">Step 2: Open your ad set — go to the Audience section and scroll to Exclusions</li>
+          <li class="slide__bullet">Step 3: Click Add Exclusion and select the custom audience from the dropdown</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 7: Waterfall Structure (custom diagram) -->
+    <section class="slide slide--diagram"
+      data-slide="7" data-chapter="Waterfall Structure"
+      data-notes="This is the advanced move — once exclusions are in, structure campaigns as a waterfall|Each layer is clean because it explicitly excludes what's above it|Attribution becomes readable — you know exactly which funnel stage drove the conversion|'This is the setup I use on every client account'">
+      <div class="slide__content">
+        <div class="badge badge--recommended">Advanced Move</div>
+        <h2 class="slide__heading">The Waterfall Campaign Structure</h2>
+        <div class="waterfall">
+          <div class="waterfall-row">
+            <div class="waterfall-layer waterfall-layer--top" style="display:flex; align-items:center; justify-content:space-between; width:100%; max-width:900px;">
+              <div class="waterfall-label">
+                <h4>Top of Funnel — Prospecting</h4>
+                <p>Cold audiences, broad targeting, new reach</p>
+              </div>
+              <span class="waterfall-tag tag--blue">Cold Traffic</span>
+            </div>
+          </div>
+          <div class="waterfall-arrow" style="margin-left:-160px;">
+            <span class="exclusion-tag">Excludes: Mid + Bottom audiences</span>
+          </div>
+          <div class="waterfall-row">
+            <div class="waterfall-layer waterfall-layer--mid" style="display:flex; align-items:center; justify-content:space-between; width:calc(100% - 48px); max-width:852px;">
+              <div class="waterfall-label">
+                <h4>Middle of Funnel — Warm Traffic</h4>
+                <p>Site visitors, video views, engagement</p>
+              </div>
+              <span class="waterfall-tag tag--gold">Warm</span>
+            </div>
+          </div>
+          <div class="waterfall-arrow" style="margin-left:-80px;">
+            <span class="exclusion-tag">Excludes: Bottom + Converted</span>
+          </div>
+          <div class="waterfall-row">
+            <div class="waterfall-layer waterfall-layer--bottom" style="display:flex; align-items:center; justify-content:space-between; width:calc(100% - 96px); max-width:804px;">
+              <div class="waterfall-label">
+                <h4>Bottom of Funnel — Hot Intent</h4>
+                <p>Leads, high-intent actions, almost-converted</p>
+              </div>
+              <span class="waterfall-tag tag--green">Hot</span>
+            </div>
+          </div>
+          <div class="waterfall-arrow">
+            <span class="exclusion-tag">Excludes: All converted</span>
+          </div>
+          <div class="waterfall-row">
+            <div class="waterfall-layer waterfall-layer--retention" style="display:flex; align-items:center; justify-content:space-between; width:calc(100% - 144px); max-width:756px;">
+              <div class="waterfall-label">
+                <h4>Retention / Upsell</h4>
+                <p>Existing customers only</p>
+              </div>
+              <span class="waterfall-tag tag--purple">Customers</span>
+            </div>
+          </div>
+        </div>
+        <ul class="slide__bullets" style="max-width: 700px; margin-top: 8px;">
+          <li class="slide__bullet">Each funnel layer explicitly excluded from the one above it</li>
+          <li class="slide__bullet">No overlap means clean attribution — you know what drove each conversion</li>
+          <li class="slide__bullet">Audiences stay clean as ad spend and account size scale up</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 8: Common Mistakes (hero image) -->
+    <section class="slide slide--heading-bullets"
+      data-slide="8" data-chapter="Common Mistakes"
+      data-notes="These three mistakes are in almost every account I audit|Excluding too broadly is almost as bad as no exclusions — you kill reach|Campaign level vs ad set level is the most common one|Stale audiences: if your converter list is 180 days old, people who converted recently aren't in it">
+      <div class="slide__content">
+        <div class="badge badge--danger">Avoid These</div>
+        <img class="slide__hero-image" src="images/slide-08-common-mistakes.png" alt="3 Common Exclusion Mistakes" />
+        <p class="slide__subheading">Exclusion errors that kill performance quietly</p>
+        <ul class="slide__bullets">
+          <li class="slide__bullet">Excluding too broadly — your audience shrinks to zero reach</li>
+          <li class="slide__bullet">Setting exclusions at campaign level instead of ad set level — wrong scope</li>
+          <li class="slide__bullet">Stale audience lists that never refresh — refresh at minimum every 30 days</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 9: Audit Checklist (Recap) -->
+    <section class="slide slide--recap"
+      data-slide="9" data-chapter="Audit Checklist"
+      data-notes="Tell them to screenshot this slide|Five questions — if any is 'no' they have a leak right now|'Pull up an active ad set and go through this list before you close this video'|Pause between each point">
+      <div class="slide__content">
+        <div class="badge badge--recommended">Your 5-Point Exclusion Audit</div>
+        <h2 class="slide__heading">Open an Active Ad Set Right Now</h2>
+        <ol class="slide__takeaways" style="max-width: 800px;">
+          <li class="slide__takeaway">Are recent converters excluded from all acquisition campaigns?</li>
+          <li class="slide__takeaway">Are your retargeting audiences excluded from prospecting campaigns?</li>
+          <li class="slide__takeaway">Are exclusions set at the ad set level — not the campaign level?</li>
+          <li class="slide__takeaway">Have your audience lists been refreshed within the last 30 days?</li>
+          <li class="slide__takeaway">Do any two active campaigns target the same audience with no exclusions between them?</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Slide 10: Engagement CTA -->
+    <section class="slide slide--title"
+      data-slide="10" data-chapter="Engagement CTA"
+      data-notes="This is the comment hook — end on a question|Let the question breathe — don't rush to say 'like and subscribe'|Then close with the subscribe ask|'If you found this valuable, one like tells the algorithm to show it to more people like you'">
+      <div class="slide__content slide__content--centered">
+        <div class="badge badge--step">Drop a Comment</div>
+        <h1 class="slide__title" style="font-size: 2.8rem; max-width: 800px;">What are you blaming your creative for that might actually be an exclusion problem?</h1>
+        <p class="slide__subtitle" style="font-size: 1.25rem;">Like and subscribe for weekly agency-level Meta strategy</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Edit toolbar + indicator inside .presentation for CSS selector .edit-mode .edit-toolbar -->
+  <div class="edit-toolbar">
+    <button class="edit-toolbar__btn" data-action="bold" title="Bold"><strong>B</strong></button>
+    <button class="edit-toolbar__btn" data-action="italic" title="Italic"><em>I</em></button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="font-up" title="Increase font size">A+</button>
+    <button class="edit-toolbar__btn" data-action="font-down" title="Decrease font size">A-</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-image" title="Insert image">+ Image</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-bullet" title="Add bullet">+ Bullet</button>
+    <button class="edit-toolbar__btn" data-action="remove-bullet" title="Remove bullet">- Bullet</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-row" title="Add table row">+ Row</button>
+    <button class="edit-toolbar__btn" data-action="remove-row" title="Remove table row">- Row</button>
+    <button class="edit-toolbar__btn" data-action="add-col" title="Add table column">+ Col</button>
+    <button class="edit-toolbar__btn" data-action="remove-col" title="Remove table column">- Col</button>
+    <div class="edit-toolbar__separator"></div>
+    <button class="edit-toolbar__btn" data-action="add-slide" title="Add slide">+ Slide</button>
+    <button class="edit-toolbar__btn edit-toolbar__btn--danger" data-action="delete-slide" title="Delete slide">Del Slide</button>
+    <div class="edit-toolbar__spacer"></div>
+    <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save" title="Save (Cmd+S)">Save</button>
+  </div>
+  <div class="edit-indicator">Edit Mode — Cmd+E to exit</div>
+
+</div><!-- /presentation -->
+
+<script>
+/**
+ * Slide Engine - Navigation, Edit Mode, Slide Management, and Fullscreen
+ */
+(function () {
+  'use strict';
+  let currentSlide = 0;
+  let editMode = false;
+  let isFullscreen = false;
+  let notesVisible = false;
+  let fileHandle = null;
+  let slides = Array.from(document.querySelectorAll('.slide'));
+  let sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+  const progressFill = document.querySelector('.sidebar__progress-fill');
+  const progressText = document.querySelector('.sidebar__progress-text');
+  const presentation = document.querySelector('.presentation');
+  const editToolbar = document.querySelector('.edit-toolbar');
+  const editIndicator = document.querySelector('.edit-indicator');
+  const stage = document.querySelector('.stage');
+  const sidebarNav = document.querySelector('.sidebar__nav');
+
+  function getTotalSlides() { return slides.length; }
+
+  function goToSlide(index) {
+    var total = getTotalSlides();
+    if (index < 0 || index >= total) return;
+    slides[currentSlide].classList.remove('slide--active');
+    sidebarItems[currentSlide]?.classList.remove('sidebar__item--active');
+    currentSlide = index;
+    slides[currentSlide].classList.add('slide--active');
+    sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+    updateProgress();
+    sidebarItems[currentSlide]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (notesVisible) updateNotesContent();
+  }
+
+  function nextSlide() { goToSlide(currentSlide + 1); }
+  function prevSlide() { goToSlide(currentSlide - 1); }
+
+  function updateProgress() {
+    var total = getTotalSlides();
+    var pct = ((currentSlide + 1) / total) * 100;
+    if (progressFill) progressFill.style.width = pct + '%';
+    if (progressText) progressText.textContent = (currentSlide + 1) + ' / ' + total;
+  }
+
+  function bindSidebarClicks() {
+    sidebarItems.forEach(function (item, i) { item.onclick = function () { goToSlide(i); }; });
+  }
+  bindSidebarClicks();
+
+  function renumberSidebar() {
+    sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+    sidebarItems.forEach(function (item, i) {
+      var numEl = item.querySelector('.sidebar__item-number');
+      if (numEl) numEl.textContent = String(i + 1).padStart(2, '0');
+    });
+    bindSidebarClicks();
+  }
+
+  const editableSelectors = ['.slide__title','.slide__heading','.slide__subheading','.slide__subtitle','.slide__description','.slide__bullet','.slide__quote','.slide__attribution','.card__title','.card__description','.stat-card__value','.stat-card__label','.stat-card__description','.slide__takeaway','.slide__cta-text','.badge','.slide__table th','.slide__table td'];
+
+  function enableEditMode() {
+    editMode = true;
+    presentation.classList.add('edit-mode');
+    document.querySelectorAll(editableSelectors.join(', ')).forEach(function (el) { el.setAttribute('contenteditable', 'true'); });
+    document.querySelectorAll('.sidebar__item-label').forEach(function (label) { label.setAttribute('contenteditable', 'true'); });
+    addImageOverlays(); addDragHandles(); addDeleteButtons(); addListRowControls();
+  }
+
+  (function bindSidebarLabelGuards() {
+    var sidebarEl = document.querySelector('.sidebar');
+    if (!sidebarEl) return;
+    sidebarEl.addEventListener('mousedown', function (e) { if (!editMode) return; var label = e.target.closest('.sidebar__item-label'); if (!label) return; e.stopPropagation(); e.stopImmediatePropagation(); setTimeout(function () { label.focus(); }, 0); }, true);
+    sidebarEl.addEventListener('click', function (e) { if (!editMode) return; var label = e.target.closest('.sidebar__item-label'); if (!label) return; e.stopPropagation(); e.stopImmediatePropagation(); e.preventDefault(); }, true);
+    sidebarEl.addEventListener('keydown', function (e) { if (!editMode) return; var label = e.target.closest('.sidebar__item-label'); if (!label) return; if (e.key === 'Enter') { e.preventDefault(); label.blur(); } }, true);
+  })();
+
+  function disableEditMode() {
+    editMode = false;
+    presentation.classList.remove('edit-mode');
+    document.querySelectorAll('[contenteditable="true"]').forEach(function (el) { el.removeAttribute('contenteditable'); });
+    removeImageOverlays(); removeDragHandles(); removeDeleteButtons(); removeListRowControls();
+  }
+
+  function toggleEditMode() { if (editMode) { disableEditMode(); } else { enableEditMode(); } }
+
+  function addImageOverlays() {
+    document.querySelectorAll('.slide__image').forEach(function (img) {
+      if (img.parentElement.querySelector('.image-replace-overlay')) return;
+      var wrapper = document.createElement('div'); wrapper.style.position = 'relative'; wrapper.style.display = 'inline-block';
+      img.parentNode.insertBefore(wrapper, img); wrapper.appendChild(img);
+      var overlay = document.createElement('div'); overlay.className = 'image-replace-overlay';
+      var btn = document.createElement('button'); btn.className = 'image-replace-btn'; btn.textContent = 'Replace Image';
+      btn.addEventListener('click', function () { var url = prompt('Paste new image URL:'); if (url) img.src = url; });
+      overlay.appendChild(btn); wrapper.appendChild(overlay);
+    });
+  }
+
+  function removeImageOverlays() {
+    document.querySelectorAll('.image-replace-overlay').forEach(function (overlay) {
+      var wrapper = overlay.parentElement; var img = wrapper.querySelector('.slide__image');
+      if (img && wrapper.parentElement) { wrapper.parentElement.insertBefore(img, wrapper); wrapper.remove(); }
+    });
+  }
+
+  var dragState = null;
+  function addDragHandles() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.drag-handle')) return; if (el.classList.contains('add-row-btn')) return;
+      var handle = document.createElement('div'); handle.className = 'drag-handle';
+      handle.addEventListener('mousedown', function (e) { startDrag(e, el); }); el.appendChild(handle);
+    });
+  }
+  function removeDragHandles() { if (dragState) handleDragEnd(); document.querySelectorAll('.drag-handle').forEach(function (h) { h.remove(); }); }
+  function addDeleteButtons() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.delete-element-btn')) return; if (el.classList.contains('add-row-btn')) return;
+      var btn = document.createElement('button'); btn.className = 'delete-element-btn'; btn.title = 'Delete this element';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation(); var preview = el.textContent.trim().substring(0, 40);
+        if (preview.length > 37) preview = preview.substring(0, 37) + '...';
+        if (confirm('Delete this element?\n\n"' + preview + '"')) { el.remove(); }
+      });
+      el.appendChild(btn);
+    });
+  }
+  function removeDeleteButtons() { document.querySelectorAll('.delete-element-btn').forEach(function (b) { b.remove(); }); }
+
+  var ROW_LIST_SELECTOR = '.slide__bullets, .slide__takeaways';
+  function rowItemClassFor(list) { return list.classList.contains('slide__bullets') ? 'slide__bullet' : 'slide__takeaway'; }
+  function addRowDeleteBtn(li) {
+    if (li.querySelector(':scope > .row-delete-btn')) return;
+    var btn = document.createElement('button'); btn.className = 'row-delete-btn'; btn.type = 'button'; btn.title = 'Delete row'; btn.setAttribute('contenteditable', 'false');
+    btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    btn.addEventListener('click', function (e) { e.stopPropagation(); li.remove(); }); li.appendChild(btn);
+  }
+  function addListRowControls() {
+    document.querySelectorAll(ROW_LIST_SELECTOR).forEach(function (list) {
+      list.querySelectorAll(':scope > li').forEach(addRowDeleteBtn);
+      var next = list.nextElementSibling; if (next && next.classList && next.classList.contains('add-row-btn')) return;
+      var btn = document.createElement('button'); btn.className = 'add-row-btn'; btn.type = 'button'; btn.textContent = '+ Add row';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation(); var li = document.createElement('li'); li.className = rowItemClassFor(list);
+        li.setAttribute('contenteditable', 'true'); li.textContent = 'New item'; list.appendChild(li); addRowDeleteBtn(li); li.focus();
+        var range = document.createRange(); range.selectNodeContents(li); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      });
+      list.parentNode.insertBefore(btn, list.nextSibling);
+    });
+  }
+  function removeListRowControls() { document.querySelectorAll('.row-delete-btn, .add-row-btn').forEach(function (el) { el.remove(); }); }
+
+  function startDrag(e, el) { e.preventDefault(); dragState = { el: el, container: el.parentElement }; el.classList.add('dragging'); document.addEventListener('mousemove', handleDragMove); document.addEventListener('mouseup', handleDragEnd); }
+  function handleDragMove(e) {
+    if (!dragState) return; e.preventDefault();
+    var container = dragState.container; var dragEl = dragState.el; var children = Array.from(container.children);
+    for (var i = 0; i < children.length; i++) { var child = children[i]; if (child === dragEl) continue; var rect = child.getBoundingClientRect(); var midY = rect.top + rect.height / 2; if (e.clientY < midY) { container.insertBefore(dragEl, child); return; } }
+    container.appendChild(dragEl);
+  }
+  function handleDragEnd() { if (!dragState) return; dragState.el.classList.remove('dragging'); dragState = null; document.removeEventListener('mousemove', handleDragMove); document.removeEventListener('mouseup', handleDragEnd); }
+
+  function addSlide() {
+    if (!editMode) return; var newNum = currentSlide + 2;
+    var section = document.createElement('section'); section.className = 'slide slide--heading-bullets'; section.setAttribute('data-slide', String(newNum)); section.setAttribute('data-chapter', 'New Slide'); section.setAttribute('data-notes', '');
+    section.innerHTML = '<div class="slide__content"><div class="badge badge--step" contenteditable="true">New Section</div><h2 class="slide__heading" contenteditable="true">Slide Title</h2><p class="slide__subheading" contenteditable="true">Subtitle goes here</p><ul class="slide__bullets"><li class="slide__bullet" contenteditable="true">First point</li><li class="slide__bullet" contenteditable="true">Second point</li></ul></div>';
+    var currentSlideEl = slides[currentSlide];
+    if (currentSlideEl.nextElementSibling) { stage.insertBefore(section, currentSlideEl.nextElementSibling); } else { stage.appendChild(section); }
+    var li = document.createElement('li'); li.className = 'sidebar__item'; li.innerHTML = '<span class="sidebar__item-number">' + String(newNum).padStart(2, '0') + '</span><span class="sidebar__item-label">New Slide</span>';
+    var currentSidebarItem = sidebarItems[currentSlide];
+    if (currentSidebarItem && currentSidebarItem.nextElementSibling) { sidebarNav.insertBefore(li, currentSidebarItem.nextElementSibling); } else { sidebarNav.appendChild(li); }
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar(); updateProgress(); goToSlide(currentSlide + 1);
+  }
+
+  function deleteSlide() {
+    if (!editMode) return; var total = getTotalSlides(); if (total <= 1) return; if (!confirm('Delete this slide?')) return;
+    var slideToRemove = slides[currentSlide]; var sidebarToRemove = sidebarItems[currentSlide]; var targetIndex = currentSlide;
+    if (currentSlide >= total - 1) { targetIndex = currentSlide - 1; }
+    slideToRemove.classList.remove('slide--active'); if (sidebarToRemove) sidebarToRemove.classList.remove('sidebar__item--active');
+    slideToRemove.remove(); if (sidebarToRemove) sidebarToRemove.remove();
+    slides = Array.from(document.querySelectorAll('.slide')); renumberSidebar();
+    currentSlide = Math.max(0, Math.min(targetIndex, getTotalSlides() - 1));
+    slides[currentSlide].classList.add('slide--active'); sidebarItems[currentSlide]?.classList.add('sidebar__item--active'); updateProgress();
+  }
+
+  function execCommand(cmd) { document.execCommand(cmd, false, null); }
+  function changeFontSize(delta) { var sel = window.getSelection(); if (!sel.rangeCount) return; var el = sel.anchorNode?.parentElement; if (!el) return; var current = parseFloat(window.getComputedStyle(el).fontSize); el.style.fontSize = (current + delta) + 'px'; }
+  function addBullet() { var activeSlide = slides[currentSlide]; var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways'); if (!list) return; var item = document.createElement('li'); item.className = list.querySelector('li')?.className || ''; item.textContent = 'New item'; item.setAttribute('contenteditable', 'true'); list.appendChild(item); item.focus(); }
+  function removeBullet() { var activeSlide = slides[currentSlide]; var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways'); if (!list) return; var items = list.querySelectorAll('li'); if (items.length > 1) { items[items.length - 1].remove(); } }
+
+  function insertImageFromDataUrl(dataUrl) {
+    var activeSlide = slides[currentSlide]; var content = activeSlide.querySelector('.slide__content'); if (!content) return;
+    var img = document.createElement('img'); img.className = 'slide__hero-image'; img.src = dataUrl; img.alt = 'Pasted image';
+    var insertBefore = content.querySelector('.slide__bullets, .slide__table-wrapper, .slide__cards, .slide__stats-grid, .slide__takeaways, .slide__quote-wrapper, .slide__cta');
+    if (insertBefore) { content.insertBefore(img, insertBefore); } else { content.appendChild(img); }
+    if (editMode) { addImageOverlays(); addDragHandles(); addDeleteButtons(); }
+  }
+  function blobToDataUrl(blob, cb) { var reader = new FileReader(); reader.onload = function () { cb(reader.result); }; reader.readAsDataURL(blob); }
+
+  function getActiveTable() { var activeSlide = slides[currentSlide]; return activeSlide ? activeSlide.querySelector('.slide__table') : null; }
+  function getFocusedCell() { var sel = window.getSelection(); if (!sel || sel.rangeCount === 0) return null; var node = sel.anchorNode; if (!node) return null; if (node.nodeType === 3) node = node.parentNode; return node.closest ? node.closest('td, th') : null; }
+  function addTableRow() { var table = getActiveTable(); if (!table) return; var tbody = table.querySelector('tbody'); if (!tbody) return; var lastRow = tbody.querySelector('tr:last-child'); var colCount = lastRow ? lastRow.children.length : 2; var tr = document.createElement('tr'); for (var i = 0; i < colCount; i++) { var td = document.createElement('td'); td.textContent = 'New'; if (editMode) td.setAttribute('contenteditable', 'true'); tr.appendChild(td); } tbody.appendChild(tr); }
+  function removeTableRow() { var table = getActiveTable(); if (!table) return; var tbody = table.querySelector('tbody'); if (!tbody) return; var rows = tbody.querySelectorAll('tr'); if (rows.length <= 1) return; var cell = getFocusedCell(); var targetRow = (cell && tbody.contains(cell)) ? cell.parentNode : rows[rows.length - 1]; if (targetRow && targetRow.parentNode === tbody) targetRow.remove(); }
+  function addTableCol() { var table = getActiveTable(); if (!table) return; var theadRow = table.querySelector('thead tr'); if (theadRow) { var th = document.createElement('th'); th.textContent = 'New'; if (editMode) th.setAttribute('contenteditable', 'true'); theadRow.appendChild(th); } table.querySelectorAll('tbody tr').forEach(function (tr) { var td = document.createElement('td'); td.textContent = 'New'; if (editMode) td.setAttribute('contenteditable', 'true'); tr.appendChild(td); }); }
+  function removeTableCol() { var table = getActiveTable(); if (!table) return; var theadRow = table.querySelector('thead tr'); var bodyRows = table.querySelectorAll('tbody tr'); var totalCols = theadRow ? theadRow.children.length : 0; if (totalCols <= 1) return; var colIndex = totalCols - 1; if (theadRow && theadRow.children[colIndex]) theadRow.removeChild(theadRow.children[colIndex]); bodyRows.forEach(function (tr) { if (tr.children[colIndex]) tr.removeChild(tr.children[colIndex]); }); }
+
+  function addImage() { var input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none'; input.addEventListener('change', function () { var file = input.files && input.files[0]; if (!file) return; blobToDataUrl(file, insertImageFromDataUrl); }); document.body.appendChild(input); input.click(); setTimeout(function () { input.remove(); }, 1000); }
+  document.addEventListener('paste', function (e) { if (!editMode) return; var items = e.clipboardData && e.clipboardData.items; if (!items) return; for (var i = 0; i < items.length; i++) { var item = items[i]; if (item.kind === 'file' && item.type.indexOf('image/') === 0) { e.preventDefault(); var blob = item.getAsFile(); if (blob) blobToDataUrl(blob, insertImageFromDataUrl); return; } } });
+
+  function savePresentation() {
+    var wasEditing = editMode; if (wasEditing) disableEditMode();
+    var notesPanel = document.querySelector('.notes-panel'); if (notesPanel) notesPanel.style.display = 'none';
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    if (notesPanel && notesVisible) notesPanel.style.display = 'block';
+    if (wasEditing) enableEditMode();
+    if (window.showSaveFilePicker) { saveWithFileSystemAccess(html); } else { saveWithDownload(html); }
+  }
+  function saveWithFileSystemAccess(html) {
+    if (fileHandle) { writeToHandle(fileHandle, html); } else {
+      window.showSaveFilePicker({ suggestedName: document.title.replace(/\s+/g, '-').toLowerCase() + '.html', types: [{ description: 'HTML Files', accept: { 'text/html': ['.html'] } }] })
+        .then(function (handle) { fileHandle = handle; writeToHandle(handle, html); }).catch(function (err) { if (err.name !== 'AbortError') { console.error('Save failed:', err); showToast('Save failed', true); } });
+    }
+  }
+  function writeToHandle(handle, content) { handle.createWritable().then(function (w) { return w.write(content).then(function () { return w.close(); }); }).then(function () { showToast('Saved!'); }).catch(function (err) { console.error('Write failed:', err); showToast('Save failed', true); fileHandle = null; }); }
+  function saveWithDownload(html) { var blob = new Blob([html], { type: 'text/html' }); var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = document.title.replace(/\s+/g, '-').toLowerCase() + '.html'; a.click(); URL.revokeObjectURL(a.href); showToast('Downloaded!'); }
+  function showToast(message, isError) { var existing = document.querySelector('.save-toast'); if (existing) existing.remove(); var toast = document.createElement('div'); toast.className = 'save-toast' + (isError ? ' save-toast--error' : ''); toast.textContent = message; document.body.appendChild(toast); requestAnimationFrame(function () { toast.classList.add('save-toast--visible'); }); setTimeout(function () { toast.classList.remove('save-toast--visible'); setTimeout(function () { toast.remove(); }, 300); }, 2000); }
+
+  function createNotesPanel() {
+    var panel = document.createElement('div'); panel.className = 'notes-panel';
+    panel.innerHTML = '<div class="notes-panel__header"><span class="notes-panel__title">Talking Points</span><span class="notes-panel__hint">T</span><button class="notes-panel__close">&times;</button></div><ul class="notes-panel__list"></ul>';
+    panel.style.display = 'none'; document.body.appendChild(panel);
+    panel.querySelector('.notes-panel__close').addEventListener('click', function () { toggleNotes(); });
+    return panel;
+  }
+  var notesPanelEl = createNotesPanel();
+  function updateNotesContent() {
+    var list = notesPanelEl.querySelector('.notes-panel__list'); var currentSlideEl = slides[currentSlide]; var notesData = currentSlideEl ? currentSlideEl.dataset.notes : '';
+    if (!notesData || notesData.trim() === '') { list.innerHTML = '<li class="notes-panel__empty">No notes for this slide</li>'; return; }
+    var points = notesData.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+    list.innerHTML = points.map(function (p) { return '<li class="notes-panel__item">' + p + '</li>'; }).join('');
+  }
+  function toggleNotes() { notesVisible = !notesVisible; notesPanelEl.style.display = notesVisible ? 'block' : 'none'; if (notesVisible) updateNotesContent(); }
+
+  document.querySelectorAll('.edit-toolbar__btn').forEach(function (btn) {
+    var action = btn.dataset.action; if (!action) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      switch (action) {
+        case 'bold': execCommand('bold'); break; case 'italic': execCommand('italic'); break;
+        case 'font-up': changeFontSize(2); break; case 'font-down': changeFontSize(-2); break;
+        case 'add-bullet': addBullet(); break; case 'remove-bullet': removeBullet(); break;
+        case 'add-image': addImage(); break;
+        case 'add-row': addTableRow(); break; case 'remove-row': removeTableRow(); break;
+        case 'add-col': addTableCol(); break; case 'remove-col': removeTableCol(); break;
+        case 'add-slide': addSlide(); break; case 'delete-slide': deleteSlide(); break;
+        case 'save': savePresentation(); break;
+      }
+    });
+  });
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) { document.documentElement.requestFullscreen().then(function () { isFullscreen = true; presentation.classList.add('presentation--fullscreen'); }).catch(function () {}); }
+    else { document.exitFullscreen(); isFullscreen = false; presentation.classList.remove('presentation--fullscreen'); }
+  }
+  document.addEventListener('fullscreenchange', function () { if (!document.fullscreenElement) { isFullscreen = false; presentation.classList.remove('presentation--fullscreen'); } });
+
+  document.addEventListener('keydown', function (e) {
+    var isEditing = e.target.isContentEditable;
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); savePresentation(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'e') { e.preventDefault(); toggleEditMode(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') { if (editMode) { e.preventDefault(); deleteSlide(); return; } }
+    if (e.key === 'Escape') { if (editMode) { disableEditMode(); } return; }
+    if (isEditing) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nextSlide(); break;
+      case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prevSlide(); break;
+      case 'f': case 'F11': e.preventDefault(); toggleFullscreen(); break;
+      case 't': e.preventDefault(); toggleNotes(); break;
+      case 'Home': e.preventDefault(); goToSlide(0); break;
+      case 'End': e.preventDefault(); goToSlide(getTotalSlides() - 1); break;
+    }
+  });
+
+  var touchStartX = 0;
+  document.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+  document.addEventListener('touchend', function (e) { var diff = e.changedTouches[0].screenX - touchStartX; if (Math.abs(diff) > 50) { if (diff > 0) prevSlide(); else nextSlide(); } }, { passive: true });
+
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({ startOnLoad: true, theme: 'dark', themeVariables: { darkMode: true, primaryColor: '#C7963F', primaryTextColor: '#ffffff', primaryBorderColor: '#2e2820', lineColor: '#9a9080', secondaryColor: '#161310', tertiaryColor: '#1c1915', fontSize: '22px' } });
+  }
+
+  goToSlide(0);
+})();
+</script>
+</body>
+</html>

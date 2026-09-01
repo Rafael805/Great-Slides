@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1" />
+  <title>How We Run Our Agency On Claude AI - Great Marketing AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* --- Brand CSS Custom Properties (from brand.json) --- */
+    :root {
+      --bg: #0f0d0a;
+      --surface: #161310;
+      --card-bg: #1c1915;
+      --card-border: #2e2820;
+      --primary: #C7963F;
+      --primary-glow: rgba(199, 150, 63, 0.15);
+      --secondary: #7c3aed;
+      --text: #ffffff;
+      --text-muted: #9a9080;
+      --text-accent: #C7963F;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --font-heading: 'Inter', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --title-size: 3.5rem;
+      --heading-size: 2.5rem;
+      --subheading-size: 1.5rem;
+      --body-size: 1.125rem;
+      --bullet-size: 1.25rem;
+      --caption-size: 0.875rem;
+      --content-padding: 80px;
+      --card-radius: 16px;
+      --sidebar-width: 260px;
+      --transition-duration: 300ms;
+    }
+
+    /* --- Inlined slide-theme.css --- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: var(--body-size); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    .presentation { display: flex; width: 100vw; height: 100vh; }
+    .sidebar { width: var(--sidebar-width); min-width: var(--sidebar-width); background: var(--surface); border-right: 1px solid var(--card-border); display: flex; flex-direction: column; padding: 32px 0; overflow-y: auto; z-index: 10; }
+    .sidebar--hidden { transform: translateX(calc(-1 * var(--sidebar-width))); position: absolute; }
+    .sidebar__logo { padding: 0 24px 32px; border-bottom: 1px solid var(--card-border); margin-bottom: 24px; }
+    .sidebar__logo img { max-width: 120px; height: auto; }
+    .sidebar__nav { list-style: none; padding: 0 12px; flex: 1; }
+    .sidebar__item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 8px; cursor: pointer; transition: all 150ms ease; margin-bottom: 4px; font-size: var(--caption-size); color: var(--text-muted); font-weight: 500; }
+    .sidebar__item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .sidebar__item--active { background: var(--primary-glow); color: var(--primary); font-weight: 600; }
+    .sidebar__item-number { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; min-width: 28px; text-align: center; }
+    .sidebar__item-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar__drag-handle { flex: 0 0 auto; width: 14px; height: 18px; margin-right: 2px; cursor: grab; color: var(--text-muted); opacity: 0.35; transition: opacity 150ms ease, color 150ms ease; background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px); background-size: 4px 4.5px; background-position: center; background-repeat: round; user-select: none; }
+    .edit-mode .sidebar__item:hover > .sidebar__drag-handle { opacity: 0.7; }
+    .sidebar__drag-handle:hover { opacity: 1 !important; color: var(--primary); }
+    .sidebar__drag-handle:active { cursor: grabbing; }
+    .sidebar__item--dragging { opacity: 0.6; background: var(--card-bg); outline: 1px dashed var(--primary); }
+    .sidebar__progress { padding: 16px 24px; border-top: 1px solid var(--card-border); margin-top: auto; }
+    .sidebar__progress-bar { width: 100%; height: 3px; background: var(--card-border); border-radius: 2px; overflow: hidden; }
+    .sidebar__progress-fill { height: 100%; background: var(--primary); border-radius: 2px; transition: width var(--transition-duration) ease; }
+    .sidebar__progress-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: center; }
+    .stage { flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity var(--transition-duration) ease; padding: var(--content-padding); }
+    .slide--active { opacity: 1; pointer-events: auto; }
+    .slide__content { width: 100%; max-width: 1400px; display: flex; flex-direction: column; gap: 32px; }
+    .slide__content--centered { align-items: center; text-align: center; }
+    .slide__content--split { flex-direction: row; align-items: center; gap: 64px; }
+    .slide__title { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; line-height: 1.1; color: var(--text); letter-spacing: -0.02em; }
+    .slide__heading { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 700; line-height: 1.2; color: var(--text); letter-spacing: -0.01em; }
+    .slide__heading--overlay { text-shadow: 0 2px 12px rgba(0,0,0,0.8); }
+    .slide__subheading { font-size: var(--subheading-size); font-weight: 500; color: var(--text-muted); line-height: 1.4; }
+    .slide__subheading--overlay { text-shadow: 0 2px 8px rgba(0,0,0,0.8); color: var(--text); }
+    .slide__subtitle { font-size: var(--subheading-size); font-weight: 400; color: var(--text-muted); margin-top: -16px; }
+    .slide__description { font-size: var(--body-size); color: var(--text-muted); line-height: 1.6; }
+    .badge { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 100px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
+    .badge--step { border: 1.5px solid var(--primary); background: transparent; color: var(--primary); }
+    .badge--recommended { border: 1.5px solid var(--primary); background: var(--primary); color: var(--bg); }
+    .slide__bullets { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+    .slide__bullet { font-size: var(--bullet-size); font-weight: 400; color: var(--text); padding-left: 28px; position: relative; line-height: 1.5; }
+    .slide__bullet::before { content: ''; position: absolute; left: 0; top: 10px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+    .slide__text-side { flex: 1; display: flex; flex-direction: column; gap: 24px; }
+    .slide__image-side { flex: 1; display: flex; align-items: center; justify-content: center; }
+    .slide__image { max-width: 100%; max-height: 70vh; border-radius: var(--card-radius); object-fit: cover; }
+    .slide--image-right .slide__content--split { flex-direction: row-reverse; }
+    .slide__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); overflow: hidden; transition: transform 150ms ease, box-shadow 150ms ease; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .card__image-wrapper { width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--surface); display: flex; align-items: center; justify-content: center; }
+    .card__image { width: 100%; height: 100%; object-fit: cover; }
+    .card__body { padding: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .card__title { font-family: var(--font-heading); font-size: var(--subheading-size); font-weight: 600; color: var(--text); }
+    .card__description { font-size: var(--body-size); color: var(--text-muted); line-height: 1.5; }
+    .slide__quote-wrapper { max-width: 900px; position: relative; }
+    .slide__quote-mark { font-family: Georgia, serif; font-size: 8rem; color: var(--primary); opacity: 0.3; line-height: 1; position: absolute; top: -40px; left: -20px; }
+    .slide__quote { font-family: var(--font-heading); font-size: var(--heading-size); font-weight: 500; font-style: italic; line-height: 1.4; color: var(--text); position: relative; z-index: 1; }
+    .slide__attribution { display: block; margin-top: 24px; font-size: var(--body-size); font-style: normal; color: var(--text-muted); }
+    .slide__stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius); padding: 40px 32px; text-align: center; }
+    .stat-card__value { font-family: var(--font-heading); font-size: var(--title-size); font-weight: 700; color: var(--primary); line-height: 1; margin-bottom: 8px; }
+    .stat-card__label { font-size: var(--subheading-size); font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .stat-card__description { font-size: var(--caption-size); color: var(--text-muted); }
+    .slide__takeaways { list-style: none; counter-reset: takeaway; display: flex; flex-direction: column; gap: 16px; }
+    .slide__takeaway { counter-increment: takeaway; font-size: var(--bullet-size); color: var(--text); padding-left: 48px; position: relative; line-height: 1.5; }
+    .slide__takeaway::before { content: counter(takeaway); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--primary-glow); color: var(--primary); font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .slide__cta { margin-top: 16px; }
+    .slide__cta-link { display: inline-flex; align-items: center; padding: 14px 32px; background: var(--primary); color: var(--bg); border-radius: 100px; font-weight: 600; font-size: var(--body-size); text-decoration: none; transition: transform 150ms ease; }
+    .slide__cta-link:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--primary-glow); }
+    .slide__cta-text { font-size: var(--subheading-size); color: var(--text-accent); font-weight: 600; }
+    .image-placeholder { background: var(--surface); border: 2px dashed var(--card-border); border-radius: var(--card-radius); display: flex; align-items: center; justify-content: center; padding: 40px; color: var(--text-muted); font-style: italic; font-size: var(--caption-size); aspect-ratio: 16/9; }
+    .slide__diagram-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 400px; }
+    .slide__diagram-wrapper .mermaid { width: 100%; }
+
+    /* Edit mode styles */
+    .edit-mode .slide__title, .edit-mode .slide__heading, .edit-mode .slide__subheading, .edit-mode .slide__subtitle, .edit-mode .slide__description, .edit-mode .slide__bullet, .edit-mode .slide__quote, .edit-mode .slide__attribution, .edit-mode .card__title, .edit-mode .card__description, .edit-mode .stat-card__value, .edit-mode .stat-card__label, .edit-mode .stat-card__description, .edit-mode .slide__takeaway, .edit-mode .slide__cta-text, .edit-mode .badge { outline: 1px dashed rgba(255,255,255,0.15); outline-offset: 4px; cursor: text; }
+    .edit-mode [contenteditable="true"]:focus { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 4px; }
+    .edit-mode .image-replace-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 150ms ease; border-radius: var(--card-radius); pointer-events: none; }
+    .edit-mode .slide__image:hover + .image-replace-overlay, .edit-mode .image-replace-overlay:hover { opacity: 1; pointer-events: auto; }
+    .image-replace-btn { padding: 8px 20px; background: var(--primary); color: var(--bg); border: none; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+    .edit-toolbar { position: fixed; top: 0; left: var(--sidebar-width); right: 0; height: 48px; background: var(--surface); border-bottom: 1px solid var(--card-border); display: none; align-items: center; padding: 0 24px; gap: 8px; z-index: 100; }
+    .edit-mode .edit-toolbar { display: flex; }
+    .edit-toolbar__btn { padding: 6px 12px; background: transparent; border: 1px solid var(--card-border); border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer; transition: all 150ms ease; }
+    .edit-toolbar__btn:hover { background: var(--card-bg); border-color: var(--primary); }
+    .edit-toolbar__btn--save { background: var(--primary); color: var(--bg); border-color: var(--primary); font-weight: 600; }
+    .edit-toolbar__separator { width: 1px; height: 24px; background: var(--card-border); margin: 0 4px; }
+    .edit-toolbar__spacer { flex: 1; }
+    .edit-indicator { position: fixed; bottom: 16px; right: 16px; padding: 8px 16px; background: var(--primary); color: var(--bg); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; z-index: 100; display: none; }
+    .edit-mode .edit-indicator { display: block; }
+    .presentation--fullscreen .sidebar { display: none; }
+  </style>
+<body>
+  <div class="presentation">
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <div style="color: var(--primary); font-weight: 700; font-size: 1rem;">GREAT MARKETING AI</div>
+      </div>
+      <ul class="sidebar__nav">
+        <li class="sidebar__item"><span class="sidebar__item-number">01</span><span class="sidebar__item-label">Intro</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">02</span><span class="sidebar__item-label">The Problem</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">03</span><span class="sidebar__item-label">The Promise</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">04</span><span class="sidebar__item-label">What Is Claude</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">05</span><span class="sidebar__item-label">The 4 Blocks</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">06</span><span class="sidebar__item-label">Skills</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">07</span><span class="sidebar__item-label">Agents</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">08</span><span class="sidebar__item-label">MCPs</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">09</span><span class="sidebar__item-label">Cron Jobs</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">10</span><span class="sidebar__item-label">Recap</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">11</span><span class="sidebar__item-label">Shared Skills</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">12</span><span class="sidebar__item-label">Real-World AI</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">13</span><span class="sidebar__item-label">Always-On</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">14</span><span class="sidebar__item-label">Models</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">15</span><span class="sidebar__item-label">The Cost</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">16</span><span class="sidebar__item-label">Mindset Shift</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">17</span><span class="sidebar__item-label">Key Takeaways</span></li>
+        <li class="sidebar__item"><span class="sidebar__item-number">18</span><span class="sidebar__item-label">Work With Us</span></li>
+      </ul>
+      <div class="sidebar__progress">
+        <div class="sidebar__progress-bar"><div class="sidebar__progress-fill" style="width: 5.6%;"></div></div>
+        <div class="sidebar__progress-text">1 / 18</div>
+      </div>
+    </aside>
+
+    <main class="stage">
+      <div class="edit-toolbar">
+        <button class="edit-toolbar__btn" data-action="bold"><strong>B</strong></button>
+        <button class="edit-toolbar__btn" data-action="italic"><em>I</em></button>
+        <div class="edit-toolbar__separator"></div>
+        <button class="edit-toolbar__btn" data-action="font-up">A+</button>
+        <button class="edit-toolbar__btn" data-action="font-down">A-</button>
+        <div class="edit-toolbar__separator"></div>
+        <button class="edit-toolbar__btn" data-action="add-bullet">+ Bullet</button>
+        <button class="edit-toolbar__btn" data-action="remove-bullet">- Bullet</button>
+        <div class="edit-toolbar__spacer"></div>
+        <button class="edit-toolbar__btn edit-toolbar__btn--save" data-action="save">Save HTML</button>
+      </div>
+      <div class="edit-indicator">Edit Mode (Ctrl+E to exit)</div>
+
+      <!-- Slide 1: Title -->
+      <section class="slide slide--title" data-slide="1" data-chapter="Intro" data-notes="Big energy open|Set the promise, not the how">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--step">AI FOR MARKETING AGENCIES</div>
+          <h1 class="slide__title">How We Run Our Agency<br/>On Claude AI</h1>
+          <p class="slide__subtitle">The system that turns AI from a chatbot into a coworker</p>
+        </div>
+      </section>
+
+      <!-- Slide 2: The Problem -->
+      <section class="slide slide--heading-bullets" data-slide="2" data-chapter="The Problem" data-notes="This is where most agencies stall|Stress: chatbot is the ceiling, not the start">
+        <div class="slide__content">
+          <div class="badge badge--step">THE PROBLEM</div>
+          <h2 class="slide__heading">Most Agencies Use AI As A Chatbot</h2>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Pay for a chatbot, paste in prompts all day</li>
+            <li class="slide__bullet">The AI answers, but never does the work</li>
+            <li class="slide__bullet">Every teammate prompts a different way</li>
+            <li class="slide__bullet">That is the ceiling, not the starting line</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 3: Promise (Quote) -->
+      <section class="slide slide--quote" data-slide="3" data-chapter="The Promise" data-notes="Let this land|Pause after 'while you sleep'">
+        <div class="slide__content slide__content--centered">
+          <div class="slide__quote-wrapper">
+            <div class="slide__quote-mark">"</div>
+            <blockquote class="slide__quote">The work gets done overnight, while you sleep, and nobody clocked in.</blockquote>
+            <cite class="slide__attribution">What an AI operating system actually looks like</cite>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: What is Claude -->
+      <section class="slide slide--heading-bullets" data-slide="4" data-chapter="What Is Claude" data-notes="Plain-English definition|Use the new-hire analogy|Genius brain, zero context about YOU">
+        <div class="slide__content">
+          <div class="badge badge--step">THE FOUNDATION</div>
+          <img class="slide__hero-image" src="images/slide-04-what-is-claude.png" alt="Claude as a reasoning engine, a genius new hire with no context about your business" />
+          <p class="slide__subheading">A reasoning engine you hand real work to, not a search box.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Genius new hire that has read everything</li>
+            <li class="slide__bullet">On day one it knows nothing about you</li>
+            <li class="slide__bullet">The chatbot stage is only 10% of the value</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 5: The 4 Blocks -->
+      <section class="slide slide--heading-bullets" data-slide="5" data-chapter="The 4 Blocks" data-notes="One sentence each here|Tease: all four connected is the magic|Open loop for the finale">
+        <div class="slide__content">
+          <div class="badge badge--step">THE 4 BUILDING BLOCKS</div>
+          <img class="slide__hero-image" src="images/slide-05-four-blocks.png" alt="Skills, Agents, MCPs and Cron jobs clicking together into one system" />
+          <p class="slide__subheading">Four blocks turn a chatbot into a coworker.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Skills, Agents, MCPs, Cron jobs</li>
+            <li class="slide__bullet">Any one alone is nice</li>
+            <li class="slide__bullet">All four connected is the whole game</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 6: Skills -->
+      <section class="slide slide--heading-bullets" data-slide="6" data-chapter="Skills" data-notes="Define skill simply|Write once, done your way every time">
+        <div class="slide__content">
+          <div class="badge badge--step">BLOCK 1</div>
+          <img class="slide__hero-image" src="images/slide-06-skill.png" alt="A skill is a playbook written once that the AI follows every time" />
+          <p class="slide__subheading">A skill is a playbook you write once.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Capture how a task should be done</li>
+            <li class="slide__bullet">The AI follows it every single time</li>
+            <li class="slide__bullet">Your standards, not generic output</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 7: Agents -->
+      <section class="slide slide--heading-bullets" data-slide="7" data-chapter="Agents" data-notes="Agent decides when and who|Runs the skill, reports back">
+        <div class="slide__content">
+          <div class="badge badge--step">BLOCK 2</div>
+          <img class="slide__hero-image" src="images/slide-07-agent.png" alt="An agent decides when to act and who does the work, then reports back" />
+          <p class="slide__subheading">An agent decides when to act and who does it.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Notices it is time to do the work</li>
+            <li class="slide__bullet">Runs the right skill on its own</li>
+            <li class="slide__bullet">Hands you the finished result</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 8: MCPs -->
+      <section class="slide slide--heading-bullets" data-slide="8" data-chapter="MCPs" data-notes="USB port analogy is the anchor|Plugs AI into your real tools">
+        <div class="slide__content">
+          <div class="badge badge--step">BLOCK 3</div>
+          <img class="slide__hero-image" src="images/slide-08-mcp.png" alt="An MCP is a USB port that plugs AI into your real tools" />
+          <p class="slide__subheading">An MCP is a USB port for AI.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">The wire into your real tools</li>
+            <li class="slide__bullet">Meta Ads, Google Ads, your platform, Slack</li>
+            <li class="slide__bullet">It can read real data and take action</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 9: Cron Jobs -->
+      <section class="slide slide--heading-bullets" data-slide="9" data-chapter="Cron Jobs" data-notes="Cron is just a timer|This is the while-you-sleep layer">
+        <div class="slide__content">
+          <div class="badge badge--step">BLOCK 4</div>
+          <img class="slide__hero-image" src="images/slide-09-cron.png" alt="A cron job is a timer that runs work on a schedule with no one asking" />
+          <p class="slide__subheading">A cron job is a timer for hands-off work.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Runs tasks on a schedule</li>
+            <li class="slide__bullet">Reports, monitoring, content prep</li>
+            <li class="slide__bullet">No one has to press a button</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 10: Recap #1 -->
+      <section class="slide slide--recap" data-slide="10" data-chapter="Recap" data-notes="Fast recap|Tease team-sharing and cost coming up">
+        <div class="slide__content">
+          <h2 class="slide__heading">Quick Recap</h2>
+          <ol class="slide__takeaways">
+            <li class="slide__takeaway">Claude is a reasoning engine, a genius new hire</li>
+            <li class="slide__takeaway">Skills are playbooks you write once</li>
+            <li class="slide__takeaway">Agents run the work and report back</li>
+            <li class="slide__takeaway">MCPs wire AI into your real tools</li>
+            <li class="slide__takeaway">Cron jobs run it all on a schedule</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Slide 11: Shared Skills Repo -->
+      <section class="slide slide--heading-bullets" data-slide="11" data-chapter="Shared Skills" data-notes="This is the infrastructure moment|Improve once, whole team inherits it">
+        <div class="slide__content">
+          <div class="badge badge--step">GO DEEPER: SKILLS</div>
+          <img class="slide__hero-image" src="images/slide-11-shared-skills-repo.png" alt="One shared skills library installed by the whole team" />
+          <p class="slide__subheading">One skills library the whole team installs.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Improve a playbook once</li>
+            <li class="slide__bullet">Everyone inherits it instantly</li>
+            <li class="slide__bullet">Toy versus infrastructure</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 12: MCPs + Agents real world -->
+      <section class="slide slide--heading-bullets" data-slide="12" data-chapter="Real-World AI" data-notes="This is the unfair-advantage slide|Writing about marketing vs doing it">
+        <div class="slide__content">
+          <div class="badge badge--step">GO DEEPER: MCPs + AGENTS</div>
+          <img class="slide__hero-image" src="images/slide-12-mcps-agents-realworld.png" alt="AI wired into ad accounts, spotting problems and drafting fixes" />
+          <p class="slide__subheading">From writing about marketing to doing it.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Pull real ad spend from the accounts</li>
+            <li class="slide__bullet">Spot a rising cost per lead</li>
+            <li class="slide__bullet">Draft the fix and report back</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 13: Always-on Mac mini -->
+      <section class="slide slide--heading-bullets" data-slide="13" data-chapter="Always-On" data-notes="This closes the while-you-sleep loop|A little machine that never turns off">
+        <div class="slide__content">
+          <div class="badge badge--step">THE ALWAYS-ON LAYER</div>
+          <img class="slide__hero-image" src="images/slide-13-always-on-mac-mini.png" alt="An always-on Mac mini running scheduled jobs overnight" />
+          <p class="slide__subheading">A machine in the corner that never turns off.</p>
+          <ul class="slide__bullets">
+            <li class="slide__bullet">Scheduled reports go out on time</li>
+            <li class="slide__bullet">Monitoring watches the ad accounts</li>
+            <li class="slide__bullet">It runs while you sleep</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Slide 14: Models table -->
+      <section class="slide slide--heading-bullets" data-slide="14" data-chapter="Models" data-notes="Keep it dead simple|Pick the model by the job">
+        <div class="slide__content">
+          <div class="badge badge--step">PICK THE RIGHT MODEL</div>
+          <h2 class="slide__heading">The Claude Models, In Plain English</h2>
+          <table style="width:100%;border-collapse:collapse;margin-top:12px;font-size:1.15rem;">
+            <thead>
+              <tr>
+                <th style="text-align:left;padding:14px 18px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px 0 0 0;color:var(--text-muted);">Model</th>
+                <th style="text-align:left;padding:14px 18px;background:var(--primary);color:var(--bg);border:1px solid var(--primary);">Best for</th>
+                <th style="text-align:left;padding:14px 18px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:0 8px 0 0;color:var(--text-muted);">Think of it as</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);font-weight:700;color:var(--primary);">Opus</td>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);">Hardest thinking</td>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);color:var(--text-muted);">The powerhouse</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);font-weight:700;color:var(--primary);">Sonnet</td>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);">Most everyday work</td>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);color:var(--text-muted);">The balanced workhorse</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);font-weight:700;color:var(--primary);">Haiku</td>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);">High-volume simple tasks</td>
+                <td style="padding:14px 18px;border:1px solid var(--card-border);color:var(--text-muted);">Fast and cheap</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="slide__subheading" style="margin-top:20px;">Most of your work should live in Sonnet.</p>
+        </div>
+      </section>
+
+      <!-- Slide 15: The Cost -->
+      <section class="slide slide--quote" data-slide="15" data-chapter="The Cost" data-notes="Let the number sink in|Compare to one more hire">
+        <div class="slide__content slide__content--centered">
+          <div class="slide__quote-wrapper">
+            <div class="slide__quote-mark">"</div>
+            <blockquote class="slide__quote">A million words of copy, reports and research, for the price of lunch.</blockquote>
+            <cite class="slide__attribution">Roughly a few dollars per million words on the everyday model</cite>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 16: Mindset Shift -->
+      <section class="slide slide--quote" data-slide="16" data-chapter="Mindset Shift" data-notes="This is the one line to remember|Say it slow">
+        <div class="slide__content slide__content--centered">
+          <div class="slide__quote-wrapper">
+            <div class="slide__quote-mark">"</div>
+            <blockquote class="slide__quote">Stop renting a chatbot. Start building an AI operating system.</blockquote>
+            <cite class="slide__attribution">Context, playbooks, tools, and a schedule</cite>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 17: Key Takeaways -->
+      <section class="slide slide--recap" data-slide="17" data-chapter="Key Takeaways" data-notes="Land all loops|Then straight into the CTA">
+        <div class="slide__content">
+          <h2 class="slide__heading">The Whole Game</h2>
+          <ol class="slide__takeaways">
+            <li class="slide__takeaway">Skills, Agents, MCPs and Cron jobs together</li>
+            <li class="slide__takeaway">Connecting all four beats any single prompt</li>
+            <li class="slide__takeaway">Share one skills library across the team</li>
+            <li class="slide__takeaway">The always-on layer runs it while you sleep</li>
+            <li class="slide__takeaway">Treat AI like a coworker, not a vending machine</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Slide 18: CTA -->
+      <section class="slide slide--title" data-slide="18" data-chapter="Work With Us" data-notes="Comment question first|Then like, subscribe, book a call">
+        <div class="slide__content slide__content--centered">
+          <div class="badge badge--recommended">YOUR MOVE</div>
+          <h1 class="slide__title">Want This Built<br/>In Your Agency?</h1>
+          <p class="slide__subtitle">Which block would change your agency most? Comment below. Then like, subscribe, and book a call in the description.</p>
+        </div>
+      </section>
+
+    </main>
+  </div><!-- /presentation -->
+
+  <script>
+/**
+ * Slide Engine - Navigation, Edit Mode, Slide Management, and Fullscreen
+ * Embedded in every generated HTML slide deck.
+ */
+(function () {
+  'use strict';
+
+  /* ------------------------------------------------------------------ */
+  /*  State                                                              */
+  /* ------------------------------------------------------------------ */
+  let currentSlide = 0;
+  let editMode = false;
+  let isFullscreen = false;
+  let notesVisible = false;
+  let fileHandle = null;
+  let slides = Array.from(document.querySelectorAll('.slide'));
+  let sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+  const progressFill = document.querySelector('.sidebar__progress-fill');
+  const progressText = document.querySelector('.sidebar__progress-text');
+  const presentation = document.querySelector('.presentation');
+  const editToolbar = document.querySelector('.edit-toolbar');
+  const editIndicator = document.querySelector('.edit-indicator');
+  const stage = document.querySelector('.stage');
+  const sidebarNav = document.querySelector('.sidebar__nav');
+
+  function getTotalSlides() {
+    return slides.length;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Navigation                                                         */
+  /* ------------------------------------------------------------------ */
+  function goToSlide(index) {
+    var total = getTotalSlides();
+    if (index < 0 || index >= total) return;
+    slides[currentSlide].classList.remove('slide--active');
+    sidebarItems[currentSlide]?.classList.remove('sidebar__item--active');
+    currentSlide = index;
+    slides[currentSlide].classList.add('slide--active');
+    sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+    updateProgress();
+
+    // Scroll sidebar item into view
+    sidebarItems[currentSlide]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+
+    // Update talking points if visible
+    if (notesVisible) updateNotesContent();
+  }
+
+  function nextSlide() {
+    goToSlide(currentSlide + 1);
+  }
+
+  function prevSlide() {
+    goToSlide(currentSlide - 1);
+  }
+
+  function updateProgress() {
+    var total = getTotalSlides();
+    var pct = ((currentSlide + 1) / total) * 100;
+    if (progressFill) progressFill.style.width = pct + '%';
+    if (progressText) progressText.textContent = (currentSlide + 1) + ' / ' + total;
+  }
+
+  // Sidebar click handlers
+  function bindSidebarClicks() {
+    sidebarItems.forEach(function (item, i) {
+      item.onclick = function () {
+        goToSlide(i);
+      };
+    });
+  }
+  bindSidebarClicks();
+
+  /* ------------------------------------------------------------------ */
+  /*  Sidebar Renumbering                                                */
+  /* ------------------------------------------------------------------ */
+  function renumberSidebar() {
+    sidebarItems = Array.from(document.querySelectorAll('.sidebar__item'));
+    sidebarItems.forEach(function (item, i) {
+      var numEl = item.querySelector('.sidebar__item-number');
+      if (numEl) numEl.textContent = String(i + 1).padStart(2, '0');
+    });
+    bindSidebarClicks();
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Edit Mode                                                          */
+  /* ------------------------------------------------------------------ */
+  const editableSelectors = [
+    '.slide__title', '.slide__heading', '.slide__subheading',
+    '.slide__subtitle', '.slide__description', '.slide__bullet',
+    '.slide__quote', '.slide__attribution', '.card__title',
+    '.card__description', '.stat-card__value', '.stat-card__label',
+    '.stat-card__description', '.slide__takeaway', '.slide__cta-text',
+    '.badge', '.slide__table th', '.slide__table td'
+  ];
+
+  function enableEditMode() {
+    editMode = true;
+    presentation.classList.add('edit-mode');
+    document.querySelectorAll(editableSelectors.join(', ')).forEach(function (el) {
+      el.setAttribute('contenteditable', 'true');
+    });
+    // Make sidebar item labels editable
+    document.querySelectorAll('.sidebar__item-label').forEach(function (label) {
+      label.setAttribute('contenteditable', 'true');
+    });
+    addImageOverlays();
+    addDragHandles();
+    addDeleteButtons();
+    addListRowControls();
+    addSidebarDragHandles();
+  }
+
+  // Capture-phase guards on the sidebar so that, in edit mode, clicking a label
+  // edits it instead of navigating to its slide.
+  (function bindSidebarLabelGuards() {
+    var sidebarEl = document.querySelector('.sidebar');
+    if (!sidebarEl) return;
+    sidebarEl.addEventListener('mousedown', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      setTimeout(function () { label.focus(); }, 0);
+    }, true);
+    sidebarEl.addEventListener('click', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    }, true);
+    sidebarEl.addEventListener('keydown', function (e) {
+      if (!editMode) return;
+      var label = e.target.closest('.sidebar__item-label');
+      if (!label) return;
+      if (e.key === 'Enter') { e.preventDefault(); label.blur(); }
+    }, true);
+  })();
+
+  function disableEditMode() {
+    editMode = false;
+    presentation.classList.remove('edit-mode');
+    document.querySelectorAll('[contenteditable="true"]').forEach(function (el) {
+      el.removeAttribute('contenteditable');
+    });
+    removeImageOverlays();
+    removeDragHandles();
+    removeDeleteButtons();
+    removeListRowControls();
+    removeSidebarDragHandles();
+  }
+
+  function toggleEditMode() {
+    if (editMode) {
+      disableEditMode();
+    } else {
+      enableEditMode();
+    }
+  }
+
+  /* Image replace overlays */
+  function addImageOverlays() {
+    document.querySelectorAll('.slide__image').forEach(function (img) {
+      if (img.parentElement.querySelector('.image-replace-overlay')) return;
+      var wrapper = document.createElement('div');
+      wrapper.style.position = 'relative';
+      wrapper.style.display = 'inline-block';
+      img.parentNode.insertBefore(wrapper, img);
+      wrapper.appendChild(img);
+
+      var overlay = document.createElement('div');
+      overlay.className = 'image-replace-overlay';
+      var btn = document.createElement('button');
+      btn.className = 'image-replace-btn';
+      btn.textContent = 'Replace Image';
+      btn.addEventListener('click', function () {
+        var url = prompt('Paste new image URL (or base64 data URI):');
+        if (url) img.src = url;
+      });
+      overlay.appendChild(btn);
+      wrapper.appendChild(overlay);
+    });
+  }
+
+  function removeImageOverlays() {
+    document.querySelectorAll('.image-replace-overlay').forEach(function (overlay) {
+      var wrapper = overlay.parentElement;
+      var img = wrapper.querySelector('.slide__image');
+      if (img && wrapper.parentElement) {
+        wrapper.parentElement.insertBefore(img, wrapper);
+        wrapper.remove();
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Drag and Drop Reordering (Edit Mode)                               */
+  /* ------------------------------------------------------------------ */
+  var dragState = null;
+
+  function addDragHandles() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.drag-handle')) return;
+      if (el.classList.contains('add-row-btn')) return;
+      var handle = document.createElement('div');
+      handle.className = 'drag-handle';
+      handle.addEventListener('mousedown', function (e) {
+        startDrag(e, el);
+      });
+      el.appendChild(handle);
+    });
+  }
+
+  function removeDragHandles() {
+    if (dragState) handleDragEnd();
+    document.querySelectorAll('.drag-handle').forEach(function (handle) {
+      handle.remove();
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Delete Element Buttons (Edit Mode)                                 */
+  /* ------------------------------------------------------------------ */
+  function addDeleteButtons() {
+    document.querySelectorAll('.slide__content > *').forEach(function (el) {
+      if (el.querySelector('.delete-element-btn')) return;
+      if (el.classList.contains('add-row-btn')) return;
+      var btn = document.createElement('button');
+      btn.className = 'delete-element-btn';
+      btn.title = 'Delete this element';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        // Get text preview for confirmation
+        var preview = el.textContent.trim().substring(0, 40);
+        if (preview.length > 37) preview = preview.substring(0, 37) + '...';
+        if (confirm('Delete this element?\n\n"' + preview + '"')) {
+          el.remove();
+        }
+      });
+      el.appendChild(btn);
+    });
+  }
+
+  function removeDeleteButtons() {
+    document.querySelectorAll('.delete-element-btn').forEach(function (btn) {
+      btn.remove();
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  List Row Controls (Edit Mode) - per-row delete + add row          */
+  /* ------------------------------------------------------------------ */
+  var ROW_LIST_SELECTOR = '.slide__bullets, .slide__takeaways';
+
+  function rowItemClassFor(list) {
+    return list.classList.contains('slide__bullets') ? 'slide__bullet' : 'slide__takeaway';
+  }
+
+  function addRowDeleteBtn(li) {
+    if (li.querySelector(':scope > .row-delete-btn')) return;
+    var btn = document.createElement('button');
+    btn.className = 'row-delete-btn';
+    btn.type = 'button';
+    btn.title = 'Delete row';
+    btn.setAttribute('contenteditable', 'false');
+    btn.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      li.remove();
+    });
+    li.appendChild(btn);
+  }
+
+  function addListRowControls() {
+    document.querySelectorAll(ROW_LIST_SELECTOR).forEach(function (list) {
+      list.querySelectorAll(':scope > li').forEach(addRowDeleteBtn);
+
+      var next = list.nextElementSibling;
+      if (next && next.classList && next.classList.contains('add-row-btn')) return;
+
+      var btn = document.createElement('button');
+      btn.className = 'add-row-btn';
+      btn.type = 'button';
+      btn.textContent = '+ Add row';
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var li = document.createElement('li');
+        li.className = rowItemClassFor(list);
+        li.setAttribute('contenteditable', 'true');
+        li.textContent = 'New item';
+        list.appendChild(li);
+        addRowDeleteBtn(li);
+        li.focus();
+        var range = document.createRange();
+        range.selectNodeContents(li);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      });
+      list.parentNode.insertBefore(btn, list.nextSibling);
+    });
+  }
+
+  function removeListRowControls() {
+    document.querySelectorAll('.row-delete-btn, .add-row-btn').forEach(function (el) {
+      el.remove();
+    });
+  }
+
+  function startDrag(e, el) {
+    e.preventDefault();
+    dragState = { el: el, container: el.parentElement };
+    el.classList.add('dragging');
+    document.addEventListener('mousemove', handleDragMove);
+    document.addEventListener('mouseup', handleDragEnd);
+  }
+
+  function handleDragMove(e) {
+    if (!dragState) return;
+    e.preventDefault();
+    var container = dragState.container;
+    var dragEl = dragState.el;
+    var children = Array.from(container.children);
+    for (var i = 0; i < children.length; i++) {
+      var child = children[i];
+      if (child === dragEl) continue;
+      var rect = child.getBoundingClientRect();
+      var midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        container.insertBefore(dragEl, child);
+        return;
+      }
+    }
+    container.appendChild(dragEl);
+  }
+
+  function handleDragEnd() {
+    if (!dragState) return;
+    dragState.el.classList.remove('dragging');
+    dragState = null;
+    document.removeEventListener('mousemove', handleDragMove);
+    document.removeEventListener('mouseup', handleDragEnd);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Sidebar Reorder (Edit Mode) - drag a page up/down to reorder       */
+  /* ------------------------------------------------------------------ */
+  // Edit-only grip handles. Added in enableEditMode / stripped in
+  // disableEditMode, so they never leak into the saved HTML. Dragging a
+  // sidebar item reorders both the sidebar entry and its matching slide.
+  var sidebarDrag = null;
+
+  function addSidebarDragHandles() {
+    document.querySelectorAll('.sidebar__item').forEach(function (item) {
+      if (item.querySelector(':scope > .sidebar__drag-handle')) return; // idempotent
+      var h = document.createElement('span');
+      h.className = 'sidebar__drag-handle';
+      h.setAttribute('contenteditable', 'false');
+      h.setAttribute('draggable', 'false');
+      h.title = 'Drag to reorder';
+      h.addEventListener('mousedown', function (e) { startSidebarDrag(e, item); });
+      item.insertBefore(h, item.firstChild); // grip sits left of the number
+    });
+  }
+
+  function removeSidebarDragHandles() {
+    document.querySelectorAll('.sidebar__drag-handle').forEach(function (el) {
+      el.remove();
+    });
+  }
+
+  function startSidebarDrag(e, li) {
+    if (!editMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // Map each sidebar item to its slide using the current index alignment,
+    // so we can re-sync the slide order after the sidebar is reordered.
+    var liveItems = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    var map = new Map();
+    liveItems.forEach(function (it, i) { map.set(it, slides[i]); });
+    sidebarDrag = {
+      li: li,
+      itemToSlide: map,
+      activeSlideEl: slides[currentSlide],
+      startY: e.clientY,
+      moved: false
+    };
+    li.classList.add('sidebar__item--dragging');
+    document.addEventListener('mousemove', handleSidebarDragMove);
+    document.addEventListener('mouseup', handleSidebarDragEnd);
+  }
+
+  function handleSidebarDragMove(e) {
+    if (!sidebarDrag) return;
+    e.preventDefault();
+    if (!sidebarDrag.moved && Math.abs(e.clientY - sidebarDrag.startY) < 4) return; // threshold
+    sidebarDrag.moved = true;
+    var dragEl = sidebarDrag.li;
+    var siblings = Array.from(sidebarNav.querySelectorAll('.sidebar__item'));
+    for (var i = 0; i < siblings.length; i++) {
+      var sib = siblings[i];
+      if (sib === dragEl) continue;
+      var rect = sib.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) {
+        sidebarNav.insertBefore(dragEl, sib);
+        return;
+      }
+    }
+    sidebarNav.appendChild(dragEl); // dropped below everything
+  }
+
+  function handleSidebarDragEnd() {
+    if (!sidebarDrag) return;
+    var d = sidebarDrag;
+    d.li.classList.remove('sidebar__item--dragging');
+    document.removeEventListener('mousemove', handleSidebarDragMove);
+    document.removeEventListener('mouseup', handleSidebarDragEnd);
+    sidebarDrag = null;
+    if (!d.moved) return; // a plain click on the grip - nothing to reorder
+
+    // Mirror the new sidebar order onto the slide elements (appendChild moves nodes).
+    Array.from(sidebarNav.querySelectorAll('.sidebar__item')).forEach(function (li) {
+      var slideEl = d.itemToSlide.get(li);
+      if (slideEl) stage.appendChild(slideEl);
+    });
+
+    slides = Array.from(document.querySelectorAll('.slide'));
+    renumberSidebar();                                  // re-number + rebind navigation
+    currentSlide = Math.max(0, slides.indexOf(d.activeSlideEl)); // keep the open slide active
+    updateProgress();
+    suppressNextSidebarClick();                          // stop the post-drag click from navigating
+  }
+
+  function suppressNextSidebarClick() {
+    var sidebarEl = document.querySelector('.sidebar');
+    if (!sidebarEl) return;
+    var handler = function (e) {
+      e.stopPropagation();
+      e.preventDefault();
+      sidebarEl.removeEventListener('click', handler, true);
+    };
+    sidebarEl.addEventListener('click', handler, true); // capture: fires before item.onclick
+    setTimeout(function () { sidebarEl.removeEventListener('click', handler, true); }, 0);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Slide Management (Add / Delete)                                    */
+  /* ------------------------------------------------------------------ */
+  function addSlide() {
+    if (!editMode) return;
+
+    var newNum = currentSlide + 2; // 1-indexed, insert after current
+
+    // Create new slide element
+    var section = document.createElement('section');
+    section.className = 'slide slide--heading-bullets';
+    section.setAttribute('data-slide', String(newNum));
+    section.setAttribute('data-chapter', 'New Slide');
+    section.setAttribute('data-notes', '');
+    section.innerHTML =
+      '<div class="slide__content">' +
+        '<div class="badge badge--step" contenteditable="true">New Section</div>' +
+        '<h2 class="slide__heading" contenteditable="true">Slide Title</h2>' +
+        '<p class="slide__subheading" contenteditable="true">Subtitle goes here</p>' +
+        '<ul class="slide__bullets">' +
+          '<li class="slide__bullet" contenteditable="true">First point</li>' +
+          '<li class="slide__bullet" contenteditable="true">Second point</li>' +
+          '<li class="slide__bullet" contenteditable="true">Third point</li>' +
+        '</ul>' +
+      '</div>';
+
+    // Insert after current slide in DOM
+    var currentSlideEl = slides[currentSlide];
+    if (currentSlideEl.nextElementSibling) {
+      stage.insertBefore(section, currentSlideEl.nextElementSibling);
+    } else {
+      stage.appendChild(section);
+    }
+
+    // Create sidebar item
+    var li = document.createElement('li');
+    li.className = 'sidebar__item';
+    li.innerHTML =
+      '<span class="sidebar__item-number">' + String(newNum).padStart(2, '0') + '</span>' +
+      '<span class="sidebar__item-label">New Slide</span>';
+
+    var currentSidebarItem = sidebarItems[currentSlide];
+    if (currentSidebarItem && currentSidebarItem.nextElementSibling) {
+      sidebarNav.insertBefore(li, currentSidebarItem.nextElementSibling);
+    } else {
+      sidebarNav.appendChild(li);
+    }
+
+    // Refresh arrays
+    slides = Array.from(document.querySelectorAll('.slide'));
+    renumberSidebar();
+    addSidebarDragHandles(); // make the new sidebar item draggable while editing
+    updateProgress();
+
+    // Navigate to the new slide
+    goToSlide(currentSlide + 1);
+  }
+
+  function deleteSlide() {
+    if (!editMode) return;
+    var total = getTotalSlides();
+    if (total <= 1) return; // Never delete the last slide
+
+    if (!confirm('Delete this slide?')) return;
+
+    var slideToRemove = slides[currentSlide];
+    var sidebarToRemove = sidebarItems[currentSlide];
+    var targetIndex = currentSlide;
+
+    // Navigate away first
+    if (currentSlide >= total - 1) {
+      // Deleting last slide, go to previous
+      targetIndex = currentSlide - 1;
+    }
+    // else stay at same index (next slide will take this position)
+
+    // Deactivate current
+    slideToRemove.classList.remove('slide--active');
+    if (sidebarToRemove) sidebarToRemove.classList.remove('sidebar__item--active');
+
+    // Remove from DOM
+    slideToRemove.remove();
+    if (sidebarToRemove) sidebarToRemove.remove();
+
+    // Refresh arrays
+    slides = Array.from(document.querySelectorAll('.slide'));
+    renumberSidebar();
+
+    // Navigate to target
+    currentSlide = Math.max(0, Math.min(targetIndex, getTotalSlides() - 1));
+    slides[currentSlide].classList.add('slide--active');
+    sidebarItems[currentSlide]?.classList.add('sidebar__item--active');
+    updateProgress();
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Toolbar Actions                                                    */
+  /* ------------------------------------------------------------------ */
+  function execCommand(cmd) {
+    document.execCommand(cmd, false, null);
+  }
+
+  function changeFontSize(delta) {
+    var sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    var el = sel.anchorNode?.parentElement;
+    if (!el) return;
+    var current = parseFloat(window.getComputedStyle(el).fontSize);
+    el.style.fontSize = (current + delta) + 'px';
+  }
+
+  function addBullet() {
+    var activeSlide = slides[currentSlide];
+    var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways');
+    if (!list) return;
+    var tag = list.tagName === 'OL' ? 'li' : 'li';
+    var item = document.createElement(tag);
+    item.className = list.querySelector('li')?.className || '';
+    item.textContent = 'New item';
+    item.setAttribute('contenteditable', 'true');
+    list.appendChild(item);
+    item.focus();
+  }
+
+  function removeBullet() {
+    var activeSlide = slides[currentSlide];
+    var list = activeSlide.querySelector('.slide__bullets, .slide__takeaways');
+    if (!list) return;
+    var items = list.querySelectorAll('li');
+    if (items.length > 1) {
+      items[items.length - 1].remove();
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Empty subtext / bullet removal (Backspace on an empty element)     */
+  /* ------------------------------------------------------------------ */
+  // Only these get removed when emptied + Backspace'd — subtext lines and list
+  // rows. Headings, titles and table cells are intentionally NOT in this set.
+  var REMOVABLE_EMPTY_SELECTOR =
+    '.slide__subheading, .slide__subtitle, .slide__description, .slide__bullet, .slide__takeaway';
+
+  function isEditableEl(node) {
+    return !!(node && node.nodeType === 1 && node.matches &&
+      node.matches(editableSelectors.join(', ')));
+  }
+
+  function placeCaretAtEnd(node) {
+    if (!node) return;
+    try {
+      node.focus();
+      var range = document.createRange();
+      range.selectNodeContents(node);
+      range.collapse(false);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (err) { /* focus is best-effort */ }
+  }
+
+  // Where the caret should land after `el` is removed.
+  function focusTargetAfterRemoval(el) {
+    if (el.tagName === 'LI') {
+      var prevRow = el.previousElementSibling;
+      while (prevRow && prevRow.tagName !== 'LI') prevRow = prevRow.previousElementSibling;
+      if (prevRow) return prevRow;
+      // No previous row: hop to the editable element before the whole list.
+      var listSib = el.parentNode ? el.parentNode.previousElementSibling : null;
+      while (listSib && !isEditableEl(listSib)) {
+        var innerLi = listSib.querySelector ? listSib.querySelector('li') : null;
+        if (innerLi) return innerLi;
+        listSib = listSib.previousElementSibling;
+      }
+      return listSib;
+    }
+    // Subtext: hop to the previous editable content element (usually the heading).
+    var sib = el.previousElementSibling;
+    while (sib && !isEditableEl(sib)) sib = sib.previousElementSibling;
+    return sib;
+  }
+
+  // Toolbar "+ Subtext": re-add a subtitle line if the slide has none.
+  function addSubtext() {
+    if (!editMode) return;
+    var activeSlide = slides[currentSlide];
+    var content = activeSlide && activeSlide.querySelector('.slide__content');
+    if (!content) return;
+    var existing = content.querySelector('.slide__subheading');
+    if (existing) { placeCaretAtEnd(existing); return; }
+    var p = document.createElement('p');
+    p.className = 'slide__subheading';
+    p.setAttribute('contenteditable', 'true');
+    p.textContent = 'Subtitle goes here';
+    var heading = content.querySelector('.slide__heading');
+    if (heading && heading.nextSibling) {
+      content.insertBefore(p, heading.nextSibling);
+    } else if (heading) {
+      content.appendChild(p);
+    } else {
+      var badge = content.querySelector('.badge');
+      if (badge && badge.nextSibling) content.insertBefore(p, badge.nextSibling);
+      else content.insertBefore(p, content.firstChild);
+    }
+    addDeleteButtons();
+    // Select the placeholder so the user can type straight over it.
+    try {
+      p.focus();
+      var range = document.createRange();
+      range.selectNodeContents(p);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (err) { p.focus(); }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Insert Image (file picker + clipboard paste)                       */
+  /* ------------------------------------------------------------------ */
+  function insertImageFromDataUrl(dataUrl) {
+    var activeSlide = slides[currentSlide];
+    var content = activeSlide.querySelector('.slide__content');
+    if (!content) return;
+    var img = document.createElement('img');
+    img.className = 'slide__hero-image';
+    img.src = dataUrl;
+    img.alt = 'Pasted image';
+    // Insert before the first bullets/table/quote, or before the first heading's siblings
+    var insertBefore = content.querySelector('.slide__bullets, .slide__table-wrapper, .slide__cards, .slide__stats-grid, .slide__takeaways, .slide__quote-wrapper, .slide__cta');
+    if (insertBefore) {
+      content.insertBefore(img, insertBefore);
+    } else {
+      content.appendChild(img);
+    }
+    // Re-decorate so the new image gets edit affordances
+    if (editMode) {
+      addImageOverlays();
+      addDragHandles();
+      addDeleteButtons();
+    }
+  }
+
+  function blobToDataUrl(blob, cb) {
+    var reader = new FileReader();
+    reader.onload = function () { cb(reader.result); };
+    reader.readAsDataURL(blob);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Table editing (add/remove rows and columns)                        */
+  /* ------------------------------------------------------------------ */
+  function getActiveTable() {
+    var activeSlide = slides[currentSlide];
+    return activeSlide ? activeSlide.querySelector('.slide__table') : null;
+  }
+
+  function getFocusedCell() {
+    var sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return null;
+    var node = sel.anchorNode;
+    if (!node) return null;
+    if (node.nodeType === 3) node = node.parentNode;
+    return node.closest ? node.closest('td, th') : null;
+  }
+
+  function addTableRow() {
+    var table = getActiveTable();
+    if (!table) return;
+    var tbody = table.querySelector('tbody');
+    if (!tbody) return;
+    var lastRow = tbody.querySelector('tr:last-child');
+    var colCount = lastRow ? lastRow.children.length : (table.querySelector('thead tr')?.children.length || 2);
+    var tr = document.createElement('tr');
+    for (var i = 0; i < colCount; i++) {
+      var td = document.createElement('td');
+      td.textContent = 'New';
+      if (editMode) td.setAttribute('contenteditable', 'true');
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+
+  function removeTableRow() {
+    var table = getActiveTable();
+    if (!table) return;
+    var tbody = table.querySelector('tbody');
+    if (!tbody) return;
+    var rows = tbody.querySelectorAll('tr');
+    if (rows.length <= 1) return;
+    var cell = getFocusedCell();
+    var targetRow = (cell && tbody.contains(cell)) ? cell.parentNode : rows[rows.length - 1];
+    if (targetRow && targetRow.parentNode === tbody) targetRow.remove();
+  }
+
+  function addTableCol() {
+    var table = getActiveTable();
+    if (!table) return;
+    // Add to thead
+    var theadRow = table.querySelector('thead tr');
+    if (theadRow) {
+      var th = document.createElement('th');
+      th.textContent = 'New';
+      if (editMode) th.setAttribute('contenteditable', 'true');
+      theadRow.appendChild(th);
+    }
+    // Add to each tbody row
+    table.querySelectorAll('tbody tr').forEach(function (tr) {
+      var td = document.createElement('td');
+      td.textContent = 'New';
+      if (editMode) td.setAttribute('contenteditable', 'true');
+      tr.appendChild(td);
+    });
+  }
+
+  function removeTableCol() {
+    var table = getActiveTable();
+    if (!table) return;
+    var theadRow = table.querySelector('thead tr');
+    var bodyRows = table.querySelectorAll('tbody tr');
+    var totalCols = theadRow ? theadRow.children.length : (bodyRows[0] ? bodyRows[0].children.length : 0);
+    if (totalCols <= 1) return;
+    var cell = getFocusedCell();
+    var colIndex = -1;
+    if (cell) {
+      var row = cell.parentNode;
+      colIndex = Array.prototype.indexOf.call(row.children, cell);
+    }
+    if (colIndex < 0) colIndex = totalCols - 1;
+    if (theadRow && theadRow.children[colIndex]) {
+      theadRow.removeChild(theadRow.children[colIndex]);
+    }
+    bodyRows.forEach(function (tr) {
+      if (tr.children[colIndex]) tr.removeChild(tr.children[colIndex]);
+    });
+  }
+
+  function addImage() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.style.display = 'none';
+    input.addEventListener('change', function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      blobToDataUrl(file, insertImageFromDataUrl);
+    });
+    document.body.appendChild(input);
+    input.click();
+    setTimeout(function () { input.remove(); }, 1000);
+  }
+
+  // Clipboard paste: when in edit mode, intercept image paste from clipboard
+  document.addEventListener('paste', function (e) {
+    if (!editMode) return;
+    var items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      if (item.kind === 'file' && item.type.indexOf('image/') === 0) {
+        e.preventDefault();
+        var blob = item.getAsFile();
+        if (blob) blobToDataUrl(blob, insertImageFromDataUrl);
+        return;
+      }
+    }
+  });
+
+  // Inject new toolbar buttons if missing (so existing decks pick up the feature)
+  (function injectNewToolbarButtons() {
+    if (!editToolbar) return;
+    function makeBtn(action, label, title) {
+      var b = document.createElement('button');
+      b.className = 'edit-toolbar__btn';
+      b.dataset.action = action;
+      b.textContent = label;
+      if (title) b.title = title;
+      return b;
+    }
+    function makeSep() {
+      var s = document.createElement('div');
+      s.className = 'edit-toolbar__separator';
+      return s;
+    }
+    var addBulletBtn = editToolbar.querySelector('[data-action="add-bullet"]');
+    var anchorParent = (addBulletBtn && addBulletBtn.parentNode) || editToolbar;
+    var anchor = addBulletBtn || null;
+
+    function insertBeforeAnchor(node) {
+      if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(node, anchor);
+      else editToolbar.appendChild(node);
+    }
+
+    if (!editToolbar.querySelector('[data-action="add-image"]')) {
+      insertBeforeAnchor(makeBtn('add-image', '+ Image', 'Insert image (or paste from clipboard with Cmd/Ctrl+V)'));
+      insertBeforeAnchor(makeSep());
+    }
+    if (!editToolbar.querySelector('[data-action="add-subtext"]')) {
+      insertBeforeAnchor(makeBtn('add-subtext', '+ Subtext', 'Add a subtitle line to this slide (Backspace on an empty subtext/bullet removes it)'));
+    }
+    if (!editToolbar.querySelector('[data-action="add-row"]')) {
+      // Insert table buttons after bullets group
+      var addSlideBtn = editToolbar.querySelector('[data-action="add-slide"]');
+      var tableAnchor = addSlideBtn || null;
+      function insertBeforeTableAnchor(node) {
+        if (tableAnchor && tableAnchor.parentNode) tableAnchor.parentNode.insertBefore(node, tableAnchor);
+        else editToolbar.appendChild(node);
+      }
+      insertBeforeTableAnchor(makeBtn('add-row', '+ Row', 'Add row to table'));
+      insertBeforeTableAnchor(makeBtn('remove-row', '- Row', 'Remove last row from table'));
+      insertBeforeTableAnchor(makeBtn('add-col', '+ Col', 'Add column to table'));
+      insertBeforeTableAnchor(makeBtn('remove-col', '- Col', 'Remove last column from table'));
+      insertBeforeTableAnchor(makeSep());
+    }
+  })();
+
+  /* ------------------------------------------------------------------ */
+  /*  Save Presentation (File System Access API with download fallback)  */
+  /* ------------------------------------------------------------------ */
+  function savePresentation() {
+    // Temporarily disable edit mode for clean HTML
+    var wasEditing = editMode;
+    if (wasEditing) disableEditMode();
+
+    // Hide notes panel from saved output
+    var notesPanel = document.querySelector('.notes-panel');
+    if (notesPanel) notesPanel.style.display = 'none';
+
+    var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    // Restore notes panel if it was visible
+    if (notesPanel && notesVisible) notesPanel.style.display = 'block';
+
+    // Re-enable if was editing
+    if (wasEditing) enableEditMode();
+
+    if (window.showSaveFilePicker) {
+      saveWithFileSystemAccess(html);
+    } else {
+      saveWithDownload(html);
+    }
+  }
+
+  function saveWithFileSystemAccess(html) {
+    if (fileHandle) {
+      writeToHandle(fileHandle, html);
+    } else {
+      var suggestedName = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+      window.showSaveFilePicker({
+        suggestedName: suggestedName,
+        types: [{
+          description: 'HTML Files',
+          accept: { 'text/html': ['.html'] }
+        }]
+      }).then(function (handle) {
+        fileHandle = handle;
+        writeToHandle(handle, html);
+      }).catch(function (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Save failed:', err);
+          showToast('Save failed', true);
+        }
+      });
+    }
+  }
+
+  function writeToHandle(handle, content) {
+    handle.createWritable().then(function (writable) {
+      return writable.write(content).then(function () {
+        return writable.close();
+      });
+    }).then(function () {
+      showToast('Saved!');
+    }).catch(function (err) {
+      console.error('Write failed:', err);
+      showToast('Save failed', true);
+      fileHandle = null;
+    });
+  }
+
+  function saveWithDownload(html) {
+    var blob = new Blob([html], { type: 'text/html' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = document.title.replace(/\s+/g, '-').toLowerCase() + '.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('Downloaded!');
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Toast Notifications                                                */
+  /* ------------------------------------------------------------------ */
+  function showToast(message, isError) {
+    var existing = document.querySelector('.save-toast');
+    if (existing) existing.remove();
+
+    var toast = document.createElement('div');
+    toast.className = 'save-toast' + (isError ? ' save-toast--error' : '');
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(function () {
+      toast.classList.add('save-toast--visible');
+    });
+
+    setTimeout(function () {
+      toast.classList.remove('save-toast--visible');
+      setTimeout(function () { toast.remove(); }, 300);
+    }, 2000);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Talking Points Panel                                               */
+  /* ------------------------------------------------------------------ */
+  function createNotesPanel() {
+    var panel = document.createElement('div');
+    panel.className = 'notes-panel';
+    panel.innerHTML =
+      '<div class="notes-panel__header">' +
+        '<span class="notes-panel__title">Talking Points</span>' +
+        '<span class="notes-panel__hint">T</span>' +
+        '<button class="notes-panel__close">&times;</button>' +
+      '</div>' +
+      '<ul class="notes-panel__list"></ul>';
+    panel.style.display = 'none';
+    document.body.appendChild(panel);
+
+    panel.querySelector('.notes-panel__close').addEventListener('click', function () {
+      toggleNotes();
+    });
+
+    return panel;
+  }
+
+  var notesPanelEl = createNotesPanel();
+
+  function updateNotesContent() {
+    var list = notesPanelEl.querySelector('.notes-panel__list');
+    var currentSlideEl = slides[currentSlide];
+    var notesData = currentSlideEl ? currentSlideEl.dataset.notes : '';
+
+    if (!notesData || notesData.trim() === '') {
+      list.innerHTML = '<li class="notes-panel__empty">No notes for this slide</li>';
+      return;
+    }
+
+    var points = notesData.split('|').map(function (s) { return s.trim(); }).filter(Boolean);
+    list.innerHTML = points.map(function (p) {
+      return '<li class="notes-panel__item">' + p + '</li>';
+    }).join('');
+  }
+
+  function toggleNotes() {
+    notesVisible = !notesVisible;
+    notesPanelEl.style.display = notesVisible ? 'block' : 'none';
+    if (notesVisible) updateNotesContent();
+  }
+
+  // Bind toolbar buttons
+  document.querySelectorAll('.edit-toolbar__btn').forEach(function (btn) {
+    var action = btn.dataset.action;
+    if (!action) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      switch (action) {
+        case 'bold': execCommand('bold'); break;
+        case 'italic': execCommand('italic'); break;
+        case 'font-up': changeFontSize(2); break;
+        case 'font-down': changeFontSize(-2); break;
+        case 'add-bullet': addBullet(); break;
+        case 'remove-bullet': removeBullet(); break;
+        case 'add-subtext': addSubtext(); break;
+        case 'add-image': addImage(); break;
+        case 'add-row': addTableRow(); break;
+        case 'remove-row': removeTableRow(); break;
+        case 'add-col': addTableCol(); break;
+        case 'remove-col': removeTableCol(); break;
+        case 'add-slide': addSlide(); break;
+        case 'delete-slide': deleteSlide(); break;
+        case 'save': savePresentation(); break;
+      }
+    });
+  });
+
+  /* ------------------------------------------------------------------ */
+  /*  Fullscreen                                                         */
+  /* ------------------------------------------------------------------ */
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(function () {
+        isFullscreen = true;
+        presentation.classList.add('presentation--fullscreen');
+      }).catch(function () {});
+    } else {
+      document.exitFullscreen();
+      isFullscreen = false;
+      presentation.classList.remove('presentation--fullscreen');
+    }
+  }
+
+  document.addEventListener('fullscreenchange', function () {
+    if (!document.fullscreenElement) {
+      isFullscreen = false;
+      presentation.classList.remove('presentation--fullscreen');
+    }
+  });
+
+  /* ------------------------------------------------------------------ */
+  /*  Keyboard Shortcuts                                                 */
+  /* ------------------------------------------------------------------ */
+  document.addEventListener('keydown', function (e) {
+    // Don't intercept when typing in editable fields (except Escape and Ctrl combos)
+    var isEditing = e.target.isContentEditable;
+
+    // Ctrl/Cmd + S: Save presentation
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      savePresentation();
+      return;
+    }
+
+    // Ctrl/Cmd + E: Toggle edit mode
+    if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+      e.preventDefault();
+      toggleEditMode();
+      return;
+    }
+
+    // Ctrl/Cmd + D: Delete current slide (edit mode only)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+      if (editMode) {
+        e.preventDefault();
+        deleteSlide();
+        return;
+      }
+    }
+
+    // Escape: Exit edit mode or fullscreen
+    if (e.key === 'Escape') {
+      if (editMode) {
+        disableEditMode();
+      } else if (isFullscreen) {
+        // Browser handles fullscreen exit via Escape
+      }
+      return;
+    }
+
+    // Backspace/Delete on an EMPTY subtext or bullet removes the element entirely
+    // (edit mode only). Must run before the isEditing early-return below, because
+    // editing an empty contenteditable still reports isEditing === true.
+    if (editMode && isEditing && (e.key === 'Backspace' || e.key === 'Delete')) {
+      var delTarget = e.target;
+      // strip zero-width space / BOM; trim() already covers normal + nbsp whitespace
+      var delText = delTarget && delTarget.textContent
+        ? delTarget.textContent.replace(/[​﻿]/g, '').trim()
+        : '';
+      if (delTarget && delTarget.matches && delTarget.matches(REMOVABLE_EMPTY_SELECTOR) && delText === '') {
+        e.preventDefault();
+        var nextFocus = focusTargetAfterRemoval(delTarget);
+        delTarget.remove();
+        if (nextFocus) placeCaretAtEnd(nextFocus);
+        return;
+      }
+    }
+
+    // Don't handle navigation keys while editing text
+    if (isEditing) return;
+
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault();
+        nextSlide();
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault();
+        prevSlide();
+        break;
+      case 'f':
+      case 'F11':
+        e.preventDefault();
+        toggleFullscreen();
+        break;
+      case 't':
+        e.preventDefault();
+        toggleNotes();
+        break;
+      case 'Home':
+        e.preventDefault();
+        goToSlide(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goToSlide(getTotalSlides() - 1);
+        break;
+    }
+  });
+
+  /* ------------------------------------------------------------------ */
+  /*  Touch / Swipe Support                                              */
+  /* ------------------------------------------------------------------ */
+  var touchStartX = 0;
+  document.addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    var diff = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) prevSlide();
+      else nextSlide();
+    }
+  }, { passive: true });
+
+  /* ------------------------------------------------------------------ */
+  /*  Mermaid Init (if present)                                          */
+  /* ------------------------------------------------------------------ */
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        primaryColor: getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#C7963F',
+        primaryTextColor: '#ffffff',
+        primaryBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--card-border').trim() || '#2a2a3e',
+        lineColor: getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#8a8a9a',
+        secondaryColor: getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#141420',
+        tertiaryColor: getComputedStyle(document.documentElement).getPropertyValue('--card-bg').trim() || '#1a1a2e',
+        fontSize: '22px'
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Initialize                                                         */
+  /* ------------------------------------------------------------------ */
+  goToSlide(0);
+})();
+
+  </script>
+</body>
+</html>
